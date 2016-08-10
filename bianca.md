@@ -51,8 +51,6 @@ In addition, we present a comprehensive overview of the dependencies topology of
 In this section, we describe our approach in details. 
 BIANCA (Bug Insertion ANticipation by Clone Analysis at commit time) consists in three steps: (a) acquiring dependencies, (b) clustering project and (c) identifying risky commits.
 
-
-
 The rest of this section is organized as follows: section \ref{sec:dep} describes the processes that allows us to extract the dependencies of each repositories and build a dependency graph. 
 Section \ref{sec:clust} presents the algorithm used to cluster the repositories according to their dependencies. 
 Finally, section \ref{sec:clone} presents the mechanisms behind the detection of risky commits at commit time.
@@ -77,11 +75,12 @@ As shown, \texttt{badlogicgames.gdx} depends on projects owned by the same organ
 
 ## Clustering Projects {#sec:clust} 
 
-The Girvan–Newman algorithm [@Girvan2002][@Newman2004] detects communities by progressively removing edges from the original network. 
+The Girvan–Newman algorithm [@Girvan2002; @Newman2004] detects communities by progressively removing edges from the original network. 
 The connected components of the remaining network are the communities. 
-Instead of trying to construct a measure that tells us which edges are the most central to communities, the Girvan–Newman algorithm focuses on edges that are most likely "between" communities.
+Instead of trying to construct a measure that tells which edges are the most central to communities, the Girvan–Newman algorithm focuses on edges that are most likely "between" communities.
 This algorithm is highly effective at discovering community structure in both computer-generated and real-world network data.
 
+The Girvan–Newman algorithm fits our problem as we are interested in discovering the _communities_ of repositories that depend on a similar set of dependences.
 
 
 
@@ -130,10 +129,17 @@ $$
 ## Dependencies analyses
 
 Figure \ref{fig:dep-graph} presents the complete dependency graph.
-The dependency graph is composed of more than 3,254 nodes and showcases five clusters: yellow, red, green, purple and blue.
-The 3,254 nodes are the result of the dependencies analyses of the child dependencies, great-child dependencies and great-great child dependencies.
+The dependency graph is composed of more than 592 nodes and showcases five clusters: yellow, red, green, purple and blue.
+The 592 nodes are the result of the dependencies analyses of the child dependencies, great-child dependencies and great-great child dependencies.
 The size of the nodes are proportional to the number of connection form and to the node.
-The clusters centroids are as follows:
+The communities---or clusters---are presented by figure \ref{fig:dep-graph} and table \ref{tab:communities}.
+
+
+![Dependency Graph\label{fig:dep-graph}](media/network.png)
+
+As depicted by our dependency map, the dependency landscape of the most popular Github repositories is very much inter-connected and inter-dependent.
+Indeed, we have an average of 77 dependencies per projects (child, great-child and great-great-child included) and, as seen earlier, 592 unique dependencies.
+Meaning that, in average, our 42 repositories share 62 of their 77 dependencies with at least one other repository.
 
 * yellow: Alibaba
 * red: Apache Hadoop
@@ -142,19 +148,21 @@ The clusters centroids are as follows:
 * blue: sonatype oss, Apache storm, io netty, eclipse che
 
 
-As depicted by our dependency map, the software engineering landscape of the most popular Github repositories is very much inter-connected and inter-dependent.
-Indeed, we have an average of 77 dependencies per projects (child, great-child and great-great-child included).
-
-
-
-\begin{figure*}[]
-  \centering
-    \includegraphics{media/network.png}
-    \caption{Dependency Graph
-    \label{fig:dep-graph}}
-\end{figure*}
-
-
+\begin{table}[]
+\centering
+\caption{Communities in terms of ID, Color code, Centroids, Betweenness and number of members}
+\label{tab:communities}
+\begin{tabular}{llllll}
+\#ID               & Community             & Centroids        & Betweenness & \# Members        \\
+\multirow{3}{*}{1} & \multirow{3}{*}{Blue} & org.sonatype.oss & 25710      & \multirow{3}{*}{479}  \\
+                   &                       & org.apache.storm & 24525      &                                         \\
+                   &                       & junit            & 16718      &                                         \\
+2                  & Yellow                & Alibaba          & 24400      & 42                                      \\
+3                  & Red                   & Hadoop           & 16709      & 37                                      \\
+4                  & Green                 & openhab          & 3504       & 22                                      \\
+5                  & Purple                & gdx              & 6839       & 12                                     
+\end{tabular}
+\end{table}
 
 
 \begin{table*}[]
@@ -209,6 +217,23 @@ Total              & 165912  & 41225                    \\
                    &         &                         
 \end{tabular}
 \end{table*}
+
+\begin{table}[]
+\centering
+\caption{My caption}
+\label{my-label}
+\begin{tabular}{llll}
+Year  & Defect Detected & Pairs  & Time Difference \\
+2010  & 712             & 46.43  & 139.90  \\
+2011  & 3054            & 20.43  & 290.17  \\
+2012  & 5148            & 8.37   & 595.71   \\
+2013  & 6015            & 15.19  & 850.03  \\
+2014  & 22645           & 29.44  & 376.71  \\
+2015  & 34903           & 104.27 & 515.43  \\
+2016  & 16864           & 19.55  & 640.73  \\
+Total & 89341           & 34.81  & 486.96 
+\end{tabular}
+\end{table}
 
 
 # References

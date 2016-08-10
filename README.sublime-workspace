@@ -1,0 +1,1326 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"depe",
+				"dependencies"
+			],
+			[
+				"depend",
+				"dependencies	(methodology_taxo.tex)"
+			],
+			[
+				"proem",
+				"predominant	(methodology_taxo.tex)"
+			],
+			[
+				"sect",
+				"section"
+			],
+			[
+				"cite",
+				"citecolor	(default.latex)"
+			],
+			[
+				"tit",
+				"title	(default.latex)"
+			],
+			[
+				"targ",
+				"targetCommit"
+			],
+			[
+				"tar",
+				"targetRepo"
+			],
+			[
+				"file",
+				"files"
+			],
+			[
+				"fix",
+				"fixes"
+			],
+			[
+				"viz",
+				"vizNet"
+			],
+			[
+				"Git",
+				"GitCommitLinker	(analyzer.py)"
+			],
+			[
+				"ana",
+				"analyze	(cas_manager.py)"
+			],
+			[
+				"buil",
+				"buildWatches	method"
+			],
+			[
+				"n",
+				"next	property"
+			],
+			[
+				"mar",
+				"margin-right"
+			],
+			[
+				"tex",
+				"text-decoration"
+			],
+			[
+				"text",
+				"text-decoration"
+			],
+			[
+				"na",
+				"nav	property"
+			],
+			[
+				"d",
+				"dismiss	method"
+			],
+			[
+				"sel",
+				"selectedWatch	let"
+			],
+			[
+				"Eve",
+				"EventEmitter	alias"
+			],
+			[
+				"Eleme",
+				"ElementRef	alias"
+			],
+			[
+				"Pa",
+				"ParagraphPipe	alias"
+			],
+			[
+				"Re",
+				"RegExp	interface"
+			],
+			[
+				"h",
+				"highlightColor	property"
+			],
+			[
+				"res",
+				"resultString	let"
+			],
+			[
+				"nu",
+				"number	keyword"
+			],
+			[
+				"in",
+				"input	Tag"
+			],
+			[
+				"wid",
+				"width"
+			],
+			[
+				"bac",
+				"background-size"
+			],
+			[
+				"padd",
+				"padding-top"
+			],
+			[
+				"font-s",
+				"font-size"
+			],
+			[
+				"back",
+				"background-image"
+			],
+			[
+				"font",
+				"font-family"
+			],
+			[
+				"over",
+				"overflow-y: 〔property〕"
+			],
+			[
+				"re",
+				"required"
+			],
+			[
+				"pas",
+				"password	property"
+			],
+			[
+				"t",
+				"translate	property"
+			],
+			[
+				"acc",
+				"accuracy"
+			],
+			[
+				"Lo",
+				"LogInPage	alias"
+			],
+			[
+				"me",
+				"measures	property"
+			],
+			[
+				"da",
+				"date	property"
+			],
+			[
+				"pa",
+				"padding-top"
+			],
+			[
+				"fon",
+				"font-size"
+			],
+			[
+				"bor",
+				"border"
+			],
+			[
+				"Time",
+				"TimePage	alias"
+			],
+			[
+				"onN",
+				"onNewWatch	method"
+			],
+			[
+				"ma",
+				"margin-left"
+			],
+			[
+				"p",
+				"posts	property"
+			],
+			[
+				"setT",
+				"setRoot	method"
+			],
+			[
+				"to",
+				"toString	method"
+			],
+			[
+				"fo",
+				"font-size"
+			],
+			[
+				"i",
+				"italic"
+			],
+			[
+				"text-",
+				"text-transform"
+			],
+			[
+				"Wa",
+				"WatchAction	enum"
+			],
+			[
+				"for",
+				"fori	for (…) {…}"
+			],
+			[
+				"a",
+				"accuracy	property"
+			],
+			[
+				"Watch",
+				"WatchStatus	alias"
+			],
+			[
+				"bo",
+				"bolder"
+			],
+			[
+				"o",
+				"offsetedDateString	property"
+			],
+			[
+				"con",
+				"setContent	method"
+			],
+			[
+				"as",
+				"addAccuracyMeasure	method"
+			],
+			[
+				"roo",
+				"setRoot	method"
+			],
+			[
+				"get",
+				"getTime	method"
+			],
+			[
+				"border-r",
+				"border-radius"
+			],
+			[
+				"pad",
+				"padding"
+			],
+			[
+				"fot",
+				"font-style"
+			],
+			[
+				"ba",
+				"background"
+			],
+			[
+				"Watc",
+				"WatchAction	alias"
+			],
+			[
+				"c",
+				"currentMeasure	method"
+			],
+			[
+				"WA",
+				"WatchStatus	alias"
+			],
+			[
+				"di",
+				"display"
+			],
+			[
+				"hea",
+				"header	Tag"
+			],
+			[
+				"wa",
+				"watchDeleted	property"
+			],
+			[
+				"boo",
+				"bottom"
+			],
+			[
+				"del",
+				"deleteWatch	method"
+			],
+			[
+				"m",
+				"myIcon	property"
+			],
+			[
+				"b",
+				"block"
+			],
+			[
+				"sub",
+				"sub-tab"
+			],
+			[
+				"font-",
+				"font-size"
+			],
+			[
+				"tw",
+				"TweenMax	local var"
+			],
+			[
+				"ins",
+				"instance	local var"
+			],
+			[
+				"user",
+				"userFromUJSONAPI	let"
+			],
+			[
+				"Do",
+				"Dog	class"
+			],
+			[
+				"ge",
+				"getBrands	method"
+			],
+			[
+				"ex",
+				"extends	keyword"
+			],
+			[
+				"Ana",
+				"Animal	interface"
+			],
+			[
+				"imp",
+				"implements	keyword"
+			],
+			[
+				"marg",
+				"margin-top"
+			],
+			[
+				"va",
+				"value	property"
+			],
+			[
+				"s",
+				"syncedDataAnchor	property"
+			],
+			[
+				"wh",
+				"width"
+			],
+			[
+				"no",
+				"no-repeat"
+			],
+			[
+				"head",
+				"head	Tag"
+			],
+			[
+				"margin",
+				"margin-bottom"
+			],
+			[
+				"min",
+				"min-width"
+			],
+			[
+				"Logi",
+				"LoginComponent	alias"
+			],
+			[
+				"app",
+				"app/**/*.ts"
+			],
+			[
+				"Blo",
+				"BlogPost	alias"
+			],
+			[
+				"wind",
+				"window"
+			],
+			[
+				"de",
+				"deleteWatch	method"
+			],
+			[
+				"wat",
+				"watchModel	property"
+			],
+			[
+				"mod",
+				"models	property"
+			],
+			[
+				"contr",
+				"ControlGroup	alias"
+			],
+			[
+				"v",
+				"value	property"
+			],
+			[
+				"f",
+				"filter	method"
+			],
+			[
+				"fi",
+				"filteredList	property"
+			],
+			[
+				"tr",
+				"getTranslation	method"
+			],
+			[
+				"e",
+				"emailTaken	property"
+			],
+			[
+				"COn",
+				"Control	alias"
+			],
+			[
+				"em",
+				"emailRepeat	property"
+			],
+			[
+				"ca",
+				"catch	keyword"
+			],
+			[
+				"co",
+				"cover"
+			],
+			[
+				"g",
+				"getDay	method"
+			],
+			[
+				"getM",
+				"getMonth	method"
+			],
+			[
+				"l",
+				"login.component.ts"
+			],
+			[
+				"ap",
+				"api-client.component.ts"
+			],
+			[
+				"pro",
+				"promises	let"
+			],
+			[
+				"stas",
+				"statusCallback	parameter"
+			],
+			[
+				"tDe",
+				"tDeleteAccountTest	let"
+			],
+			[
+				"curr",
+				"currentTime"
+			],
+			[
+				"dele",
+				"deleteOptions	let"
+			],
+			[
+				"dee",
+				"deleteMeasure	method"
+			],
+			[
+				"tAc",
+				"tAddAccuracyMeasure	let"
+			],
+			[
+				"tAd",
+				"tAddBaseMeasure	let"
+			],
+			[
+				"accuy",
+				"accuracyAge	parameter"
+			],
+			[
+				"ac",
+				"accuracyAge	property"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 208.0,
+		"last_filter": "install",
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			],
+			[
+				"add repo",
+				"Package Control: Add Repository"
+			],
+			[
+				"show",
+				"TypeScript: Show Error List"
+			],
+			[
+				"packa",
+				"Package Control: Remove Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"sho",
+				"TypeScript: Show Error List"
+			],
+			[
+				"showe",
+				"TypeScript: Show Error List"
+			],
+			[
+				"show ",
+				"TypeScript: Show Error List"
+			],
+			[
+				"show er",
+				"TypeScript: Show Error List"
+			],
+			[
+				"show e",
+				"TypeScript: Show Error List"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"show err",
+				"TypeScript: Show Error List"
+			],
+			[
+				"sh",
+				"TypeScript: Show Error List"
+			],
+			[
+				"package ins",
+				"Package Control: Install Package"
+			],
+			[
+				"erro",
+				"TypeScript: Show Error List"
+			],
+			[
+				"err",
+				"TypeScript: Show Error List"
+			],
+			[
+				"error",
+				"TypeScript: Show Error List"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 601.0
+	},
+	"console":
+	{
+		"height": 132.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/math/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/math/.config/sublime-text-3/Packages/User/Md2PDF.sublime-build",
+		"/home/math/www/bumper/CAS_CodeRepoAnalyzer/caslogging.py",
+		"/home/math/www/bumper/CAS_CodeRepoAnalyzer/config.json",
+		"/home/math/www/bumper/bumper-bianca/bianca/cas_manager.py",
+		"/usr/local/lib/nicad4/config/javanormalizeifconditions.cfg",
+		"/usr/local/lib/nicad4/config/bianca.cfg",
+		"/usr/local/lib/nicad4/config/00-README.txt",
+		"/home/math/www/bumper/usages/read_bug.sh",
+		"/home/math/www/bumper/bianca-viz/viz.R",
+		"/home/math/www/bumper/CAS_CodeRepoAnalyzer/cas_manager.py",
+		"/home/math/cas/results2/1313194549-127f1a3e5020b00447e78d3e85ca5422e605d044-AND-1337104615-c4e2400484b737a5c8e3535bc982cda7a774e9dd.result",
+		"/home/math/cas/results2/1313194549-127f1a3e5020b00447e78d3e85ca5422e605d044-AND-1415280032-5a9ed8ef8590190deb8085c33984906bc4e7190b.result",
+		"/home/math/cas/results2/1313194549-127f1a3e5020b00447e78d3e85ca5422e605d044-AND-1407666963-bd209c351113fe4317caf10bc7acb084361f5668.result",
+		"/home/math/cas/results2/1313194549-127f1a3e5020b00447e78d3e85ca5422e605d044-AND-1387236947-ae8017bb6355b23cea5f1e843f2b5ce3979f050e.result",
+		"/home/math/cas/results2/1313194549-127f1a3e5020b00447e78d3e85ca5422e605d044-AND-1375855347-d679325a8ebb4d70e9557a9a80baf589f8908102.result",
+		"/home/math/cas/results2/1313194549-127f1a3e5020b00447e78d3e85ca5422e605d044-AND-1367382095-af0cb5e914ec2a77b4dcceae3eea5ebfef3a52ad.result",
+		"/home/math/cas/results2/1313194549-127f1a3e5020b00447e78d3e85ca5422e605d044-AND-1363645151-7708dcd06417fc35c9ce4643f8d0fef3b9920bd7.result",
+		"/home/math/cas/results2/1313194549-127f1a3e5020b00447e78d3e85ca5422e605d044-AND-1347925898-22cceba1423a823f66c532602a276b0114beaadf.result",
+		"/home/math/cas/results2/1313194549-127f1a3e5020b00447e78d3e85ca5422e605d044-AND-1346110327-92e9ae5f49364346ea950425578a1cf687db0a62.result",
+		"/home/math/cas/results2/1313194549-127f1a3e5020b00447e78d3e85ca5422e605d044-AND-1340313544-7b6f6b697ffbad13c9de5e851efc39980e4e057e.result",
+		"/usr/local/lib/nicad4/config/javanormalizeifconditions",
+		"/usr/local/lib/nicad4/config/abstractconditions.cfg",
+		"/usr/local/lib/nicad4/config/filterdeclarationsreport.cfg",
+		"/usr/local/lib/nicad4/scripts/NiCadCross",
+		"/usr/local/lib/nicad4/QUESTIONS.txt",
+		"/usr/local/lib/nicad4/CHANGES-4.0.txt",
+		"/usr/local/lib/nicad4/BUGS.txt",
+		"/usr/local/lib/nicad4/scripts/Extract",
+		"/home/math/cas/stats.txt",
+		"/home/math/cas/extract/02097225-0e1d-4610-b02e-bf434af5cc4d/1470232375-50eeae3466bec7f772c852174850d8afc7514c81_blocks-crossclones-2016-08-08-07:38:35.log",
+		"/home/math/cas/extract/02097225-0e1d-4610-b02e-bf434af5cc4d/1470232375-50eeae3466bec7f772c852174850d8afc7514c81_blocks.xml",
+		"/home/math/cas/extract/02097225-0e1d-4610-b02e-bf434af5cc4d/1470176622-ea1d8f428649748650aa189d16fd3bd66a5da553_blocks-crossclones-2016-08-08-07:38:33.log",
+		"/usr/local/lib/nicad4/config/type3-2report.cfg",
+		"/usr/local/lib/nicad4/config/type3-2creport.cfg",
+		"/usr/local/lib/nicad4/config/blindrenamereport.cfg",
+		"/home/math/pairs.result",
+		"/home/math/cas/extract/f228500a-dbab-4b81-8f82-b5e0c872f4ea/1156471279-66b415a2066cac9f36ed58070777de388f63a3a4_blocks-blind-crossclones/1156471279-66b415a2066cac9f36ed58070777de388f63a3a4_blocks-blind-crossclones-0.30.xml",
+		"/home/math/cas/extract/38d697c2-ebfe-416c-b4c9-cffc6fedb556/1305077721-0e60b7d9888217be8499fe8b13c7b55e707f269c_blocks-blind-crossclones/1305077721-0e60b7d9888217be8499fe8b13c7b55e707f269c_blocks-blind-crossclones-0.30.xml",
+		"/home/math/cas/result/02097225-0e1d-4610-b02e-bf434af5cc4d-07ad7ecc-3861-422e-bbb9-9f9a973f6242-1388051476-69def5c544348aed0c928a2d4f8d9f764a568e80.result",
+		"/home/math/cas/result/02097225-0e1d-4610-b02e-bf434af5cc4d-1205131918-c296cd129b7e2b647cf1302042d9fbedb59fca32-AND-07ad7ecc-3861-422e-bbb9-9f9a973f6242-1388051476-69def5c544348aed0c928a2d4f8d9f764a568e80.result",
+		"/home/math/cas/extract/02097225-0e1d-4610-b02e-bf434af5cc4d/1205131918-c296cd129b7e2b647cf1302042d9fbedb59fca32_blocks-blind-crossclones/1205131918-c296cd129b7e2b647cf1302042d9fbedb59fca32_blocks-blind-crossclones-0.30.xml",
+		"/home/math/cas/extract/02097225-0e1d-4610-b02e-bf434af5cc4d/1205131918-c296cd129b7e2b647cf1302042d9fbedb59fca32_blocks-crossclones-2016-08-08-13:53:51.log",
+		"/home/math/cas/extract/02097225-0e1d-4610-b02e-bf434af5cc4d/1470176622-ea1d8f428649748650aa189d16fd3bd66a5da553_blocks-blind.xml",
+		"/usr/local/lib/nicad4/txl/java-extract-blocks.txl",
+		"/usr/local/lib/nicad4/txl/java-extract-blocks.x",
+		"/usr/local/lib/nicad4/nicad4cross",
+		"/usr/local/bin/nicad4cross",
+		"/home/math/cas/test/1374348579-b9b17b4c333f6a2da89eeabb48d1bdcecaabb82a_blocks-crossclones/1374348579-b9b17b4c333f6a2da89eeabb48d1bdcecaabb82a_blocks-crossclones-0.30-classes.xml",
+		"/home/math/cas/test/1374348579-b9b17b4c333f6a2da89eeabb48d1bdcecaabb82a_blocks-crossclones/1374348579-b9b17b4c333f6a2da89eeabb48d1bdcecaabb82a_blocks-crossclones-0.30.xml",
+		"/usr/local/lib/nicad4/00-README-NiCad4.txt",
+		"/usr/local/lib/nicad4/config/javanormalizeifconditionsreport.cfg",
+		"/home/math/www/bumper/usages/0001-YARN-1077.-Fixed-TestContainerLaunch-test-failure-on.patch",
+		"/home/math/Downloads/export.csv",
+		"/home/math/www/bumper/bianca-viz/index.html",
+		"/home/math/Downloads/export (1).csv",
+		"/home/math/www/bumper/usages/2000_java_stars/uniq-maven-repos.txt",
+		"/home/math/cas/test/1374348579-b9b17b4c333f6a2da89eeabb48d1bdcecaabb82a_block-clones-2016-08-05-12:29:23.log",
+		"/home/math/cas/test/1374348579-b9b17b4c333f6a2da89eeabb48d1bdcecaabb82a_java-clones-2016-08-05-12:28:58.log",
+		"/usr/local/lib/nicad4/config/type3-2c.cfg",
+		"/usr/local/lib/nicad4/config/type3-1.cfg",
+		"/home/math/cas/analyzer/datasets/0a3b8811-d9ad-407c-99d3-67210e988b79.csv",
+		"/home/math/www/bumper/bianca-viz/index",
+		"/home/math/Drive/writing/Papers/BUG_Taxo/extract/wmw.R",
+		"/home/math/www/bumper/bumper-bianca/bianca/ingester/git.py",
+		"/home/math/www/bumper/repos",
+		"/home/math/www/bumper/usages/usage-github.sh",
+		"/home/math/www/bumper/usages/pull-gihub.sh",
+		"/home/math/www/bumper/usages/2000_java_stars/repos.txt",
+		"/home/math/www/bumper/usages/2000_java_stars/maven.txt",
+		"/home/math/www/bumper/usages/repo-github.txt",
+		"/home/math/www/bumper/usages/usage.sh",
+		"/home/math/www/bumper/repos-rxjava",
+		"/home/math/www/bumper/RxJava/build.gradle",
+		"/home/math/www/bumper/RxJava/pom.xml",
+		"/home/math/www/bumper/maven-dependency-mapper/src/main/java/no/finntech/StoreGraphDependencyMojo.java",
+		"/home/math/www/bumper/maven-dependency-mapper/src/main/java/no/finntech/ReverseDependencyMojo.java",
+		"/home/math/www/bumper/usages/io.reactivex/rxjava/repos.txt",
+		"/home/math/www/bumper/usages/io.reactivex/rxjava/p1.html",
+		"/home/math/www/bumper/usages/5000_java_stars/gradle.txt",
+		"/home/math/www/bumper/usages/5000_java_stars/maven.txt",
+		"/home/math/www/bumper/usages/5000_java_stars/repos/astuetz/PagerSlidingTabStrip/library/build.gradle",
+		"/home/math/www/bumper/usages/5000_java_stars/repos/astuetz/PagerSlidingTabStrip/build.gradle",
+		"/home/math/www/bumper/usages/5000_java_stars/repos/bumptech/glide/build.gradle",
+		"/home/math/www/bumper/usages/5000_java_stars/repos/astuetz/build.gradle",
+		"/home/math/www/bumper/usages/5000_java_stars/html/p1.html",
+		"/home/math/www/bumper/usages/5000_java_stars/repos.txt",
+		"/media/math/c23701bf-d947-4ede-a8f4-910087129ff9/repos",
+		"/home/math/!",
+		"/home/math/www/bumper/bumper-bianca/bianca/ingester/ingester.py",
+		"/home/math/www/bumper/bumper-bianca/bianca/app.py",
+		"/home/math/www/bumper/bumper-bianca/bianca/analyzer/analyzer.py",
+		"/home/math/www/bumper/bumper-bianca/bianca/analyzer/git_commit_linker.py",
+		"/home/math/www/bumper/NiCad-4.0/00-README-NiCad4.txt",
+		"/home/math/www/bumper/NiCad-4.0/txl/java.txl",
+		"/home/math/www/bumper/NiCad-4.0/txl/java.grm",
+		"/home/math/.zshrc",
+		"/home/math/www/bumper/txl10.6d.linux64/00README.txt",
+		"/home/math/www/bumper/bumper-bianca/bianca/ingester/localrepository.py",
+		"/usr/local/lib/nicad4/nicad4",
+		"/usr/local/lib/python3.4/dist-packages/monthdelta.py",
+		"/home/math/www/bumper/bumper-bianca/bianca/config.json",
+		"/home/math/www/bumper/CAS_Web/config/adapters.js",
+		"/home/math/www/bumper/CAS_Web/README.md",
+		"/home/math/www/bumper/bumper-bianca/bianca/analyzer/notifier.py",
+		"/home/math/www/bumper/bumper-bianca/bianca/config.py",
+		"/home/math/www/bumper/bumper-bianca/bianca/orm/repository.py",
+		"/home/math/www/bumper/bumper-bianca/dev_requirements.txt",
+		"/home/math/www/bumper/bumper-bianca/requirements.txt",
+		"/home/math/www/bumper/bumper-bianca/setup.py",
+		"/home/math/www/bumper/bumper-bianca/README.md",
+		"/home/math/www/bumper/bumper-bianca/.coveragerc",
+		"/home/math/www/bumper/bumper-bianca/.travis.yml",
+		"/home/math/www/bumper/bumper-bianca/LICENSE",
+		"/home/math/www/bumper/bumper-bianca/CONTRIBUTORS.md",
+		"/home/math/www/bumper/bianca/setup.py",
+		"/home/math/www/twapp/tw-mobile/config.xml",
+		"/home/math/www/twapp/tw-mobile/app/app.ts",
+		"/home/math/www/twapp/tw-mobile/app/pages/dashboard/dashboard.ts",
+		"/home/math/www/twapp/tw-mobile/app/pages/measure/measure.ts",
+		"/home/math/www/twapp/tw-mobile/app/theme/app.variables.scss",
+		"/home/math/www/twapp/tw-common/dist/app/models/watch.model.js",
+		"/home/math/www/twapp/tw-mobile/app/pages/watch/watch.ts",
+		"/home/math/www/twapp/tw-mobile/app/pages/login/login.html",
+		"/home/math/www/twapp/tw-common/dist/app/directives/watch/watch.component.css",
+		"/home/math/www/twapp/tw-common/src/app/directives/signup/signup.component.ts",
+		"/home/math/www/twapp/tw-common/src/app/models/blog-post.model.ts",
+		"/home/math/www/twapp/tw-mobile/app/pages/footer/footer.ts"
+	],
+	"find":
+	{
+		"height": 28.0
+	},
+	"find_in_files":
+	{
+		"height": 121.0,
+		"where_history":
+		[
+			"/home/math/www/bumper/maven-dependency-mapper"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"/",
+			"[]",
+			"(#",
+			"\\ref{",
+			"title",
+			"\"",
+			"Applying custom normalization java-normalize",
+			"ERROR",
+			"overflo",
+			"548ce13435a00bb447fbffdbca8c5ce3be752ee4",
+			"time",
+			"chrt",
+			"line",
+			" ",
+			"\";\"",
+			"\"",
+			"\"''",
+			"notify",
+			"topom",
+			"github",
+			"h1",
+			"Populating class realm maven.api",
+			"getCommitStatsProperties",
+			"cmd",
+			"Month",
+			"gac",
+			"redis-lua",
+			"pyt",
+			"loa",
+			"req",
+			"    \n  ",
+			"\",",
+			"    \"name\": \"",
+			"effort",
+			"(\"color+\": \"[a-z 0-9]+\")",
+			"},",
+			"{",
+			"30px",
+			"alert",
+			"shake",
+			"share",
+			"element",
+			"replaceValue",
+			"el",
+			"[description]",
+			"currentLetter",
+			" [description]",
+			"i",
+			"this.floydString",
+			"=",
+			"('../AvenirLTStd",
+			"../",
+			"AvenirLTStd",
+			"('../AvenirLTStd",
+			"../",
+			"Heavy",
+			"Book",
+			"AvenirLTStd-Book",
+			"-Book",
+			"email",
+			"form",
+			"class=\"form-control\"",
+			",",
+			" == ",
+			"$",
+			"options",
+			"option",
+			"log_me",
+			"SetEnv",
+			"event",
+			"= ",
+			"=",
+			"watches",
+			"All",
+			"this.user",
+			"  <p *ngIf=\"watch.status === WatchStatus.NeverMeasured\">\n          {{ 'never-measured' | translate:{value: param} }}\n        </p>\n\n        <p \n        *ngIf=\"watch.status !== WatchStatus.NeverMeasured \n        && watch.next !== WatchAction.Waiting\">\n          {{ watch.curentMeasure().accuracy }} {{ 'spd' | translate:{value: param} }}\n        </p>\n\n        <p \n        *ngIf=\"watch.status !== WatchStatus.NeverMeasured \n        && watch.next === WatchAction.Waiting\">\n          {{ 'waiting' | translate:{value: param} }}\n          {{ watch.curentMeasure().accuracy }} \n          {{ 'hours' | translate:{value: param} }}\n        </p>",
+			"time:number",
+			"time: number",
+			"date",
+			"var",
+			"p",
+			".remove",
+			"a",
+			"req",
+			"event",
+			"builder",
+			"private ",
+			"dashboard",
+			"20px",
+			"40px",
+			"40",
+			"80px",
+			"20px",
+			"40px",
+			"80px",
+			"TweenMax",
+			"$bounce",
+			"=",
+			"tw-common",
+			"private",
+			"labrador",
+			"foxhound",
+			"cocker",
+			"ion-item",
+			"-webkit-",
+			"0%",
+			"src",
+			"-rc.1",
+			"[description]",
+			"<button",
+			"===",
+			"brands",
+			"ControlGroup",
+			"year",
+			"caliber",
+			"model",
+			"brand",
+			"WatchComponent",
+			"FIRSTNAME",
+			"<option value=\"[A-z,\\- .'()\"]+>([A-z,\\- .'()\"]+)</option>",
+			"'",
+			",",
+			"<option value=\"[A-z,\\- .'()\"]+>([A-z,\\- .'()\"]+)</option>",
+			"<option value=\"Zimbabwe\">Zimbabwe</option>",
+			"<option value=\"[A-z,\\- .'()\"]+>([A-z,\\- .'()\"]+)</option>",
+			"<option value=\"[A-z '()\"]+>([A-z '()\"]+)</option>",
+			"password",
+			","
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"",
+			"* ",
+			"",
+			"\"$1\",",
+			"'$1',",
+			"$1,",
+			"$1",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 28.0
+	},
+	"input":
+	{
+		"height": 32.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/User/Md2PDF.sublime-build",
+	"project": "README.sublime-project",
+	"replace":
+	{
+		"height": 52.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"reposi",
+				"bianca/orm/repository.py"
+			],
+			[
+				"watc",
+				"tw-mobile/app/pages/watch/watch.html"
+			],
+			[
+				"dash",
+				"tw-mobile/app/pages/dashboard/dashboard.ts"
+			],
+			[
+				"en.",
+				"tw-common/src/app/assets/i18n/en.json"
+			],
+			[
+				"twap",
+				"tw-common/src/app/services/twapi.service.ts"
+			],
+			[
+				"watch.mo",
+				"tw-common/src/app/models/watch.model.ts"
+			],
+			[
+				"watchmo",
+				"tw-common/dist/app/models/watch.model.js"
+			],
+			[
+				"dashb",
+				"tw-mobile/app/pages/dashboard/dashboard.html"
+			],
+			[
+				"watchcomponent",
+				"tw-common/src/app/directives/watch/watch.component.ts"
+			],
+			[
+				"logincomponent",
+				"tw-common/src/app/directives/login/login.component.ts"
+			],
+			[
+				"footer",
+				"tw-mobile/app/pages/footer/footer.html"
+			],
+			[
+				"blog",
+				"tw-common/src/app/models/blog-post.model.ts"
+			],
+			[
+				"sign",
+				"tw-mobile/app/pages/signup/signup.html"
+			],
+			[
+				"signupcomponent",
+				"tw-common/src/app/directives/signup/signup.component.ts"
+			],
+			[
+				"floyd",
+				"chap2/src/app/floyd/floyd.component.ts"
+			],
+			[
+				"login.",
+				"tw-mobile/app/pages/login/login.html"
+			],
+			[
+				"time",
+				"tw-mobile/app/pages/time/time.scss"
+			],
+			[
+				"heade",
+				"tw-mobile/app/pages/header/header.scss"
+			],
+			[
+				"login",
+				"tw-common/src/app/directives/login/login.component.ts"
+			],
+			[
+				"header",
+				"tw-mobile/app/pages/header/header.html"
+			],
+			[
+				"blogpost",
+				"tw-common/src/app/models/blog-post.model.ts"
+			],
+			[
+				"modelfactory",
+				"tw-common/src/app/models/model.factory.ts"
+			],
+			[
+				"twapiservice",
+				"tw-common/src/app/services/twapi.service.ts"
+			],
+			[
+				"en.jso",
+				"tw-common/dist/app/assets/i18n/en.json"
+			],
+			[
+				"watch",
+				"tw-mobile/app/pages/watch/watch.ts"
+			],
+			[
+				"moonphasescomponent",
+				"tw-common/src/app/directives/clock/moon-phases/moon-phases.component.ts"
+			],
+			[
+				"clockcomponent",
+				"tw-common/src/app/directives/clock/clock.component.ts"
+			],
+			[
+				"login.compo",
+				"tw-common/src/app/directives/login/login.component.ts"
+			],
+			[
+				"signup.com",
+				"tw-common/dist/app/directives/signup/signup.component.html"
+			],
+			[
+				"signup",
+				"tw-mobile/app/pages/signup/signup.html"
+			],
+			[
+				"login.com",
+				"tw-common/src/app/directives/login/login.component.ts"
+			],
+			[
+				"signup.co",
+				"tw-common/src/app/directives/signup/signup.component.ts"
+			],
+			[
+				"home",
+				"tw/application/controllers/Home.php"
+			],
+			[
+				"my_lo",
+				"tw/application/core/MY_Log.php"
+			],
+			[
+				"/controllers/api/users_api_test",
+				"tw/application/tests/controllers/api/Users_api_test.php"
+			],
+			[
+				"application/models/measure.php",
+				"tw/application/models/Measure.php"
+			],
+			[
+				"tw/application/controllers/measures.php",
+				"tw/application/controllers/Measures.php"
+			],
+			[
+				"twapi",
+				"tw-common/src/app/services/twapi.service.ts"
+			],
+			[
+				"measu",
+				"tw-mobile/app/pages/measure/measure.html"
+			],
+			[
+				"footer.h",
+				"tw-mobile/app/pages/footer/footer.html"
+			],
+			[
+				"measure",
+				"tw-mobile/app/pages/measure/measure.scss"
+			],
+			[
+				"meas",
+				"tw-mobile/app/pages/measure/measure.ts"
+			],
+			[
+				"input",
+				"tw/assets/js/input.time.logic.js"
+			],
+			[
+				"api/measu",
+				"tw/application/controllers/api/Measures_api.php"
+			],
+			[
+				"das",
+				"tw-mobile/app/pages/dashboard/dashboard.html"
+			],
+			[
+				"measure.t",
+				"tw-common/src/app/models/measure.model.ts"
+			],
+			[
+				"inpu",
+				"tw/assets/js/input.time.logic.js"
+			],
+			[
+				"measure.sc",
+				"tw-ionic/app/pages/measure/measure.scss"
+			],
+			[
+				"en.j",
+				"tw-common/dist/app/assets/i18n/en.json"
+			],
+			[
+				"measure.mod",
+				"tw-common/src/app/models/measure.model.ts"
+			],
+			[
+				"aut",
+				"tw/application/libraries/Auto_email.php"
+			],
+			[
+				"watch_ap",
+				"tw/application/controllers/api/Watches_api.php"
+			],
+			[
+				"user",
+				"tw/application/controllers/api/Users_api.php"
+			],
+			[
+				"users",
+				"tw/application/controllers/api/Users_api.php"
+			],
+			[
+				"main",
+				"tw/assets/css/main.css"
+			],
+			[
+				"auto",
+				"tw/application/libraries/Auto_email.php"
+			],
+			[
+				"watch_api",
+				"tw/application/controllers/api/Watches_api.php"
+			],
+			[
+				"user_api",
+				"tw/application/controllers/api/Users_api.php"
+			],
+			[
+				"rest",
+				"tw/application/libraries/REST_Controller.php"
+			],
+			[
+				"rest_con",
+				"tw/application/libraries/REST_Controller.php"
+			],
+			[
+				"api/user",
+				"tw/application/controllers/api/Users_api.php"
+			],
+			[
+				"browser.d.t",
+				"api-js-client/typings/browser.d.ts"
+			],
+			[
+				"pac",
+				"bumper-website/package.json"
+			],
+			[
+				"servi",
+				"bumper-website/app/report.service.ts"
+			],
+			[
+				"repor",
+				"bumper-website/app/report.ts"
+			],
+			[
+				"servic",
+				"bumper-website/app/report.service.ts"
+			],
+			[
+				"pack",
+				"bumper-website/package.json"
+			],
+			[
+				"report",
+				"bumper-website/app/report.ts"
+			],
+			[
+				"service",
+				"bumper-website/app/report.service.ts"
+			],
+			[
+				"que",
+				"bumper-website/app/queryresponse.ts"
+			],
+			[
+				"fix",
+				"bumper-website/app/fix.ts"
+			],
+			[
+				"get-a",
+				"tw/application/views/measure/get-accuracy.php"
+			],
+			[
+				"repo",
+				"app/html/report.html"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/www/twapp/tw.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 294.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
