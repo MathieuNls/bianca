@@ -1,7 +1,10 @@
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{IEEEtran}
-
+\usepackage{listings}
+\usepackage[linesnumbered]{algorithm2e}
 \usepackage[utf8]{inputenc}
 \usepackage{multirow}
+
+
 $if(linestretch)$
 \usepackage{setspace}
 \setstretch{$linestretch$}
@@ -154,7 +157,7 @@ $if(title)$
 \title{$title$$if(subtitle)$\\\vspace{0.5em}{\large $subtitle$}$endif$}
 $endif$
 
-\author{ $for(author)$ \IEEEauthorblockN{$author.name$} \IEEEauthorblockA{ $author.affiliation$ \\ $author.location$ \\ \texttt{$author.email$} \\ \vspace{0.3cm}} $sep$ \and $endfor$ }
+\author{ $for(author)$ \IEEEauthorblockN{$author.name$} \IEEEauthorblockA{ $author.affiliation$ \\ $author.location$ \\ {\footnotesize\texttt{$author.email$}} \\ \vspace{0.3cm}} $sep$ \and $endfor$ }
 
 % \author{$for(author)$$if(author.name)$ $author.name$$if(author.affiliation)$ ($author.affiliation$)$endif$\and$else$ $author$ $endif$$endfor$}
 
