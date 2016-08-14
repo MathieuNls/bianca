@@ -5,7 +5,7 @@
 Edit the bianca.md file using whichever text editor you want (Vim, Sublime, Word). 
 You can even edit it online, directly on github: https://github.com/MathieuNls/bianca/edit/master/bianca.md
 
-The only thing that matter is to save it back in text format.
+The only thing that matters is to save it in text format.
 
 ## Build the pdf
 
