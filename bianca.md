@@ -1,6 +1,6 @@
 ---
 title: "BIANCA: Prevent Bug Insertion at Commit-Time Using Dependencies Analysis and Clone Detection"
-bibliography: library.bib
+bibliography: config/library.bib
 abstract: abstract goes here
 author:
 - name: Mathieu Nayrolles,  Wahab Hamou-Lhadj
@@ -11,7 +11,7 @@ author:
   affiliation: DAS Lab, CSE Dept, Concordia University
   location: Montréal, QC, Canada
   email: eshihab@cse.concordia.ca
-csl: ieee.csl
+csl: config/ieee.csl
 classoption: conference
 keyword: 
 - Software Analytics
@@ -462,7 +462,7 @@ Finally, we can evaluate the efficiency of our clustering by analyzing BIANCA's 
 First of all, the computation time per commit without clustering is 182% higher. 
 Indeed, it goes from 32.2 seconds, in average, to 58.6 seconds (with an i5@1.8Mhz, 19.6 GiB of RAM and SSD disks on Debian 8).
 Also, without the clustering, the recall metric reaches 42.4%, which is higher than our current 37.15%. 
-However, when compared by projects with a Wilcox test, the difference is not statistically significant (i.e. p-value > 0.05).
+However, when compared by projects with a Mann-Whitney test, the difference is not statistically significant (i.e. p-value > 0.05).
 On the precision side, the metric drops significantly to 71.6% (i.e. p-value < 0.05).
 
 
