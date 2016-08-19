@@ -29,27 +29,13 @@ Studies have shown that the cost of software maintenance can reach up to 70\% of
 Much of this is attributable to several factors including the increase in software complexity, the lack of traceability between the various artifacts of the software development process, the lack of proper documentation,  and the unavailability of the original developers of the systems.
 
 Research in software maintenance has evolved over the years to include areas like mining bug repositories, bug analysis, prevention, and reproduction. The ultimate goal is to develop techniques and tools to help software developers detect, correct, and prevent bugs in an effective and efficient manner. 
-Despite the recent advances in the field, the literature shows that many existing software maintenance tools have yet to be adopted by industry [@Lewis2013; @Foss2015; @Layman2007; @Ayewah2007; @Ayewah2008; @Johnson2013; @Norman2013; @Hovemeyer2004; @Lopez2011]. 
-We believe that this is caused by the following factors. (a) Integration with the developer's workflow: Most existing maintenance tools ([@Kim2006a; @Ayewah2008b;  @Findbugs2015; @Palma; @Nayrolles2013d; @Nayrolles2013a; @Nayrolles2015a] are some noticeable examples) are not integrated well with the workflow of software developers (i.e., coding, testing, debugging, committing). (b) Corrective actions: The outcome of these tools does not always lead to corrective actions that the developers can implement. 
-Most of these tools return several results that are often difficult to interpret by developers. Take, for example, FindBugs [@Hovemeyer2004], a popular bug detection tool. 
-This tool detects hundreds of bug signatures and reports them using an abbreviated code such as `CO_COMPARETO_INCORRECT_FLOATING`. 
-Using this code, developers can browse the FindBug's dictionary and find the corresponding definition _"This method compares double or float values using a pattern like this: `val1 > val2 ? 1 : val1 < val2 ? -1 : 0`"_. 
-While the detection of this bug pattern is accurate, the tool does not propose any corrective actions to the developers that can help them fix the problem and developers decide simply to ignore them [@Arai2014; @Kim2007b; @Kim2007c; @Ayewah2010; @Shen2011]. 
-(c) Leverage of historical data: These tools do not leverage cross-project knowledge.  
-For defect prevention, for example, the state of the art approaches consists of adapting statistical models built for one project to another project [@Lo2013; @Nam2013].  
-In addition, Lewis _et al._ [@Lewis2013] and Johnson _et al._ [@Johnson2013] argued that, approaches based solely on statistical models are perceived by developers as black box solutions. 
-Developers are less likely to trust the output of these tools.
 
-In this paper, we propose an approach named BIANCA (Bug Insertion ANticipation by Clone Analysis at commit time) that assesses these challenges by using dependency analysis and clone detection to prevent bug insertion at commit-time. 
-More specifically, BIANCA lies on the idea that complex software systems are not monolithic; they have dependencies.
-Software systems sharing the same dependencies are likely to perform related tasks and, therefore, share misunderstandings leading to defect introduction.
-For example, Apache BatchEE [@TheApacheSoftwareFoundation2015] and GraphWalker [@Graphwalker2016] both depend on JUNG (Java Universal Network/Graph Framework) [@JoshuaOMadadhain]. 
-BatchEE provides an implementation of the jsr-352 (Batch Applications for the Java Platform) specification [@ChrisVignola2014] while GraphWalker is an open source model-based testing tool for test automation.
-These two systems are designed for different purposes. BatchEE is used  to do batch processing in Java, whereas GraphWalker is used to design unit tests using a graph representation of code. Nevertheless, Apache BatchEE and GraphWalker both rely on JUNG. The developers of these projects made similar mistakes while building upon JUNG. The issue reports Apache BatchEE #69 and  GraphWalker #44 indicate that the developers of these projects made similar mistakes when using the graph visualization of JUNG.
+One particular line of research focuses on the problem of preventing the introduction of bugs by detecting risky commits. The state of the art approaches consists of adapting statistical models built based on heuristics. These techniques for one project to another project [@Lo2013; @Nam2013]. In addition, as noted by Lewis _et al._ [@Lewis2013] and Johnson _et al._ [@Johnson2013], techniques based solely on statistical models are perceived by developers as black box solutions. Developers are less likely to trust the output of these tools.
 
-BIANCA integrates itself seamlessly with developers' workflow by acting at commit-time, propose concrete actions to implement to avoid bug insertion and leverage cross-project historical data without statistical models.
+In this paper, we propose a novel bug prevention approach at commit-time, called BIANCA (Bug Insertion ANticipation by Clone Analysis at commit time). BIANCA . To achieve this, that assesses these challenges by using dependency analysis and clone detection to prevent bug insertion at commit-time. More specifically, BIANCA lies on the idea that complex software systems are not monolithic; they have dependencies. Software systems sharing the same dependencies are likely to perform related tasks and, therefore, share misunderstandings leading to defect introduction. For example, Apache BatchEE [@TheApacheSoftwareFoundation2015] and GraphWalker [@Graphwalker2016] both depend on JUNG (Java Universal Network/Graph Framework) [@JoshuaOMadadhain]. 
+BatchEE provides an implementation of the jsr-352 (Batch Applications for the Java Platform) specification [@ChrisVignola2014] while GraphWalker is an open source model-based testing tool for test automation. These two systems are designed for different purposes. BatchEE is used  to do batch processing in Java, whereas GraphWalker is used to design unit tests using a graph representation of code. Nevertheless, Apache BatchEE and GraphWalker both rely on JUNG. The developers of these projects made similar mistakes while building upon JUNG. The issue reports Apache BatchEE #69 and  GraphWalker #44 indicate that the developers of these projects made similar mistakes when using the graph visualization of JUNG.
 
-The remaining of this paper is organized as follows. 
+The remaining parts of this paper are organized as follows. 
 In section \ref{sec:relwork}, we present works related to ours.
 Sections \ref{sec:bianca} and  \ref{sec:exp} present the BIANCA approach and its validation, respectively.
 Then, Sections \ref{sec:threats}, \ref{sec:conclusion} and, \ref{sec:discuss} assess the threats to validity, present the key lessons learned and, a conclusion accompanied with future work, respectively.
@@ -109,150 +95,36 @@ Finally, Nagappan *et al.* [@Nagappan2005; @Nagappan2006] and Zimmerman [@Zimmer
 
 While academia has published hundreds of bug prediction papers over the last decade, the developed tools and approaches fail to change developer behavior while deployed in industrial environments [@Lewis2013]. This is mainly due to the lack of actionable message, i.e. messages that provide concrete steps to resolve the problem at hand.
 
-## Clone Detection {#sec:rel-clones}
-
-BIANCA relies on code clone detection to perform bug prevention at commit-time. 
-Consequently, we reviewed the literature of the field.
-This section describes major works in clone detection.
-
-Code clones appear when developers reuse code with little to no modification to the original code. Studies have shown that clones can account for about 7% to 50% of the code in a given software system [@Baker; @StephaneDucasse]. 
-Developers often reuse code (and create clones) in their software on purpose [@Kim2005]. Nevertheless, clones are considered a bad practice in software development since they can introduce new bugs in the code [@Kapser2006; @Juergens2009; @Li2006]. 
-If a bug is discovered in one segment of the code that has been copied and pasted several times, then the developers will have to remember the places where this segment has been reused to fix the bug in each place.
-
-In the last two decades, there have been many studies and tools that aim at detecting clones.
-They can be grouped into three categories.
-The first category includes techniques that treat the source code as text and use transformation and normalization methods to compare various code fragments [@Johnson1994; @Johnson1993; @Cordy2011; @Roy2008].
-The second category includes methods that use lexical analysis, where the source code is sliced into sequences of tokens, similar to the way a compiler operates [@Baker; @Bakera; @Baker2002; @Kamiya2002; @Li2006].
-The tokens are used to compare code fragments.
-Finally, syntactic analysis has also been performed where the source code is converted into trees, more particularly abstract syntax tree (AST), and then the clone detection is performed using tree matching algorithms [@Baxter1998; @Komondoor2000; @Tairas2006; @Falke2008].
-
-Text-based techniques use the code — often raw (e.g. with comments) — and compare sequences of code (blocks) to each other to identify potential clones. Johnson was perhaps the first one to use fingerprints to detect clones [@Johnson1993; @Johnson1994]. 
-Blocks of code are hashed, producing fingerprints that can be compared. 
-If two blocks share the same fingerprint, they are considered as clones. Manber et al. [@Manber1994] and Ducasse et al. [@Ducasse1999] refined the fingerprint technique by using leading keywords and dot-plots.
-
-Tree-matching and metric-based are two sub-categories of syntactic analysis for clone detection. Syntactic analysis consists of building abstract syntax trees (AST) and analyze them with a set of dedicated metrics or searching for identical sub-trees. 
-Many approaches using AST have been published using sub-tree comparison including the work of Baxter et al. [@Baxter1998], Wahlert et al. [@Wahler], or more recently, the work of Jian et al. with Deckard [@Jiang2007]. 
-An AST-based approach compares metrics computed on the AST, rather than the code itself, to identify clones [@Patenaude1999; @Balazinska].
-
-Another approach to detect clones is to use static analysis and to leverage the semantics of the program to improve the detection. 
-These techniques rely on program dependency graphs where nodes are statements and edges are dependencies. Then, the problem of finding clones is reduced to the problem of finding identical sub-groups in the program dependency graph. Examples of recent techniques that fall into this category are the ones presented by Krinke et al.[@Krinke2001] and Gabel et al. [@Gabel2008].
-
-Many clone detection tools have been created using a lexical approach for clone detection. 
-Here, the code is transformed into a series of tokens. 
-If sub-series repeat themselves, it means that a potential clone is in the code. 
-Some popular tools that use this technique include, but not limited to, Dup [@Baker], CCFinder [@Kamiya2002], and CP-Miner [@Li2006].
-
-Furthermore, a large number of taxonomies have been published in an attempt to classify clones and ease the research on clone detection [@Mayrand1996; @Balazinska1999; @Koschke2006; @Bellon2007; @Kontogiannis; @Kapser].
-Despite the particularities of each proposed taxonomy, researchers agree on the following classification. 
-Type 1 clones are copy-pasted blocks of code that only differ from each other in terms of non-code artifacts such as indentation, whitespaces, comments and so on. 
-Type 2 clones are blocks of code that are syntactically identical except literals, identifiers, and types that can be modified. 
-Also, Type 2 clones share the particularities of Type 1 about indentation, whitespaces, and comments. Type 3 clones are similar to Type 2 clones in terms of modification of literals, identifiers, types, indentation, whitespaces, and comments but also contain added or deleted code statements. 
-Finally, Type 4 are code blocks that perform the same tasks but using a completely different implementation.
-
-BIANCA is different from the presented approach preventing the insertion of defects into the source code as it leverages cross-project historical data and is able to detect risky commit by using clone detection and dependencies analyses.
 
 # The BIANCA Approach {#sec:bianca}
 
-Figure \ref{fig:bianca} shows an overview of BIANCA. 
-BIANCA (Bug Insertion ANticipation by Clone Analysis at commit time) has two main components.
-The first component manages events happening on the project tracking system while the second component is responsible for analyzing developers' commits before they reach the central repository.
+Figure \ref{fig:bianca} shows an overview of the BIANCA approach, which consists of two main phases. In the first phase, BIANCA manages events happening on project tracking systems, while in the second phase, BIANCA analyses the developer's commits before they reach the central repository to detect potential risky commits (commits that may introduce bugs). 
 
-\input{tex/approach}
+The project tracking component of BIANCA listens to bug closing events of major open-source projects (currently, BIANCA supports 42 large projects). These projects share many dependencies such as the use of external tools and libraries. We cluster these projects to identify groups of highly-coupled projects. BIANCA  identifies risky commits within each group so as to increase the chances of finding risky commits caused by project dependencies. For each project group, we extract code blocks from commits that introduced defects and those that were used to provide fixes. For simplicity, in the rest of this paper, we refer to commits that are used to fix defects as _fix-commits_. We use the term _defect-commit_ to mean a commit that introduce a defect. The extracted code blocks are saved in a database that is used in the second phase to identify risky commits before they reach the central repository. For each match between a risky commit and a defect-commit, we pull our from the database the corresponding fix-commit and present it to the developer as a potential way to improve the commit content.  
 
+## Clustering project repositories {#sec:clustering}
 
-
-The project tracking component of BIANCA *listens* to bug closing events of 42 major open-source projects.
-The blocks of code composing the fix are extracted and we perform the scm $blame$ operation on the fix.
-The blame operation allows us to retrieve the parent commit of the fix.
-The parent commit is the last commit that modified the same code location as the fix (i.e. the defect introducing commit).
-We extract the blocks of code composing the defect introducing commits.
-Blocks of code from the fix and the defect introducing commit are normalized, formalized, and stored in a cross-project block database.
-
-In parallel, BIANCA analyzes developers' new commits by means of pre-commit hook. 
-A pre-commit hook is a script that is triggered before the commit is sent to the central repository.
-The blocks of code modified by new commits are extracted, normalized and, formalized.
-Then, the blocks of the new commit can be compared to the blocks known to  introduce a defect present in our database according to an $\alpha$ threshold and a projects cluster.
-Each project is clustered according to its dependencies and the $\alpha$ threshold controls the minimum similarity percentage required for a block to *match* another block.
-If the new commit matches a commit known to have introduced a defect, then BIANCA marks it as _risky_.
-For each match between the _risky_ commit and defect introducing commits, we pull from our database the commits that fixed them and present them to the developer.
-
-The rest of this section is organized as follows: Section \ref{sec:clustering} presents the clustering of projects according to their dependencies, Section \ref{sec:offline} the analysis of fixing and defect introducing commits pulled from the project management system while Section \ref{sec:online} describes how we detect if an incoming commit is _risky_.
-
-
-## Clustering {#sec:clustering}
-
-
-BIANCA first extracts dependencies of each repository (Section \ref{sec:dep}) and clusters repositories according to their dependencies (Section \ref{sec:clust}).
-The idea of clustering project based on their dependencies is that project sharing dependencies are likely to propose related feature, and, unfortunately, related misunderstandings about their dependencies.
-Then, repositories are only compared with repositories in their cluster.
-In our experimentations (Section \ref{sec:exp}), we demonstrate that such a clustering performs significantly better than no clustering.
-
-
-
-### Building a project dependency graph {#sec:dep}
-	
-In this step, the dependencies of repositories are analysed and saved into a single no-SQL graph database as shown by Figure \ref{fig:bianca-clustering}. 
-Graph databases use graphs structures as a way to store and query information. 
-In our case, each project is a node and is connected to its dependencies. 
-Dependencies can be automatically retrieved if projects use a dependency manager such as Maven. 
+We cluster project repositories according to their dependencies on external tools and libraries. The rationale is that projects that share dependencies are most likely to contain defects caused by misuse of these dependencies. In this step, the project dependencies are analysed and saved into a single no-SQL graph database as shown in Figure \ref{fig:bianca-clustering}. Graph databases use graph structures as a way to store and query information.  In our case,  a node corresponds to a project that is connected to its dependencies. Project dependencies can be  automatically retrieved if projects use a dependency manager such as Maven [REF]. 
 
 Figure \ref{fig:network-sample} shows a simplified view of a dependency graph for a project named \texttt{com.badlogicgames.gdx}.
-As shown, \texttt{badlogicgames.gdx} depends on projects owned by the same organization (i.e., badlogicgames) and other organizations such as Google, Apple, and Github.
+As we can see, \texttt{badlogicgames.gdx} depends on projects owned by the same organization (i.e., badlogicgames) and other organizations such as Google, Apple, and Github.
 
 ![Simplified Dependency Graph for \texttt{com.badlogicgames.gdx} (Zoomed from south of Figure \ref{fig:dep-graph})\label{fig:network-sample}](media/network-sample.png)
   
-### Clustering Algorithm {#sec:clust} 
-
-The Girvan–Newman algorithm [@Girvan2002; @Newman2004] detects communities by progressively removing edges from the original network. 
-The connected components of the remaining network are the communities. 
-Instead of trying to construct a measure that tells which edges are the most central to communities, the Girvan–Newman algorithm focuses on edges that are most likely "between" communities.
-This algorithm is highly effective at discovering community structure in both computer-generated and real-world network data.
-
-The Girvan–Newman algorithm fits our problem as we are interested in discovering the _communities_ of repositories that depend on a similar set of dependencies.
+Once the project dependency graph is extracted, we use a clustering algorithm to partition the graph. For this purpose, we choose the Girvan–Newman algorithm [@Girvan2002; @Newman2004], used to detect communities by progressively removing edges from the original network. The connected components of the remaining network form distinct communities. Instead of trying to construct a measure that identifies the edges are the most central to communities, the Girvan–Newman algorithm focuses on edges that are most likely "between" communities. This algorithm is very effective at discovering community structure in both computer-generated and real-world network data. Other clustering algorithms can also be used. 
 
 
+## Building a database of code blocks of defect-commits and fix-commits {#sec:offline}
 
+BIANCA listens to bug (issue) closing events happening on the project tracking system. Every time an issue is closed, BIANCA retrieves the commit that was used to fix the issue as well as the one that introduced the defect. Retrieving fix-commits is known to be a challenging task [@Wu2011]. This is because the link between the project tracking system and the code version control system is not always explicit. In an ideal situation, developers would add a reference to the issue they work on inside the description of the commit. But this good practice is not always followed. To make the link between fix-commits and their related issues, we turn to a modified version of the back-end of commit-guru [@Rosen2015a]. Commit-guru is a tool, developed by .... to... WAHAB: PLEASE COMPLETE THIS¸ 
 
-In summary, this step receives the files and lines, modified by the latest changes made by the developer and produces an up to date block representation of the system at hand.
-
-
-## Indexing Fix and Defects Introducing Commits {#sec:offline}
-
-In this section, we present how we link fixing commit to their respective issues (Section \ref{sec:linking}) and how we extract blocks from fixing commit and bug introducing commits (Section \ref{sec:block-extract}).
-
-### Linking Issues and Fixes {#sec:linking}
-
-BIANCA *listens* to bug closing events happening on the project tracking system.
-Every time a bug (or issue) is closed on the project tracking system, BIANCA retrieves the fixing commit and the defect introducing commit.
-Retrieving the commit fixing an issue is known to be a challenging task [@Wu2011]. 
-Indeed, the *link* between the project tracking system and the code version system is not automatic.
-Good development practice advise developers to add a reference to the issue they are working on inside their commit description (i.e. Fixing issue \#34, for example).
-To make the *link* between fixing commits and their related issue, we used a modified version of the back-end of CommitGuru [@Rosen2015a].
-Commit guru's back-end has three major components: ingestion, analysis, and prediction.
-We reuse the ingestion and part of the analysis components for BIANCA.
-The ingestion component is responsible for ingesting (i.e., downloading) a given repository.
-Once the repository is entirely downloaded on a local server, each commit of history is analysed.
-Commits are classified using the list of keywords proposed by Hindle *et al.* [@Hindle2008] and reported in Table \ref{tab:labels}.
-After this has been completed, CommitGuru performs the SCM blame/annotate function on all modified lines of code for their corresponding files on the fixing commit's parent.
-This returns the commits that previously modified them. 
-These commits have introduced the bugs corrected by the fixing commit and mark them as such. 
-Note that we could use a simpler and more established tool such as Relink [@Wu2011] to link the commits to their issues and re-implement the classification by Hindle *et al.* [@Hindle2008] on top of it. 
-However, CommitGuru has the advantage of being open source. 
-We were able to modify it to fit our needs and reach satisfactory performance.
+Commit-guru's back-end has three major components: ingestion, analysis, and prediction. We reuse the ingestion part of the analysis components for BIANCA. The ingestion component is responsible for ingesting (i.e., downloading) a given repository.
+Once the repository is entirely downloaded on a local server, each commit history is analysed. WAHAB: IS THE CLASSIFICATION BY HINDEL IMPORTANT HERE Commits are classified using the list of keywords proposed by Hindle *et al.* [@Hindle2008] (see Table \ref{tab:labels}). Commit-guru performs the SCM blame/annotate function on all the modified lines of code for their corresponding files on the fix-commit's parents. This returns the commits that previously modified these lines of code. 
+These  are the ones that have introduced the bugs (i.e., the defect-commits). Note that we could use a simpler and more established tool such as Relink [@Wu2011] to link the commits to their issues and re-implement the classification proposed by Hindle *et al.* [@Hindle2008] on top of it. However, commit-guru has the advantage of being open-source, making it possible to  modify it to fit our needs and fine-tune its performance.
 
 \input{tex/table-words}
 
-Blocks from the fix and the defect introducing commits are then extracted.
-
-### Extracting blocks {#sec:block-extract}
-
-A block is a set of consecutive lines of code that will be compared to all other blocks to identify clones. 
-To achieve this critical part of BIANCA, we rely on TXL [@Cordy2006a], which is a first-order functional programming over linear term rewriting, developed by Cordy et al. [@Cordy2006a]. 
-For TXL to work, one has to write a grammar describing the syntax of the source language and the transformations needed. 
-TXL has three main phases: *parse*, *transform*, *unparse*. 
-In the parse phase, the grammar controls not only the input but also the output forms.
-The following code sample---extracted from the official documentation---shows a grammar matching an *if-then-else* statement in C with some special keywords: [IN] (indent), [EX] (exdent) and [NL] (newline) that will be used in the output form.
-
+To extract code blocks from fix-commits and defect-commits,  we rely on TXL [@Cordy2006a], which is a first-order functional programming over linear term rewriting, developed by Cordy et al. [@Cordy2006a]. For TXL to work, one has to write a grammar describing the syntax of the source language and the transformations needed. TXL has three main phases: *parse*, *transform*, *unparse*. In the parse phase, the grammar controls not only the input but also the output forms. The following code sample---extracted from the official documentation---shows a grammar matching an *if-then-else* statement in C with some special keywords: [IN] (indent), [EX] (exdent) and [NL] (newline) that will be used in the output form.
 
 ```bash
 define if_statement
@@ -271,12 +143,10 @@ Then, the *transform* phase applies transformation rules that can, for example, 
 Finally, the third phase of TXL, called *unparse*, unparses the transformed parsed input to output it. 
 Also, TXL supports what its creators call _Agile Parsing_ [@Dean], which allow developers to redefine the rules of the grammar and, therefore, apply different rules than the original ones.
 
-BIANCA takes advantage of that by redefining the blocks that should be extracted for the purpose of clone comparison, leaving out the blocks that are out of scope. 
-More precisely, before each commit, we only extract the blocks belonging to the modified parts of the source code. 
-Hence, we only process, in an incremental manner, the latest modification of the source code instead of the source code as a whole.
+BIANCA takes advantage of that by redefining the blocks that should be extracted for the purpose of code comparison, leaving out the blocks that are out of scope. More precisely, before each commit, we only extract the blocks belonging to the modified parts of the source code.  Hence, we only process, in an incremental manner, the latest modification of the source code instead of the source code as a whole.
 
 We have selected TXL for several reasons. First, TXL is easy to install and to integrate with the normal workflow of a developer. 
-Second, it was relatively easy to create a grammar that accepts commits as input. This is because TXL is shipped with C, Java, Csharp, Python and WSDL grammars that define all the particularities of these languages, with the ability to customize these grammars to accept changesets (chunks of the modified source code that include the added, modified, and deleted lines) instead of the whole code.
+Second, it was relatively easy to create a grammar that accepts commits as input. This is because TXL supports C, Java, Csharp, Python and WSDL grammars, with the ability to customize them to accept changesets (chunks of the modified source code that include the added, modified, and deleted lines) instead of the whole code.
 
 \input{tex/extract}
 
@@ -305,40 +175,22 @@ Therefore, we need to expand the changeset to the left (or right) to have syntac
 We do so by checking the block's beginning and ending with a parentheses algorithms [@bultena1998eades]. 
 Then, we send these expanded changesets to TXL for block extraction and formalization.
 
-## Analyzing New Commit {#sec:online}
+## Analysing New Commits using Pre-Commit Hooks {#sec:online}
 
-Each time a commit is made, a pre-commit hook kicks in (Section \ref{sec:Pre-Commit-Hook}) and we extract the modified block using the technique previously presented (Section \ref{sec:block-extract}).
-The newly modified blocks are compared to block modification known to have introduced a defect (Section \ref{sec:extracted}) and we recommend to apply the fixes that were used to correct the identified defect (Section \ref{sec:propose}). 
+Each time a developer makes a commit, BIANCA intercepts the commits using a pre-commit hook,  extracts the corresponding code block (in a similar way as in the previous phase), and compares it to the code blocks of historical defect-commits. If there is a match then the new commit is deemed to be risky (i.e., a potential defect-commit). 
 
-### Pre-Commit Hook {#sec:Pre-Commit-Hook}
+Pre-commit hooks are custom scripts set to fire off when certain important actions of the versionning process occur.
+There are two groups of hooks: client-side and server-side. Client-side hooks are triggered by operations such as committing and merging, whereas server-side hooks run on network operations such as receiving pushed commits. These hooks can be used for all sorts of reasons such as checking compliance with coding rules or automatic run of unit test suites.
 
-Hooks are custom scripts set to fire off when certain important actions of the versionning process occur.
-There are two groups of hooks: client-side and server-side.
-Client-side hooks are triggered by operations such as committing and merging, whereas server-side hooks run on network operations such as receiving pushed commits.
-These hooks can be used for all sorts of reasons such as compliance with coding rules or automatic run of unit test suites.
+The pre-commit hook is run first, before the developer types in a commit message. It is used to inspect the modifications that are about to be committed. BIANCA is based on a set of bash and python scripts, and the entry point of these scripts lies in a pre-commit hook. These scripts intercept the commit and extract the corresponding code blocks.
 
-The pre-commit hook is run first, before the developer types in a commit message.
-It is used to inspect the modifications that are about to be committed.
-Depending on the exit status of the hook, the commit will be aborted and not pushed to the central repository.
-Also, developers can choose to ignore the pre-hook.
-In Git, for example, they will need to use the command `git commit –no-verify` instead of `git commit`.
-This can be useful in case of an urgent need for fixing a bug where the code has to reach the central repository as quickly as possible. Developers can do things like check for code style, check for trailing white spaces (the default hook does exactly this), or check for appropriate documentation on new methods.
-
-BIANCA is a set of bash and python scripts, and the entry point of these scripts lies in a pre-commit hook. 
-Note that even though we use Git as the main version control system to present BIANCA, we believe that the techniques presented in this paper are readily applicable to other version control systems.
-
-### Comparing the extracted blocks {#sec:extracted}
-
-To compare the extracted blocks and detect potential clones, we can only resort to text-based matching techniques. 
-This is because lexical and syntactic analysis approaches (alternatives to text-based comparisons) would require a complete program to work, i.e., a program that compiles. 
-In the relatively wide-range of tools and techniques that exist to detect clones by considering code as text [@Johnson1993;  @Johnson1994; @Marcus; @Manber1994; @StephaneDucasse; @Wettel2005], we selected NICAD as the main text-based method for comparing clones [@Cordy2011] for several reasons. 
-First, NICAD is built on top of TXL, which we also used in the previous step. 
-Second, NICAD can detect Types 1, 2 and 3 software clones.
+To compare the extracted blocks to the ones in the database, we resort to clone detection technique, more particularly, the ones based on text matching. This is because lexical and syntactic analysis approaches (alternatives to text-based comparisons) would require a complete program to work, i.e., a program that compiles.  In the relatively wide-range of tools and techniques that exist to detect clones by considering code as text [@Johnson1993;  @Johnson1994; @Marcus; @Manber1994; @StephaneDucasse; @Wettel2005], we selected NICAD as the main text-based method for comparing code blocks [@Cordy2011] for several reasons. 
+First, NICAD is built on top of TXL, which we also used in the previous phase.  Second, NICAD can detect Types 1, 2 and 3 software clones [REF]. Type 1 clones are copy-pasted blocks of code that only differ from each other in terms of non-code artifacts such as indentation, whitespaces, comments and so on.  Type 2 clones are blocks of code that are syntactically identical except literals, identifiers, and types that can be modified. Also, Type 2 clones share the particularities of Type 1 about indentation, whitespaces, and comments. Type 3 clones are similar to Type 2 clones in terms of modification of literals, identifiers, types, indentation, whitespaces, and comments but also contain added or deleted code statements. 
 
 NICAD works in three phases: *Extraction*, *Comparison* and *Reporting*. 
 During the *Extraction* phase all potential clones are identified, pretty-printed, and extracted. 
 We do not use the *Extraction* phase of NICAD as it has been built to work on programs that are syntactically correct, which is not the case for changesets. 
-We replaced NICAD’s *Extraction* phase with our scripts, described in the previous section.
+We replaced NICAD’s *Extraction* phase with our scripts for building code blocks (described in the previous phase).
 
 In the *Comparison* phase, extracted blocks are transformed, clustered and compared to find potential clones. 
 Using TXL sub-programs, blocks go through a process called pretty-printing where they are stripped of formatting and comments. 
@@ -350,21 +202,11 @@ In addition to the pretty-printing, code can be normalized and filtered to detec
 
 \input{tex/Pretty-Printing}
 
-Finally, the extracted, pretty-printed, normalized and filtered blocks are marked as potential clones using a Longest Common Subsequence (LCS) algorithm [@Hunt1977]. 
-Then, a percentage of unique statements can be computed and, given threshold (see Section \ref{sec:exp}), the blocks are marked as clones.
+The extracted, pretty-printed, normalized and filtered blocks are marked as potential clones using a Longest Common Subsequence (LCS) algorithm [@Hunt1977]. Then, a percentage of unique statements can be computed and, given threshold, the blocks are marked as clones.
 
+Another important aspect of the design of BIANCA is the ability to provide guidance to developers on how improve the risky  commits. We achieve this by extracting from the databsed the fix-commit corresponding to the matching defect-commit and present it to the developer. This way, BIANCA goes one step further than existing techniques, based mainly on statistical models, by providing a practical way on to fix (or at least reasons about) the risky commit. A tool that supports BIANCA should have enough flexibility to allow the developers to enable or disable the recommendations made by BIANCA.
 
-### Proposing Modifications {#sec:propose}
-
-In the previous step, we compared the new modification contained in the commit at hand with modifications known to have introduced a defect in the past.
-The defect can be in any of the repositories belonging to the same cluster as the project at hand, including the project itself.
-
-As we linked bug-introducing changes to their commits (Section \ref{sec:bug-introduction}), we can propose to the developers not only the code that _looks like_ their modification and we know introduced a defect in the past but also what fixes have been deployed to eradicate it.
-
-BIANCA does not rely on statistical models nor require training to identify risky commits but on code.
-We believe that this can make BIANCA a practical approach for the developers as they will know why a given modification has been reported as risky in terms of code and not fit (or lack thereof) to a statistical model.
-Furthermore, we propose concrete actions, in the form of code, which can be taken to reduce the risk of introducing defects to the system.
-Finally, the online part happens before the commit reach the central repository (Section \ref{sec:Pre-Commit-Hook}), thus, preventing unfortunate pull of defect by other members of the organization.
+We believe that this can make BIANCA a practical approach for the developers as they will know why a given modification has been reported as risky in terms of code; this is something that is not supported by techniques based on statistical models (e.g., [REF]). Furthermore, because BIANCA acts before the commit reaches the central repository, it prevents unfortunate pulls of defects by other members of the organization.
     
 # Evaluation  {#sec:exp}
 
