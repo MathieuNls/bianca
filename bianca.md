@@ -14,7 +14,6 @@ author:
 csl: config/ieee.csl
 classoption: conference
 keyword: 
-- Software Analytics
 - Software Metrics
 - Risky Software Commits
 - Bug Prediction
@@ -24,20 +23,17 @@ keyword:
 
 # Introduction
 
-Software maintenance activities such as debugging and feature enhancement are known to be challenging and costly [@Pressman2005].
-Studies have shown that the cost of software maintenance can reach up to 70\% of the overall cost of the software development life cycle [@HealthSocial2002].
-Much of this is attributable to several factors including the increase in software complexity, the lack of traceability between the various artifacts of the software development process, the lack of proper documentation,  and the unavailability of the original developers of the systems.
+Research in software maintenance continues to evolve to include areas like mining bug repositories, bug analytics, and bug prevention and reproduction. The ultimate goal is to develop techniques and tools to help software developers detect, correct, and prevent bugs in an effective and efficient manner. 
 
-Research in software maintenance has evolved over the years to include areas like mining bug repositories, bug analysis, prevention, and reproduction. The ultimate goal is to develop techniques and tools to help software developers detect, correct, and prevent bugs in an effective and efficient manner. 
+One particular (and growing) line of research focuses on the problem of preventing the introduction of bugs by detecting risky commits (preferably before the commits reach the central repository). Recent approaches (e.g., [@Lo2013; @Nam2013]) rely on training models  based on  code and process metrics (e.g., code complexity, experience of the developers, etc.) that are used to classify  new commits as risky or not. Metrics, however, may vary from one project to another, hindering the reuse of these models. In addition, these techniques operate within single projects only, despite the fact many large projects share dependencies such as the reuse of common libraries. This makes them vulnerable to similar faults [REF]. A solution to a bug provided by the developers of one project may help fix a bug that occur in another (and dependant) project. Moreover, as noted by Lewis _et al._ [@Lewis2013] and Johnson _et al._ [@Johnson2013], techniques based solely on metrics are perceived by developers as black box solutions because they do not provide any insights on the causes of the risky commits and ways to improving them. As a result, developers are less likely to trust the output of these tools.
 
-One particular line of research focuses on the problem of preventing the introduction of bugs by detecting risky commits. The state of the art approaches consists of adapting statistical models built based on heuristics. These techniques for one project to another project [@Lo2013; @Nam2013]. In addition, as noted by Lewis _et al._ [@Lewis2013] and Johnson _et al._ [@Johnson2013], techniques based solely on statistical models are perceived by developers as black box solutions. Developers are less likely to trust the output of these tools.
+In this paper, we propose a novel bug prevention approach at commit-time, called BIANCA (Bug Insertion ANticipation by Clone Analysis at commit time). BIANCA does not use metrics to assess whether or not an upcoming commit is risky. Instead, it relies on code clone detection techniques by extracting code blocks from upcoming commits and comparing them to  those of known defect-introducing commits. 
 
-In this paper, we propose a novel bug prevention approach at commit-time, called BIANCA (Bug Insertion ANticipation by Clone Analysis at commit time). BIANCA . To achieve this, that assesses these challenges by using dependency analysis and clone detection to prevent bug insertion at commit-time. More specifically, BIANCA lies on the idea that complex software systems are not monolithic; they have dependencies. Software systems sharing the same dependencies are likely to perform related tasks and, therefore, share misunderstandings leading to defect introduction. For example, Apache BatchEE [@TheApacheSoftwareFoundation2015] and GraphWalker [@Graphwalker2016] both depend on JUNG (Java Universal Network/Graph Framework) [@JoshuaOMadadhain]. 
-BatchEE provides an implementation of the jsr-352 (Batch Applications for the Java Platform) specification [@ChrisVignola2014] while GraphWalker is an open source model-based testing tool for test automation. These two systems are designed for different purposes. BatchEE is used  to do batch processing in Java, whereas GraphWalker is used to design unit tests using a graph representation of code. Nevertheless, Apache BatchEE and GraphWalker both rely on JUNG. The developers of these projects made similar mistakes while building upon JUNG. The issue reports Apache BatchEE #69 and  GraphWalker #44 indicate that the developers of these projects made similar mistakes when using the graph visualization of JUNG.
+One particular aspect of BIANCA is its ability to  detect risky commits not only by comparing them to commits of a single project but also to those belonging to other projects that share common dependencies.  This is important because complex software systems are not designed in a monolithic way. They have dependencies that make them vulnerable to similar faults. For example, Apache BatchEE [@TheApacheSoftwareFoundation2015] and GraphWalker [@Graphwalker2016] both depend on JUNG (Java Universal Network/Graph Framework) [@JoshuaOMadadhain].  BatchEE provides an implementation of the jsr-352 (Batch Applications for the Java Platform) specification [@ChrisVignola2014] while GraphWalker is an open source model-based testing tool for test automation. These two systems are designed for different purposes. BatchEE is used  to do batch processing in Java, whereas GraphWalker is used to design unit tests using a graph representation of code. Nevertheless, because both Apache BatchEE and GraphWalker rely on JUNG, the developers of these projects made similar mistakes when building upon JUNG. The issue reports Apache BatchEE #69 and  GraphWalker #44 indicate that the developers of these projects made similar errors when using the graph visualization component of JUNG. To detect commits across projects, BIANCA resorts to project dependency analysis.
 
-The remaining parts of this paper are organized as follows. 
-In section \ref{sec:relwork}, we present works related to ours.
-Sections \ref{sec:bianca} and  \ref{sec:exp} present the BIANCA approach and its validation, respectively.
+Another advantage of BIANCA is that it uses commits that are used to fix previous defect-introducing commits to provide guidance to the developers on how improve risky commits. This way, BIANCA goes one step further than existing techniques by providing a practical way on how to fix (or at least to reason about) risky commits. 
+
+The remaining parts of this paper are organized as follows. In Section \ref{sec:relwork}, we present related work. Sections \ref{sec:bianca} and  \ref{sec:exp} are dedicated to presenting the BIANCA approach and its evaluation.
 Then, Sections \ref{sec:threats}, \ref{sec:conclusion} and, \ref{sec:discuss} assess the threats to validity, present the key lessons learned and, a conclusion accompanied with future work, respectively.
 	
 # Related Work {#sec:relwork}
@@ -93,30 +89,28 @@ All these approaches, proved software metrics to be useful at detecting software
 
 Finally, Nagappan *et al.* [@Nagappan2005; @Nagappan2006] and Zimmerman [@Zimmermann2007; @Zimmermann2008] further refined metrics-based detection by using statical analysis and call-graph analysis.
 
-While academia has published hundreds of bug prediction papers over the last decade, the developed tools and approaches fail to change developer behavior while deployed in industrial environments [@Lewis2013]. This is mainly due to the lack of actionable message, i.e. messages that provide concrete steps to resolve the problem at hand.
-
 
 # The BIANCA Approach {#sec:bianca}
 
-Figure \ref{fig:bianca} shows an overview of the BIANCA approach, which consists of two main phases. In the first phase, BIANCA manages events happening on project tracking systems, while in the second phase, BIANCA analyses the developer's commits before they reach the central repository to detect potential risky commits (commits that may introduce bugs). 
+Figure \ref{fig:bianca} shows an overview of the BIANCA approach, which consists of two main phases. In the first phase, BIANCA manages events happening on project tracking systems to extract defect-introducing commits and commits that provided the fixes. For simplicity, in the rest of this paper, we refer to commits that are used to fix defects as _fix-commits_. We use the term _defect-commit_ to mean a commit that introduce a defect. In the second phase, BIANCA analyses the developer's new commits before they reach the central repository to detect potential risky commits (commits that may introduce bugs). 
 
-The project tracking component of BIANCA listens to bug closing events of major open-source projects (currently, BIANCA supports 42 large projects). These projects share many dependencies such as the use of external tools and libraries. We cluster these projects to identify groups of highly-coupled projects. BIANCA  identifies risky commits within each group so as to increase the chances of finding risky commits caused by project dependencies. For each project group, we extract code blocks from commits that introduced defects and those that were used to provide fixes. For simplicity, in the rest of this paper, we refer to commits that are used to fix defects as _fix-commits_. We use the term _defect-commit_ to mean a commit that introduce a defect. The extracted code blocks are saved in a database that is used in the second phase to identify risky commits before they reach the central repository. For each match between a risky commit and a defect-commit, we pull our from the database the corresponding fix-commit and present it to the developer as a potential way to improve the commit content.  
+The project tracking component of BIANCA listens to bug (or issue) closing events of major open-source projects (currently, BIANCA is tested with 42 large projects). These projects share many dependencies. Projects can depend on each other or on common external tools and libraries. We perform project dependency analysis to identify groups of highly-coupled projects. BIANCA identifies risky commits within each group so as to increase the chances of finding risky commits caused by project dependencies. For each project group, we extract code blocks from defect-commits and fix-commits.  The extracted code blocks are saved in a database that is used in the second phase to identify risky commits before they reach the central repository. For each match between a risky commit and a defect-commit, we pull out from the database the corresponding fix-commit and present it to the developer as a potential way to improve the commit content.  These phases are discussed in more detail in the upcoming subsections.
 
 ## Clustering project repositories {#sec:clustering}
 
-We cluster project repositories according to their dependencies on external tools and libraries. The rationale is that projects that share dependencies are most likely to contain defects caused by misuse of these dependencies. In this step, the project dependencies are analysed and saved into a single no-SQL graph database as shown in Figure \ref{fig:bianca-clustering}. Graph databases use graph structures as a way to store and query information.  In our case,  a node corresponds to a project that is connected to its dependencies. Project dependencies can be  automatically retrieved if projects use a dependency manager such as Maven [REF]. 
+We cluster project repositories according to their dependencies.  The rationale is that projects that share dependencies are most likely to contain defects caused by misuse of these dependencies. In this step, the project dependencies are analysed and saved into a single no-SQL graph database as shown in Figure \ref{fig:bianca-clustering}. Graph databases use graph structures as a way to store and query information.  In our case,  a node corresponds to a project that is connected to other projects on which it depends. Project dependencies can be  automatically retrieved if projects use a dependency manager such as Maven [REF]. 
 
 Figure \ref{fig:network-sample} shows a simplified view of a dependency graph for a project named \texttt{com.badlogicgames.gdx}.
 As we can see, \texttt{badlogicgames.gdx} depends on projects owned by the same organization (i.e., badlogicgames) and other organizations such as Google, Apple, and Github.
 
 ![Simplified Dependency Graph for \texttt{com.badlogicgames.gdx} (Zoomed from south of Figure \ref{fig:dep-graph})\label{fig:network-sample}](media/network-sample.png)
   
-Once the project dependency graph is extracted, we use a clustering algorithm to partition the graph. For this purpose, we choose the Girvan–Newman algorithm [@Girvan2002; @Newman2004], used to detect communities by progressively removing edges from the original network. The connected components of the remaining network form distinct communities. Instead of trying to construct a measure that identifies the edges are the most central to communities, the Girvan–Newman algorithm focuses on edges that are most likely "between" communities. This algorithm is very effective at discovering community structure in both computer-generated and real-world network data. Other clustering algorithms can also be used. 
+Once the project dependency graph is extracted, we use a clustering algorithm to partition the graph. To this end, we choose the Girvan–Newman algorithm [@Girvan2002; @Newman2004], used to detect communities by progressively removing edges from the original network. The connected components of the remaining network form distinct communities. Instead of trying to construct a measure that identifies the edges are the most central to communities, the Girvan–Newman algorithm focuses on edges that are most likely "between" communities. This algorithm is very effective at discovering community structure in both computer-generated and real-world network data. Other clustering algorithms can also be used. 
 
 
 ## Building a database of code blocks of defect-commits and fix-commits {#sec:offline}
 
-BIANCA listens to bug (issue) closing events happening on the project tracking system. Every time an issue is closed, BIANCA retrieves the commit that was used to fix the issue as well as the one that introduced the defect. Retrieving fix-commits is known to be a challenging task [@Wu2011]. This is because the link between the project tracking system and the code version control system is not always explicit. In an ideal situation, developers would add a reference to the issue they work on inside the description of the commit. But this good practice is not always followed. To make the link between fix-commits and their related issues, we turn to a modified version of the back-end of commit-guru [@Rosen2015a]. Commit-guru is a tool, developed by .... to... WAHAB: PLEASE COMPLETE THIS¸ 
+BIANCA listens to bug closing events happening on the project tracking system. Every time an issue is closed, BIANCA retrieves the commit that was used to fix the issue (the fix-commit) as well as the one that introduced the defect (the defect-commit). Retrieving fix-commits, however, is known to be a challenging task [@Wu2011]. This is because the link between the project tracking system and the code version control system is not always explicit. In an ideal situation, developers would add a reference to the issue they work on inside the description of the commit. But this good practice is not always followed. To make the link between fix-commits and their related issues, we turn to a modified version of the back-end of commit-guru [@Rosen2015a]. Commit-guru is a tool, developed by .... to... WAHAB: PLEASE COMPLETE THIS¸ 
 
 Commit-guru's back-end has three major components: ingestion, analysis, and prediction. We reuse the ingestion part of the analysis components for BIANCA. The ingestion component is responsible for ingesting (i.e., downloading) a given repository.
 Once the repository is entirely downloaded on a local server, each commit history is analysed. WAHAB: IS THE CLASSIFICATION BY HINDEL IMPORTANT HERE Commits are classified using the list of keywords proposed by Hindle *et al.* [@Hindle2008] (see Table \ref{tab:labels}). Commit-guru performs the SCM blame/annotate function on all the modified lines of code for their corresponding files on the fix-commit's parents. This returns the commits that previously modified these lines of code. 
@@ -150,7 +144,7 @@ Second, it was relatively easy to create a grammar that accepts commits as input
 
 \input{tex/extract}
 
-Algorithm \ref{alg:extract} presents an overview of the "extract" and "save" blocks operations of BIANCA. This algorithm receives as arguments, the changesets and the blocks that have been previously extracted. 
+Algorithm \ref{alg:extract} presents an overview of the "extract" and "save" blocks operations of BIANCA. This algorithm receives as argument, the changesets and the blocks that have been previously extracted. 
 Then, Lines 1 to 5 show the $for$ loop that iterates over the changesets. 
 For each changeset (Line 2), we extract the blocks by calling the $~extract\_blocks(Changeset~cs)$ function. 
 In this function, we expand our changeset to the left and to the right in order to have a complete block.
@@ -175,24 +169,23 @@ Therefore, we need to expand the changeset to the left (or right) to have syntac
 We do so by checking the block's beginning and ending with a parentheses algorithms [@bultena1998eades]. 
 Then, we send these expanded changesets to TXL for block extraction and formalization.
 
-## Analysing New Commits using Pre-Commit Hooks {#sec:online}
+## Analysing New Commits Using Pre-Commit Hooks {#sec:online}
 
-Each time a developer makes a commit, BIANCA intercepts the commits using a pre-commit hook,  extracts the corresponding code block (in a similar way as in the previous phase), and compares it to the code blocks of historical defect-commits. If there is a match then the new commit is deemed to be risky (i.e., a potential defect-commit). 
+Each time a developer makes a commit, BIANCA intercepts it using a pre-commit hook,  extracts the corresponding code block (in a similar way as in the previous phase), and compares it to the code blocks of historical defect-commits. If there is a match then the new commit is deemed to be risky. A threshold $\alpha$ is used to assess the extent beyond which two pair of commits are considered similar. The setting of $\alpha$ is discussed in the case study section.
 
 Pre-commit hooks are custom scripts set to fire off when certain important actions of the versionning process occur.
-There are two groups of hooks: client-side and server-side. Client-side hooks are triggered by operations such as committing and merging, whereas server-side hooks run on network operations such as receiving pushed commits. These hooks can be used for all sorts of reasons such as checking compliance with coding rules or automatic run of unit test suites.
+There are two groups of hooks: client-side and server-side. Client-side hooks are triggered by operations such as committing and merging, whereas server-side hooks run on network operations such as receiving pushed commits. These hooks can be used for all sorts of reasons such as checking compliance with coding rules or automatic run of unit test suites. The pre-commit hook is run first, before the developer types in a commit message. It is used to inspect the modifications that are about to be committed. BIANCA is based on a set of bash and python scripts, and the entry point of these scripts lies in a pre-commit hook. These scripts intercept the commit and extract the corresponding code blocks.
 
-The pre-commit hook is run first, before the developer types in a commit message. It is used to inspect the modifications that are about to be committed. BIANCA is based on a set of bash and python scripts, and the entry point of these scripts lies in a pre-commit hook. These scripts intercept the commit and extract the corresponding code blocks.
+To compare the extracted blocks to the ones in the database, we resort to clone detection techniques, more particularly, the ones based on text matching. This is because lexical and syntactic analysis approaches (alternatives to text-based comparisons) would require a complete program to work, i.e., a program that compiles.  In the relatively wide-range of tools and techniques that exist to detect clones by considering code as text [@Johnson1993;  @Johnson1994; @Marcus; @Manber1994; @StephaneDucasse; @Wettel2005], we selected NICAD as the main text-based method for comparing code blocks [@Cordy2011] for several reasons. 
+First, NICAD is built on top of TXL, which we also used in the previous phase.  Second, NICAD can detect Types 1, 2 and 3 software clones [REF]. Type 1 clones are copy-pasted blocks of code that only differ from each other in terms of non-code artefacts such as indentation, whitespaces, comments and so on.  Type 2 clones are blocks of code that are syntactically identical except literals, identifiers, and types that can be modified. Also, Type 2 clones share the particularities of Type 1 about indentation, whitespaces, and comments. Type 3 clones are similar to Type 2 clones in terms of modification of literals, identifiers, types, indentation, whitespaces, and comments but also contain added or deleted code statements. BIANCA detects Type 3 clones since they can contain added or deleted code statements, which make them suitable to comparing commit code blocks.
 
-To compare the extracted blocks to the ones in the database, we resort to clone detection technique, more particularly, the ones based on text matching. This is because lexical and syntactic analysis approaches (alternatives to text-based comparisons) would require a complete program to work, i.e., a program that compiles.  In the relatively wide-range of tools and techniques that exist to detect clones by considering code as text [@Johnson1993;  @Johnson1994; @Marcus; @Manber1994; @StephaneDucasse; @Wettel2005], we selected NICAD as the main text-based method for comparing code blocks [@Cordy2011] for several reasons. 
-First, NICAD is built on top of TXL, which we also used in the previous phase.  Second, NICAD can detect Types 1, 2 and 3 software clones [REF]. Type 1 clones are copy-pasted blocks of code that only differ from each other in terms of non-code artifacts such as indentation, whitespaces, comments and so on.  Type 2 clones are blocks of code that are syntactically identical except literals, identifiers, and types that can be modified. Also, Type 2 clones share the particularities of Type 1 about indentation, whitespaces, and comments. Type 3 clones are similar to Type 2 clones in terms of modification of literals, identifiers, types, indentation, whitespaces, and comments but also contain added or deleted code statements. 
 
 NICAD works in three phases: *Extraction*, *Comparison* and *Reporting*. 
 During the *Extraction* phase all potential clones are identified, pretty-printed, and extracted. 
 We do not use the *Extraction* phase of NICAD as it has been built to work on programs that are syntactically correct, which is not the case for changesets. 
 We replaced NICAD’s *Extraction* phase with our scripts for building code blocks (described in the previous phase).
 
-In the *Comparison* phase, extracted blocks are transformed, clustered and compared to find potential clones. 
+In the *Comparison* phase, the extracted blocks are transformed, clustered and compared to find potential clones. 
 Using TXL sub-programs, blocks go through a process called pretty-printing where they are stripped of formatting and comments. 
 When code fragments are cloned, some comments, indentation or spacing are changed according to the new context where the new code is used. 
 This pretty-printing process ensures that all code will have the same spacing and formatting, which renders the comparison of code fragments easier. 
@@ -204,77 +197,64 @@ In addition to the pretty-printing, code can be normalized and filtered to detec
 
 The extracted, pretty-printed, normalized and filtered blocks are marked as potential clones using a Longest Common Subsequence (LCS) algorithm [@Hunt1977]. Then, a percentage of unique statements can be computed and, given threshold, the blocks are marked as clones.
 
-Another important aspect of the design of BIANCA is the ability to provide guidance to developers on how improve the risky  commits. We achieve this by extracting from the databsed the fix-commit corresponding to the matching defect-commit and present it to the developer. This way, BIANCA goes one step further than existing techniques, based mainly on statistical models, by providing a practical way on to fix (or at least reasons about) the risky commit. A tool that supports BIANCA should have enough flexibility to allow the developers to enable or disable the recommendations made by BIANCA.
+Another important aspect of the design of BIANCA is the ability to provide guidance to developers on how improve the risky  commits. We achieve this by extracting from the databse the fix-commit corresponding to the matching defect-commit and present it to the developer. This way, BIANCA goes one step further than existing techniques, based mainly on statistical models, by providing a practical way on how to fix (or at least reasons about) the risky commit. A tool that supports BIANCA should have enough flexibility to allow developers to enable or disable the recommendations made by BIANCA.
 
 We believe that this can make BIANCA a practical approach for the developers as they will know why a given modification has been reported as risky in terms of code; this is something that is not supported by techniques based on statistical models (e.g., [REF]). Furthermore, because BIANCA acts before the commit reaches the central repository, it prevents unfortunate pulls of defects by other members of the organization.
     
 # Evaluation  {#sec:exp}
 
-In this section, we present our experimentations. 
-We begin by explaining how we selected the repositories we analysed (Section \ref{sec:rep}) and the results of the clustering algorithm (Section \ref{sec:dependencies}).
-Then, we show the effectiveness of BIANCA in detecting risky commits at commit-time using precision, recall and F-measure.
+In this section, we show the effectiveness of BIANCA in detecting risky commits using clone detection and project dependency analysis. The main research question addressed by this case study is: Can we detect risky commits using code comparison within and across related projects, and if so, what would be the accuracy? 
 
-## Repository Selection {#sec:rep}
+## Project Repository Selection {#sec:rep}
 
-The selection of the open source repositories under analyze was made automatically according to the following criteria:
+To select the projects used to evaluate our approach, we followed three simple criteria. First, the projects need to be in Java and use Maven to manage dependencies. This way, we can automatically extract the dependencies and perform the clustering of projects. The second criterion is to have projects that enjoy a large community support and interest. We selected projects that have at least 2000 followers. A different threshold could be used. Finally, the projects must have a public issue repository to be able to mine their past issues and the fixes. We queried Github with these criteria and retrieved 42 projects (see Table \ref{tab:results} for the list of projects), including those from some of major open-source contributors including Alibaba, Apache Software Foundation, Eclipse, Facebook, Google and Square. 
 
-a) Java project using Maven for its dependencies.
-b) Followed by at least 2000 unique developers.
-c) Use a public issue repository.
+## Project Dependency Analysis {#sec:dependencies}
 
-These criteria ensure that (a) the dependencies of each project are retrievable in an automatic fashion and (b) that the repository has a significant interest expressed by the community.
-When developers follow a project, they receive notification for each new commit and issue.
-Finally, (c) we must be able to consult past issues and their resolution to be able to evaluate the efficiency of our approach.
-A high number of followers demonstrates an interest of the community. 
-For the reader to appreciate this hard limit of 2,000 followers, on Github, 298 Java projects have at least 2,000 followers.
-The highest ranked repository, regarding followers, is react-native by Facebook with a total of 36,071 unique followers.
-React native is a framework for building native apps with the React library (a JavaScript library for building user interface, also by Facebook).
-
-
-Out of the 298 Java projects with at least 2,000 followers acquired using the Github API, 21 were referencing projects that have either gone private or been deleted.
-On the 277 remaining projects, 42 repositories matched our criterion.
-This 42 repositories composed our dataset.
-
-Our dataset is composed of 28 different ecosystems including majors open-source contributors such as Alibaba, Apache Software Foundation, Eclipse, Facebook, Google and Square.
-
-## Dependency analysis {#sec:dependencies}
-
-Figure \ref{fig:dep-graph} presents the project dependency graph.
-The dependency graph is composed of 592 nodes divided into five clusters shown in yellow, red, green, purple and blue.
-The size of the nodes in Figure \ref{fig:dep-graph} are proportional to the number of connections from and to the node.
+Figure \ref{fig:dep-graph} shows the project dependency graph. The dependency graph is composed of 592 nodes divided into five clusters shown in yellow, red, green, purple and blue. The size of the nodes in Figure \ref{fig:dep-graph} are proportional to the number of connections from and to the other nodes.
 
 ![Dependency Graph\label{fig:dep-graph}](media/network.png)
 
-As depicted by our dependency map, the dependency landscape of the most popular Github repositories is very much interconnected and interdependent.
-Indeed, we have an average of 77 dependencies per projects and, as seen earlier, 592 unique dependencies.
-Meaning that, in average, our 42 repositories share 62 of their 77 dependencies with at least one other repository. 
-Table \ref{tab:communities} presents the clusters, computed using the Girvan–Newman clustering algorithm, in terms of centroids, betweenness. The blue cluster (or community) is dominated by Storm [REF] from The Apache Software Foundation.
-Storm is a distributed real-time computation system. Druid by Alibaba, the e-commerce company that provides consumer-to-consumer, business-to-consumer and business-to-business sales services via web portals, dominates the yellow cluster.
-In recent years, Alibaba has become an active member of the open-source community and make some of its projects publicly available.
-The red cluster has Hadoop by the Apache Software Foundation as its centroid. 
-Hadoop is an open-source software framework for distributed storage and distributed processing of very large data sets on computer clusters built from commodity hardware.
-The green layer is dominated by the Persistence project of OpenHab. 
-OpenHab proposes home automation solutions and the Persistence project is their data access layer.
-Finally, the purple cluster is dominated by Libdx by Badlogicgames.
-Libdx is a cross-platform framework for game development.
+As shown in Figure \ref{fig:dep-graph},  these Github projects are very much interconnected. WAHAB: PLEASE CHECK THIS UPCOMING  SENTENCE We have an average of 77 dependencies per project. Each project shares in average 62 of the 77 dependencies with at least another project. 
 
-We believe that these clusters are accurate as they efficiently divide repositories in terms of high-level functionalities.
-We have the blue cluster which is almost entirely composed of projects from the Apache Software Foundation.
-Projects from the Apache Software Foundation tend to build on top of one another.
-We also have the red cluster for Hadoop which is itself an ecosystem inside the Apache Software Foundation.
-Finally, we got a cluster for e-commerce applications (yellow), real-time network application for home automation (green) and game development (purple).
+Table \ref{tab:communities} shows the result of the Girvan–Newman clustering algorithm  in terms of centroids and betweenness. The blue cluster is dominated by Storm from The Apache Software Foundation. Storm is a distributed real-time computation system. Druid by Alibaba, the e-commerce company that provides consumer-to-consumer, business-to-consumer and business-to-business sales services via web portals, dominates the yellow cluster. In recent years, Alibaba has become an active member of the open-source community by making some of its projects publicly available. The red cluster has Hadoop by the Apache Software Foundation as its centroid. Hadoop is an open-source software framework for distributed storage and distributed processing of very large data sets on computer clusters built from commodity hardware. The green layer is dominated by the Persistence project of OpenHab.  OpenHab proposes home automation solutions and the Persistence project is their data access layer. Finally, the purple cluster is dominated by Libdx by Badlogicgames, which is a cross-platform framework for game development.
 
-While it is difficult to assess the effectiveness of this clustering in terms of precision and recall because of the lack of the  ground truth, we show, in the next section, that this partitioning of projects provides excellent results.
+A review of each cluster shows that this partitioning divides projects in terms of high-level functionalities. For example, the blue cluster is almost entirely composed of projects from the Apache Software Foundation. Projects from the Apache Software Foundation tend to build on top of one another. We also have the red cluster for Hadoop, which is by itself an ecosystem inside the Apache Software Foundation. Finally, we obtained a cluster for e-commerce applications (yellow), real-time network application for home automation (green), and game development (purple).
+
 
 \input{tex/clusters}
 
-## Results of Bianca {#sec:result}
 
-\input{tex/result}
+## Building a database of defect-commits and fix-commits
 
-In this section, we present the results of our experimentations.
-Table \ref{tab:results} shows our results in terms of organization, project name, a short description of the project intent, number of class, number of commits, number of commits that introduced a defect, number of commits introducing a defect detected by BIANCA, precision (%), recall (%), F$_1$-measure and the average difference, in days, between detected commit and the _original_ commit inserting the defect for the first time. 
-The precision, the recall and the F1 measure results are computed according to the following equations:
+WAHAB: HERE YOU NEED TO EXPLAIN THE PROCESS OF BUILDING THIS DATABASE USING THE PROJECTS. WE SHOULD NOT REPEAT THE SAME MATERIAL AS IN THE APPROACH. I TOOK SOME PARTS FROM THE OTHER SECTIONS AND COPIED THEM HERE. YOU NEED TO DEVELOP THIS PART BETTER. 
+
+To validate the results obtained by BIANCA, we needed to use a reliable approach marking defect-commits. 
+For this, we turned to commit-guru [@Rosen2015] which has the ability to unwind the complete history of a project and label commits as defect-commits if they appear to be linked to a closed issue. We use the commit-guru labels as the baseline to compute the precision and recall of BIANCA. 
+
+
+## Process of comparing new commits
+
+WAHAB: THIS PART SHOULD ALSO BE DEVELOPED MORE. WE MAY END UP MERGING IT WITH THE PREVIOUS SECTION
+
+As our approach relies on commit pre-hooks to detect risky commit, we had to find a way to *replay* past commits. 
+To do so, we *cloned* our test subjects, and then created a new branch called *BIANCA*. When created, this branch is reinitialized at the initial state of the project (the first commit) and each commit can be replayed as they have originally been.  For each commit, we store the time taken for *BIANCA* to run, the number of detected clone pairs and, the commits known to introduce a defect that match the current commit. 
+
+To measure similarity between pairs of commits, we chose threshold of (alpha = 35%). We have made several incremental attempts, starting from 10%.  For each attempt, we incremented alpha by 5% and observed the obtained precision and recall. The current value seems to offer the best results. It should also be noted that in clone detection a threshold of around 30% is considered an adequate threshold above which two code blocks are deemed to be clones, expecially for clones of Type 3, which contain added or deleted code statements.
+
+## Evaluation Measures
+
+We used precision precision, recall, and F$_1$-measure to evaluate our approach. They are computed using TP (true positives), FP (fals positives), FN (false negatives), which are defined as follows:
+
+TP: This is the number of defect-commits that were properly classified by BIANCA
+FP: This is the number of healthy commits that were classified by BIANCA as risky
+FN: This is the number of defect-commits that were not detected by BIANCA
+
+WAHAB: PLEASE CHANGE PRECISION AND RECALL AND F_MEASURE accordingly:
+
+Precision = TP/ (TP + FP)
+Recall = TP/(TP + FN)
+F1Measure = same as before
 
 $$
   precision = \cfrac{true~positives}{true~positives \cap false~positives} \\
@@ -286,59 +266,27 @@ $$
   F1 = 2.\cfrac{precision.recall}{precision+recall} 
 $$
 
-A true positive is a commit $c_{true}$ which has been marked as risky by BIANCA. 
-This $c_{true}$ commit have introduced a defect.
-We know that $c_{true}$ introduced a defect because the code impacted by $c_{true}$ that was later corrected with another commit $c_{fix}$. 
-Finally, $c_{fix}$ was used to close a bug report (or issue) that was opened between $t_{c_{true}}$ and $t_{c_{fix}}$.
-A false positive is a commit $c_{false}$ that was marked as risky by BIANCA but did not introduced a defect.
-We known that $c_{false}$ did not introduced a defect because no bug report (or issue) was closed with a commit modifying the code introduced by $c_{false}$.
-It is worth mentioning that, in the case of defect prevention, the false positives can be hard to identify as the defects could be in the code but not yet reported through a bug report (or issue).
-To minimize this, in our experimentations, we did not include the last six months of history.
-As similar studies, we believe that if a defect is not reported within six months, then, it does not exists [@Rosen2015; @Chen2014; @Rosen2015a; @Shihab2013].
-In our case, the relevant elements are all the commits that introduced a defect that was reported (issue/bug report) and fix (sub-sequent commit).
+## Results of BIANCA {#sec:result}
 
-For a commit to be marked as risky (i.e., potentially introducing a defect) by BIANCA, the following conditions shall be met: 
+\input{tex/result}
 
-a) The commit under analysis ($commit_a$) must be a Type 3 clone of an older commit ($commit_b$) with a similarity of at least 35%. 
-b) $commit_a$ and $commit_b$ must belong to projects of the same cluster. 
-c) $commit_a$ and $commit_b$ hashes are not equal.
+Table \ref{tab:results} shows the results of applying BIANCA in terms of organization, project name, a short description of the project, the number of classes, the number of commits, the number of defect-commits, the number of defect-commits detected by BIANCA, precision (%), recall (%), F$_1$-measure and the average difference, in days, between detected commit and the _original_ commit inserting the defect for the first time. 
 
-Type 3 clones are blocks of code that are syntactically identical except literals, identifiers,  types that can be modified, indentation, whitespaces, and comments. 
-Also, Type 3 can contain added or deleted code statements.
-In our opinion type 3 clones (also known as near-miss) are more adequate for BIANCA than Type 1 and 2 as they allow blocks of code to have added or deleted code statements.
-Type 4 clones (i.e., code blocks that perform the same tasks, but using a completely different implementation) would be an even better fit for BIANCA but (a) their detection is still a challenge [@Duala-Ekoko2007a] and (b) NICAD, our clone detection engine does not support Type 4 clone. 
-The choice of the similarity threshold (35%) does not follow any specific indication, general law from clone detection or deeper insight into our dataset. 
-We were only guided by the need to filter out all spurious matches while still keeping enough clones to represent the dataset.
-Thus, we have made several incremental attempts, starting from 10%. 
-For each attempt, we incremented the value by 5% and observed the obtained precision and recall.
-The current value seems to offer the best trade-off.
+WAHAB: THE BELOW PARAGRAPH MAY BE INCLUDED IN THE PREVIOUS SUBSECTION WHERE YOU EXPLAIN THE PROCESS OF BUILDING THE DATASET USING THE PROJECTS
+It is worth mentioning that, in the case of defect prevention, the false positives can be hard to identify as the defects could be in the code but not yet reported through a bug report (or issue). To address this,  we did not include the last six months of history. Following similar studies [@Rosen2015; @Chen2014; @Rosen2015a; @Shihab2013],  if a defect is not reported within six months then it does not exist.
 
-As our approach relies on commit pre-hooks to detect risky commit during the development process (more particularly at commit time), we had to find a way to *replay* past commits. 
-To do so, we *cloned* our test subjects, and then created a new branch called *BIANCA*.
-When created, this branch is reinitialized at the initial state of the project (the first commit) and each commit can be replayed as they have originally been. 
-For each commit, we store the time taken for *BIANCA* to run, the number of detected clone pairs and, the commits known to introduce a defect that match the current commit. 
+With $\alpha$ = 35%, BIANCA achieves in average a precision of 90.75% (13,899/15,316) commits identified as risky. Theses commits triggered the opening of an issue and had to be fixed later on. On the other hand, BIANCA achieves in average 37.15% recall (15,316/41,225) and an average F$_1$ measure of 52.72% .
 
-To validate the results obtained by BIANCA, we needed to use a reliable approach marking defect introducing commit. 
-For this, we turned to Commit-Guru [@Rosen2015] which has the ability to unwind the complete history of a project and label commit as defect introducing if they appear to be linked to a closed issue.
-We use the Commit-Guru labels as the baseline to compute the precision and recall of BIANCA.
+WAHAB: PLEASE ADD A PARAGRAPH ON COMMITS WITHIN PROJECTS AND ACROSS PROJECTS ONCE YOU HAVE THE RESULTS
 
-Overall, we achieve a precision of 90.75% (13899/15316) commits identified as risky by BIANCA are true positives.
-They did trigger the opening of an issue and had to be fixed later on.
-BIANCA reaches 37.15% for the recall measure (15316/41225) and 52.72% for the F$_1$ measure.
-Consequently, we can validate our assumption that project sharing dependencies are open to the same flaws. 
-Moreover, detecting these common defects allow us to reach high precision. 
-Obviously, our recall is somewhat low (37.15%) as we can only catch risky commit with common root causes.
+WAHAB: YOU NEED TO DISCUSS INDIVIDUAL PROJECT, INTERESTING INSIGHTS, MAYBE EXAMPLES OF SOME COMMITS
 
-It is important to note that we do not claim that 37.15% of open-source systems issues are directly linked to their dependencies. 
-To support such a claim, the 15,316 detected commits would have to be analyzed manually.
-However, we have proven that complex software systems sharing dependencies also share common issues, directly related to their dependencies or not.
 
-Finally, we can evaluate the efficiency of our clustering by analyzing BIANCA's result with and without it.
-First of all, the computation time per commit without clustering is 182% higher. 
-Indeed, it goes from 3.22 seconds, in average, to 5.86 seconds (with an i5@1.8Mhz, 19.6 GiB of RAM and SSD disks on Debian 8).
-Also, without the clustering, the recall metric reaches 42.4%, which is higher than our current 37.15%. 
-However, when compared by projects with a Mann-Whitney test, the difference is not statistically significant (i.e. p-value > 0.05).
-On the precision side, the metric drops significantly to 61.6% (i.e. p-value < 0.05) for a total F$_1$ measure of 50.22.   
+It is important to note that we do not claim that 37.15% of open-source systems issues are caused by the projects dependencies. 
+To support such a claim, we would need to analyse the 15,316 detected defect-commits and determine how many yields defects that are similar across projects. Studying the similarity of defects across projects is a complex task and may require analysing the defect reports manually. This is left as part of future work. This said, we showed, in this paper, that software systems sharing dependencies also share common issues, irrespective to whether these issues represent similar defects or not.
+
+Finally, we evaluated the efficiency of BIANCA in terms of execution time. BIANCA takes in average 3.22 seconds (on a i5@1.8Mhz, 19.6 GiB of RAM and SSD disks on Debian 8) to process a commit.
+   
 
 
 # Threats to validity {#sec:threats}
