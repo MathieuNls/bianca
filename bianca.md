@@ -47,6 +47,7 @@ On the other hand, approaches using only the current version to predict bugs ass
 
 In the remaining of this section, we describe approaches belonging
 to the two families.
+Then, we present relevant clones detection approaches as BIANCA uses such an approach to achieve bug prevention at commit-time.
 
 ## Change logs approaches {#sec:change-logs-approaches}
 
@@ -88,13 +89,10 @@ All these approaches, proved software metrics to be useful at detecting software
 
 Finally, Nagappan *et al.* [@Nagappan2005; @Nagappan2006] and Zimmerman [@Zimmermann2007; @Zimmermann2008] further refined metrics-based detection by using statical analysis and call-graph analysis.
 
-_COMMENT FOR EMAD: We need to compare to other approaches in terms of precision, recall and methodology. Is there any papers we must compare to ?_
 
 # The BIANCA Approach {#sec:bianca}
 
 Figure \ref{fig:bianca} shows an overview of the BIANCA approach, which consists of two main phases. In the first phase, BIANCA manages events happening on project tracking systems to extract defect-introducing commits and commits that provided the fixes. For simplicity, in the rest of this paper, we refer to commits that are used to fix defects as _fix-commits_. We use the term _defect-commit_ to mean a commit that introduce a defect. In the second phase, BIANCA analyses the developer's new commits before they reach the central repository to detect potential risky commits (commits that may introduce bugs). 
-
-\input{tex/approach}
 
 The project tracking component of BIANCA listens to bug (or issue) closing events of major open-source projects (currently, BIANCA is tested with 42 large projects). These projects share many dependencies. Projects can depend on each other or on common external tools and libraries. We perform project dependency analysis to identify groups of highly-coupled projects. BIANCA identifies risky commits within each group so as to increase the chances of finding risky commits caused by project dependencies. For each project group, we extract code blocks from defect-commits and fix-commits.  The extracted code blocks are saved in a database that is used in the second phase to identify risky commits before they reach the central repository. For each match between a risky commit and a defect-commit, we pull out from the database the corresponding fix-commit and present it to the developer as a potential way to improve the commit content.  These phases are discussed in more detail in the upcoming subsections.
 
@@ -112,12 +110,10 @@ Once the project dependency graph is extracted, we use a clustering algorithm to
 
 ## Building a database of code blocks of defect-commits and fix-commits {#sec:offline}
 
-BIANCA listens to bug closing events happening on the project tracking system. Every time an issue is closed, BIANCA retrieves the commit that was used to fix the issue (the fix-commit) as well as the one that introduced the defect (the defect-commit). Retrieving fix-commits, however, is known to be a challenging task [@Wu2011]. This is because the link between the project tracking system and the code version control system is not always explicit. In an ideal situation, developers would add a reference to the issue they work on inside the description of the commit. But this good practice is not always followed. To make the link between fix-commits and their related issues, we turn to a modified version of the back-end of commit-guru [@Rosen2015a]. Commit-guru is a tool, developed by Rosen _et al._ to detect _risky commits_.
-A risky commit is a commit which is likely to have introduced a defect in the program. 
-In order to identify risky commits, Commit-guru builds a statistical model using change metrics (i.e. amount of lines added, amount of lines deleted, amount of files modified, ...) from past commits known to have introduced defects in the past.
+BIANCA listens to bug closing events happening on the project tracking system. Every time an issue is closed, BIANCA retrieves the commit that was used to fix the issue (the fix-commit) as well as the one that introduced the defect (the defect-commit). Retrieving fix-commits, however, is known to be a challenging task [@Wu2011]. This is because the link between the project tracking system and the code version control system is not always explicit. In an ideal situation, developers would add a reference to the issue they work on inside the description of the commit. But this good practice is not always followed. To make the link between fix-commits and their related issues, we turn to a modified version of the back-end of commit-guru [@Rosen2015a]. Commit-guru is a tool, developed by .... to... WAHAB: PLEASE COMPLETE THIS¸ 
 
 Commit-guru's back-end has three major components: ingestion, analysis, and prediction. We reuse the ingestion part of the analysis components for BIANCA. The ingestion component is responsible for ingesting (i.e., downloading) a given repository.
-Once the repository is entirely downloaded on a local server, each commit history is analysed. Commits are classified using the list of keywords proposed by Hindle *et al.* [@Hindle2008] (see Table \ref{tab:labels}). Commit-guru performs the SCM blame/annotate function on all the modified lines of code for their corresponding files on the fix-commit's parents. This returns the commits that previously modified these lines of code. 
+Once the repository is entirely downloaded on a local server, each commit history is analysed. WAHAB: IS THE CLASSIFICATION BY HINDEL IMPORTANT HERE Commits are classified using the list of keywords proposed by Hindle *et al.* [@Hindle2008] (see Table \ref{tab:labels}). Commit-guru performs the SCM blame/annotate function on all the modified lines of code for their corresponding files on the fix-commit's parents. This returns the commits that previously modified these lines of code. 
 These  are the ones that have introduced the bugs (i.e., the defect-commits). Note that we could use a simpler and more established tool such as Relink [@Wu2011] to link the commits to their issues and re-implement the classification proposed by Hindle *et al.* [@Hindle2008] on top of it. However, commit-guru has the advantage of being open-source, making it possible to  modify it to fit our needs and fine-tune its performance.
 
 \input{tex/table-words}
@@ -159,8 +155,8 @@ As depicted below, changesets contain only the modified chunk of code and not ne
 @@ -315,36 +315,6 @@
 int initprocesstree_sysdep
 (ProcessTree_T **reference) {
-	mach_port_deallocate(mytask,
-	  task);
+mach_port_deallocate(mytask,
+  task);
 }
 }
 - if (task_for_pid(mytask, pt[i].pid,
@@ -181,7 +177,7 @@ Pre-commit hooks are custom scripts set to fire off when certain important actio
 There are two groups of hooks: client-side and server-side. Client-side hooks are triggered by operations such as committing and merging, whereas server-side hooks run on network operations such as receiving pushed commits. These hooks can be used for all sorts of reasons such as checking compliance with coding rules or automatic run of unit test suites. The pre-commit hook is run first, before the developer types in a commit message. It is used to inspect the modifications that are about to be committed. BIANCA is based on a set of bash and python scripts, and the entry point of these scripts lies in a pre-commit hook. These scripts intercept the commit and extract the corresponding code blocks.
 
 To compare the extracted blocks to the ones in the database, we resort to clone detection techniques, more particularly, the ones based on text matching. This is because lexical and syntactic analysis approaches (alternatives to text-based comparisons) would require a complete program to work, i.e., a program that compiles.  In the relatively wide-range of tools and techniques that exist to detect clones by considering code as text [@Johnson1993;  @Johnson1994; @Marcus; @Manber1994; @StephaneDucasse; @Wettel2005], we selected NICAD as the main text-based method for comparing code blocks [@Cordy2011] for several reasons. 
-First, NICAD is built on top of TXL, which we also used in the previous phase.  Second, NICAD can detect Types 1, 2 and 3 software clones [@CoryKapser]. Type 1 clones are copy-pasted blocks of code that only differ from each other in terms of non-code artefacts such as indentation, whitespaces, comments and so on.  Type 2 clones are blocks of code that are syntactically identical except literals, identifiers, and types that can be modified. Also, Type 2 clones share the particularities of Type 1 about indentation, whitespaces, and comments. Type 3 clones are similar to Type 2 clones in terms of modification of literals, identifiers, types, indentation, whitespaces, and comments but also contain added or deleted code statements. BIANCA detects Type 3 clones since they can contain added or deleted code statements, which make them suitable to comparing commit code blocks.
+First, NICAD is built on top of TXL, which we also used in the previous phase.  Second, NICAD can detect Types 1, 2 and 3 software clones [REF]. Type 1 clones are copy-pasted blocks of code that only differ from each other in terms of non-code artefacts such as indentation, whitespaces, comments and so on.  Type 2 clones are blocks of code that are syntactically identical except literals, identifiers, and types that can be modified. Also, Type 2 clones share the particularities of Type 1 about indentation, whitespaces, and comments. Type 3 clones are similar to Type 2 clones in terms of modification of literals, identifiers, types, indentation, whitespaces, and comments but also contain added or deleted code statements. BIANCA detects Type 3 clones since they can contain added or deleted code statements, which make them suitable to comparing commit code blocks.
 
 
 NICAD works in three phases: *Extraction*, *Comparison* and *Reporting*. 
@@ -219,9 +215,7 @@ Figure \ref{fig:dep-graph} shows the project dependency graph. The dependency gr
 
 ![Dependency Graph\label{fig:dep-graph}](media/network.png)
 
-As shown in Figure \ref{fig:dep-graph},  these Github projects are very much interconnected.  
-In average, the projects composing our dataset have 77 dependencies.
-Among the 77 dependencies, in average, 62 dependencies are shared with at least one other project from our dataset.
+As shown in Figure \ref{fig:dep-graph},  these Github projects are very much interconnected. WAHAB: PLEASE CHECK THIS UPCOMING  SENTENCE We have an average of 77 dependencies per project. Each project shares in average 62 of the 77 dependencies with at least another project. 
 
 Table \ref{tab:communities} shows the result of the Girvan–Newman clustering algorithm  in terms of centroids and betweenness. The blue cluster is dominated by Storm from The Apache Software Foundation. Storm is a distributed real-time computation system. Druid by Alibaba, the e-commerce company that provides consumer-to-consumer, business-to-consumer and business-to-business sales services via web portals, dominates the yellow cluster. In recent years, Alibaba has become an active member of the open-source community by making some of its projects publicly available. The red cluster has Hadoop by the Apache Software Foundation as its centroid. Hadoop is an open-source software framework for distributed storage and distributed processing of very large data sets on computer clusters built from commodity hardware. The green layer is dominated by the Persistence project of OpenHab.  OpenHab proposes home automation solutions and the Persistence project is their data access layer. Finally, the purple cluster is dominated by Libdx by Badlogicgames, which is a cross-platform framework for game development.
 
@@ -231,55 +225,46 @@ A review of each cluster shows that this partitioning divides projects in terms 
 \input{tex/clusters}
 
 
-## Building a database of defect-commits and fix-commits {#sub:golden}
+## Building a database of defect-commits and fix-commits
+
+WAHAB: HERE YOU NEED TO EXPLAIN THE PROCESS OF BUILDING THIS DATABASE USING THE PROJECTS. WE SHOULD NOT REPEAT THE SAME MATERIAL AS IN THE APPROACH. I TOOK SOME PARTS FROM THE OTHER SECTIONS AND COPIED THEM HERE. YOU NEED TO DEVELOP THIS PART BETTER. 
 
 To validate the results obtained by BIANCA, we needed to use a reliable approach marking defect-commits. 
 For this, we turned to commit-guru [@Rosen2015] which has the ability to unwind the complete history of a project and label commits as defect-commits if they appear to be linked to a closed issue. We use the commit-guru labels as the baseline to compute the precision and recall of BIANCA. 
-The process used by commit-guru to identify commits that introduce a defect is simple and reliable in terms of accuracy and computation time.
-First, Commit-guru downloads all the issues that were classified as bug by the project team and closed by a commit from the project management system.
-Second, for each issue, Commit-guru extracts the commit that fixed the issue which is simply known as _fix_ of _fix commit_.
-From the _fix_ commit, Commit-guru computes the _blame/annotate_ scm operation.
-The  _blame/annotate_ allows to retrieve the parent commits of the _fix commit_.
-The parent commits of the _fix commits_ are known as _defect introducing-commits_ as they introduced modification that lead to an issue and a fix.
-Finally, all the defect-introducing commits compose a database against which we can compare the performances of our approach in terms of precision and recall.
-Each time BIANCA classifies a commit as _risky_, we can confirm the correctness of the  classification by checking if the _risky_ commit is in the database of defect-introducing commits.
-The same evaluation process is used by other approaches in the field [@ElEmam2001; @Lee2011a; @Bhattacharya2011; @Kpodjedo2010].
 
 
 ## Process of comparing new commits
 
-As our approach relies on commit pre-hooks to detect risky commit, we had to find a way to *replay* past commits. 
-To do so, we *cloned* our test subjects, and then created a new branch called *BIANCA*. When created, this branch is reinitialized at the initial state of the project (the first commit) and each commit can be replayed as they have originally been.  For each commit, we store the time taken for *BIANCA* to run, the number of detected clone pairs and, the commits that match the current commit. 
-As an example, let's assume that we have three commits from two projects. 
-At time $t_1$,  commit $c_1$ in project $p_1$ introduces a defect. 
-The defect is experienced on field by an user which report it via an issue $i_1$ at $t_2$.
-A developer fixes the defect introduced by $c_1$ in commit $c_2$ and closes $i_1$ at $t_3$.
-From $t_3$ we known that $c_1$ introduced a defect using the process described in Section \ref{sub:golden}.
-If at $t_4$, $c_3$ is pushed to $p_2$ and $c_3$ matches $c_1$ after preprocessing, pretty-printing and formatting, then $c_3$ is classified as _risky_ by BIANCA and $c_2$ is proposed to the developer as a potential solution for the defect introduced in $c_3$.
+WAHAB: THIS PART SHOULD ALSO BE DEVELOPED MORE. WE MAY END UP MERGING IT WITH THE PREVIOUS SECTION
 
-To measure similarity between pairs of commits, we chose threshold of ($\alpha$ = 35%). We have made several incremental attempts, starting from 10%.  For each attempt, we incremented $\alpha$ by 5% and observed the obtained precision and recall. The current value seems to offer the best results. It should also be noted that in clone detection a threshold of around 30% is considered an adequate threshold above which two code blocks are deemed to be clones, especially for clones of Type 3, which contain added or deleted code statements.
+As our approach relies on commit pre-hooks to detect risky commit, we had to find a way to *replay* past commits. 
+To do so, we *cloned* our test subjects, and then created a new branch called *BIANCA*. When created, this branch is reinitialized at the initial state of the project (the first commit) and each commit can be replayed as they have originally been.  For each commit, we store the time taken for *BIANCA* to run, the number of detected clone pairs and, the commits known to introduce a defect that match the current commit. 
+
+To measure similarity between pairs of commits, we chose threshold of (alpha = 35%). We have made several incremental attempts, starting from 10%.  For each attempt, we incremented alpha by 5% and observed the obtained precision and recall. The current value seems to offer the best results. It should also be noted that in clone detection a threshold of around 30% is considered an adequate threshold above which two code blocks are deemed to be clones, expecially for clones of Type 3, which contain added or deleted code statements.
 
 ## Evaluation Measures
 
-We used precision precision, recall, and F$_1$-measure to evaluate our approach. They are computed using TP (true positives), FP (false positives), FN (false negatives), which are defined as follows:
+We used precision precision, recall, and F$_1$-measure to evaluate our approach. They are computed using TP (true positives), FP (fals positives), FN (false negatives), which are defined as follows:
 
-- TP: This is the number of defect-commits that were properly classified by BIANCA
-- FP: This is the number of healthy commits that were classified by BIANCA as risky
-- FN: This is the number of defect introducing-commits that were not detected by BIANCA
+TP: This is the number of defect-commits that were properly classified by BIANCA
+FP: This is the number of healthy commits that were classified by BIANCA as risky
+FN: This is the number of defect-commits that were not detected by BIANCA
 
+WAHAB: PLEASE CHANGE PRECISION AND RECALL AND F_MEASURE accordingly:
+
+Precision = TP/ (TP + FP)
+Recall = TP/(TP + FN)
+F1Measure = same as before
 
 $$
-  precision = \cfrac{TP}{TP + FP} \\
+  precision = \cfrac{true~positives}{true~positives \cap false~positives} \\
 $$
 $$
-  recall = \cfrac{TP} {TP + FN} \\
+  recall = \cfrac{true~positives} {relevant~elements} \\
 $$
 $$
   F1 = 2.\cfrac{precision.recall}{precision+recall} 
 $$
-
-It is worth mentioning that, in the case of defect prevention, false positives can be hard to identify as the defects could be in the code but not yet reported through a bug report (or issue). To address this, we did not include the last six months of history. Following similar studies [@Rosen2015; @Chen2014; @Rosen2015a; @Shihab2013], if a defect is not reported within six months then it does not exist.
-
 
 ## Results of BIANCA {#sec:result}
 
@@ -287,73 +272,22 @@ It is worth mentioning that, in the case of defect prevention, false positives c
 
 Table \ref{tab:results} shows the results of applying BIANCA in terms of organization, project name, a short description of the project, the number of classes, the number of commits, the number of defect-commits, the number of defect-commits detected by BIANCA, precision (%), recall (%), F$_1$-measure and the average difference, in days, between detected commit and the _original_ commit inserting the defect for the first time. 
 
-With $\alpha$ = 35%, BIANCA achieves in average a precision of 90.75% (13,899/15,316) commits identified as risky. Theses commits triggered the opening of an issue and had to be fixed later on. On the other hand, BIANCA achieves in average 37.15% recall (15,316/41,225) and an average F$_1$ measure of 52.72%.
-Also, out of the 15,316 commits BIANCA classified as _risky_, only 1,320 (8.6%) were because they were matching a defect-commit inside the same project. 
-This finding supports the idea that developers of a project are not likely to introduce the same defect twice while developers of different project using the same dependencies are, in fact, likely to introduce similar defects.
-Indeed, if developers were to introduce the same defect several time inside the same project, then the proportion of commit classified as _risky_ per BIANCA because they match a defect-commit inside the same project would be higher than 8.6%.
-This is a potentially a crucial finding for researchers aiming to achieve cross-project defect prevention, regardless of the technique (i.e. statistical model, AST comparison, code comparison, ...) employed.
+WAHAB: THE BELOW PARAGRAPH MAY BE INCLUDED IN THE PREVIOUS SUBSECTION WHERE YOU EXPLAIN THE PROCESS OF BUILDING THE DATASET USING THE PROJECTS
+It is worth mentioning that, in the case of defect prevention, the false positives can be hard to identify as the defects could be in the code but not yet reported through a bug report (or issue). To address this,  we did not include the last six months of history. Following similar studies [@Rosen2015; @Chen2014; @Rosen2015a; @Shihab2013],  if a defect is not reported within six months then it does not exist.
 
-In what follows, we will describe, in details, the projects three projects with the highest and the lowest F$_1$-measure, respectively.
+With $\alpha$ = 35%, BIANCA achieves in average a precision of 90.75% (13,899/15,316) commits identified as risky. Theses commits triggered the opening of an issue and had to be fixed later on. On the other hand, BIANCA achieves in average 37.15% recall (15,316/41,225) and an average F$_1$ measure of 52.72% .
 
-The three highest performing projects are otto by square, JStorm by Alibaba and auto by Google.
-They reach F$_1$-measures of 96.5% (100.00% precision and	76.61% recall), 88.96% (90.48% precision and 87.50% recall) and 86.76% (90.48% precision and 87.50% recall), respectively.
-The three lowest performing projects are Android
-Annotations by Excilys (100.00% precision and, 1.59% recall, 3.13% F$_1$-measure), che by Eclipse (88.89% precision, 5.33% recall and, 10.05% F$_1$-measure) and, openhab by Openhab 100.00% precision, 7.14% recall and, 13.33% F$_1$-measure).
-To interpret such high and low F$_1$-measures, we conducted a manual analysis of the commit classified as _risky_ by BIANCA for the six projects.
+WAHAB: PLEASE ADD A PARAGRAPH ON COMMITS WITHIN PROJECTS AND ACROSS PROJECTS ONCE YOU HAVE THE RESULTS
 
-### Otto by Square (96.5%)
+WAHAB: YOU NEED TO DISCUSS INDIVIDUAL PROJECT, INTERESTING INSIGHTS, MAYBE EXAMPLES OF SOME COMMITS
 
-At first, the F$_1$-measure of Otto by Square seems surprising given what features it provides.
-Indeed, otto by Square provides a Guava-based event bus. 
-While it does have dependencies that could open it up to the same issues as other project, the fact that it does something this specific makes it, at first sight, unlikely to share defect with other projects.
-Through our manual analysis, we found out that out of 16 _risky_ commit detected by BIANCA (15/16 being true positives) 11 (68.75%) were matching defect introducing commit inside the Otto project itself.
-This is significantly higher than the average of _single project_ defect (8.6%).
-Further investigation of the project management system led us to discover that very few issues have been submitted for this project (15) and, out of the 11 matches inside the Otto project, 7 were trying to fix the same issue that have been submitted and fixed several times instead of re-opening the original issue.
-
-### JStorm by Alibaba (88.96%)
-
-For JStorm by Alibaba, our manual analysis of the _risky_ commits revealed that, in addition of providing stream processes, JStorm mainly supports JSON.
-Unsurprisingly, the commit detected as _risky_ were related to the JSON encoding/decoding functionalities of JStorm. 
-In our dataset, we have several other projects that supports JSON encoding and decoding such as FastJSON by Alibaba, Hadoop by Apache, Dropwizard by Dropwizard, Gradle by Gradle and Anthelion by Yahoo.
-There is, however, only one project supporting JSON in the same cluster as JStorm: Fastjson by Alibaba.
-FastJSON has a rather large history of defect introducing commits (516) and 18 out of the 21 commits marked as _risky_ by BIANCA were so because they matched defect introducing commit in the FastJSON project.
-
-### Auto by Google (86.76%)
-
-Google Auto is a code generation engine.
-This code generation engine is used by other Google projects in our database, such as Guava and Guice.
-Most of the Google auto _risky_ commits (79%) have been because they matched commit in the guava and the Guice project.
-As Guice and Guave share the same code-generation engine (Auto) it makes sense that code introducing defects in these projects share the characteristics of commits introducing defects in auto.
-
-### Openhab by Openhab (13.33%)
-
-Openhab by Openhab provides bus for home automation or smart homes.
-This is a very specific feature.
-Moreover, Openhab and his dependencies are  alone in the green cluster.
-In other words, the only project against which BIANCA could have checked for matching defect is Openhab itself.
-BIANCA was able to detect 2/28 bugs for Openhab.
-We believe that if we had other home-automation projects in our datasets (such as _HomeAutomation_ a component based for smart home systems [@Seinturier2012]) then, Openhab would not be alone is his cluster and we would have achieved a better F$_1$-measure.
-
-### Che by Eclipse (10.05%)
-
-Eclipse che is part of the Eclipse IDE which provides development support for a wide range of programming languages such as C, C++, Java and others.
-Despite the facts that the Che project has a decent amount of defect introducing commits (169) and that it is in the blue cluster (dominated by Apache) BIANCA was only able to detect 9 _risky_ commits.
-After manual analysis of the 169 defect introducing commit, we were not able to draw any conclusion on why we were not able to achieve better performances.
-We can only assume that Eclipse's developers are particularly careful on how they use their dependencies and the quality of their code in general.
-Only 2% of their commits are introducing new defects (169/7818).
-
-### Annotations by Excilys (3.13%)
-
-The last project we analyzed manually is Annotations by Excilys.
-Very much like openhab by Openhab it provides a very particular feature: Java annotations for Android project.
-We do not have any other project remotely related to Java annotations or the android ecosystem at large.
-Consequently, BIANCA performs poorly.
 
 It is important to note that we do not claim that 37.15% of open-source systems issues are caused by the projects dependencies. 
 To support such a claim, we would need to analyse the 15,316 detected defect-commits and determine how many yields defects that are similar across projects. Studying the similarity of defects across projects is a complex task and may require analysing the defect reports manually. This is left as part of future work. This said, we showed, in this paper, that software systems sharing dependencies also share common issues, irrespective to whether these issues represent similar defects or not.
 
-Finally, we evaluated the efficiency of BIANCA in terms of execution time. BIANCA takes in average 0.8 second (on a i5@1.8Mhz, 4 GiB of RAM and SSD disks on Debian 8 provided by Amazon) to perform a comparison.
-Overall, we performed 497,194,110 comparisons, on 48 amazon virtual machines running in parallel, over three months.
+Finally, we evaluated the efficiency of BIANCA in terms of execution time. BIANCA takes in average 3.22 seconds (on a i5@1.8Mhz, 19.6 GiB of RAM and SSD disks on Debian 8) to process a commit.
+   
+
 
 # Threats to validity {#sec:threats}
 
@@ -376,7 +310,7 @@ In conclusion, internal and external validity have both been minimized by choosi
 
 # Discussion {#sec:discuss}
 
-_COMMENT: THIS IS STILL A WORK IN PROGRESS. I'D LIKE TO HAVE YOUR INPUTS ON WHAT SHOULD GO HERE._
+<!-- WORK IN PROGRESS -->
 
 In this section, we discuss the key lessons learned while designing and validating BIANCA.
 
@@ -407,7 +341,7 @@ We provide a reproduction package for this paper.
 Our reproduction package is available at [http://bit.ly/bianca-icse](http://bit.ly/bianca-icse) and provides the data at different stages of processing (initial, after clustering, final result) in addition to scripts and code used.
 
 
-\newpage
+
 
 # References
 
@@ -423,4 +357,4 @@ Our reproduction package is available at [http://bit.ly/bianca-icse](http://bit.
 
 <!-- End Footnotes text -->
 
-\small
+\footnotesize
