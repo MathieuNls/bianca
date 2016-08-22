@@ -181,3 +181,4 @@ TSWLatexianTemp*
 
 *.sublime-project
 *.sublime-workspace
+data/db
