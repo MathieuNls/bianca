@@ -20,6 +20,23 @@ keyword:
 - Clone Detection
 - Software Maintenance
 ---
+<!-- 
+Hi Mathieu,
+
+I fixes some text in the paper and more importantly added some comments for you and Wahab <COMMENT FOR MATHIEU  and COMMENT FOR MATHIEU/Wahab >.
+
+Overall, the paper is really nice and it seems like a lot of hard work went into the technique. For me, the approach needs to be clarified a bit more and the text in section 3 needs to be better connected to Figure 1. Most importantly though is the evaluation. I think we need to evaluate the fixes that are proposed by BIANCA, I added some suggestions on how to do that in the text. Also, the low recall values need to be addressed; I think that it is impossible to get high recall since the data is unbalanced and we mostly detect risky commits that also show up in other projects, however, knowing ICSE and reviewers in general, very few will appreciate or understand this. I suggest that we use ROC to present the results, since it is more robust to unbalanced data. We can discuss more if needed.
+
+Please have a look at my comments and let me know if there are any questions.
+
+Regards,
+
+Fig 1 - Overall - Big blocks
+Figures per section
+
+Remove table 1
+ -->
+
 
 # Introduction
 
@@ -38,8 +55,6 @@ We validate the performance of BIANCA on 42 open source projects, obtained from 
 The remaining parts of this paper are organized as follows. In Section \ref{sec:relwork}, we present related work. Sections \ref{sec:bianca} and  \ref{sec:exp} are dedicated to presenting the BIANCA approach and its evaluation.
 Then, Sections \ref{sec:threats}, \ref{sec:conclusion} and, \ref{sec:discuss} assess the threats to validity, present the key lessons learned and, a conclusion accompanied with future work, respectively.
 
-
-	
 # Related Work {#sec:relwork}
 
 Predicting crashes, faults, and bugs is very popular research area. The main goal of existing studies is to save on manpower when dealing with bugs and crashes. There are two distinct trends in crash, fault and bug prediction: History analysis and current version analysis.
@@ -92,8 +107,9 @@ All these approaches, proved software metrics to be useful at detecting software
 
 Finally, Nagappan *et al.* [@Nagappan2005; @Nagappan2006] and Zimmerman [@Zimmermann2007; @Zimmermann2008] further refined metrics-based detection by using statical analysis and call-graph analysis.
 
-_COMMENT FOR EMAD: We need to compare to other approaches in terms of precision, recall and methodology. Is there any papers we must compare to ?_
-_REPLY TO COMMENT: Sure, I will rework the related works section. I will divide it based on file/module-level prediction and commit-level prediction_
+
+\comment{mathieu}{Emad, we need to compare to other approaches in terms of precision, recall and methodology. Is there any papers we must compare to ?}
+\comment{Emad}{Sure, I will rework the related works section. I will divide it based on file/module-level prediction and commit-level prediction}
 
 # The BIANCA Approach {#sec:bianca}
 
@@ -101,11 +117,11 @@ Figure \ref{fig:bianca} shows an overview of the BIANCA approach, which consists
 
 \input{tex/approach}
 
-_COMMENT FOR MATHIEU: Figure 1 needs to be split, maybe into 2 figures. Also, we should add numbers in the figures that correspond to each step and refer to these numbers in the text. As it is now, the figure is very hard to follow._
+\comment{Emad}{Figure 1 needs to be split, maybe into 2 figures. Also, we should add numbers in the figures that correspond to each step and refer to these numbers in the text. As it is now, the figure is very hard to follow.}
 
 The project tracking component of BIANCA listens to bug (or issue) closing events of major open-source projects (currently, BIANCA is tested with 42 large projects). These projects share many dependencies. Projects can depend on each other or on common external tools and libraries. We perform project dependency analysis to identify groups of highly-coupled projects. BIANCA identifies risky commits within each group so as to increase the chances of finding risky commits caused by project dependencies. For each project group, we extract code blocks from defect-commits and fix-commits.  The extracted code blocks are saved in a database that is used in the second phase to identify risky commits before they reach the central repository. For each match between a risky commit and a defect-commit, we pull out from the database the corresponding fix-commit and present it to the developer as a potential way to improve the commit content.  These phases are discussed in more detail in the upcoming subsections.
 
-_COMMENT FOR MATHIEU/WAHAB: A possible discussion point to examine is how much history is needed vs. accuracy of BIANCA_
+\comment{Emad}{A possible discussion point to examine is how much history is needed vs. accuracy of BIANCA}
 
 ## Clustering project repositories {#sec:clustering}
 
@@ -185,8 +201,7 @@ Then, we send these expanded changesets to TXL for block extraction and formaliz
 
 ## Analysing New Commits Using Pre-Commit Hooks {#sec:online}
 
-_COMMENT FOR MATHIEU/WAHAB: Another possible discussion point to examine is the impact of $\alpha$ vs. accuracy of BIANCA, i.e., plot $\alpha$ from 0-1 vs. f-measure_
-
+\comment{Emad}{Another possible discussion point to examine is the impact of $\alpha$ vs. accuracy of BIANCA, i.e., plot $\alpha$ from 0-1 vs. f-measure}
 
 Each time a developer makes a commit, BIANCA intercepts it using a pre-commit hook,  extracts the corresponding code block (in a similar way as in the previous phase), and compares it to the code blocks of historical defect-commits. If there is a match then the new commit is deemed to be risky. A threshold $\alpha$ is used to assess the extent beyond which two pair of commits are considered similar. The setting of $\alpha$ is discussed in the case study section.
 
@@ -209,7 +224,7 @@ Furthermore, in the pretty-printing process, statements can be broken down into 
 The pretty-printing allows NICAD to detect Segments 1 and 2 as a clone pair because only the initialization of $i$ changed. This specific example would not have been marked as a clone by other tools we tested such as Duploc [@Ducasse1999]. 
 In addition to the pretty-printing, code can be normalized and filtered to detect different classes of clones and match user preferences.
 
-_COMMENT FOR MATHIEU: I would move the [@Iss2009] citation to the table caption._
+\comment{Emad}{I would move the [@Iss2009] citation to the table caption.}
 
 \input{tex/Pretty-Printing}
 
@@ -221,17 +236,17 @@ We believe that this can make BIANCA a practical approach for the developers as 
     
 # Evaluation  {#sec:exp}
 
-_COMMENT FOR MATHIEU/WAHAB: I suggest splitting this section up into Case Study Setup (subsection A - E) and then a Cast Study Results section (subsection F)_
+\comment{Emad}{I suggest splitting this section up into Case Study Setup (subsection A - E) and then a Cast Study Results section (subsection F)}
 
 In this section, we show the effectiveness of BIANCA in detecting risky commits using clone detection and project dependency analysis. The main research question addressed by this case study is: Can we detect risky commits using code comparison within and across related projects, and if so, what would be the accuracy? 
 
-_COMMENT FOR MATHIEU/WAHAB: Another issue that we need to evaluate is do the proposed fixes help? More on this later_
+\comment{Emad}{Another issue that we need to evaluate is do the proposed fixes help? More on this later}
 
 ## Project Repository Selection {#sec:rep}
 
 To select the projects used to evaluate our approach, we followed three simple criteria. First, the projects need to be in Java and use Maven to manage dependencies. This way, we can automatically extract the dependencies and perform the clustering of projects. The second criterion is to have projects that enjoy a large community support and interest. We selected projects that have at least 2000 followers. A different threshold could be used. Finally, the projects must have a public issue repository to be able to mine their past issues and the fixes. We queried Github with these criteria and retrieved 42 projects (see Table \ref{tab:results} for the list of projects), including those from some of major open-source contributors including Alibaba, Apache Software Foundation, Eclipse, Facebook, Google and Square. 
 
-_COMMENT FOR MATHIEU/WAHAB: I assume that these are also projects that are not forked? Should we add that_
+\comment{Emad}{I assume that these are also projects that are not forked? Should we add that}
 
 ## Project Dependency Analysis {#sec:dependencies}
 
@@ -253,7 +268,7 @@ A review of each cluster shows that this partitioning divides projects in terms 
 
 ## Building a database of defect-commits and fix-commits {#sub:golden}
 
-_COMMENT FOR MATHIEU: There is a lot of repetition here about commit-guru from section 3B. I say remove the commmit-guru text and just say as discussed earlier in section 3B_
+\comment{Emad}{There is a lot of repetition here about commit-guru from section 3B. I say remove the commmit-guru text and just say as discussed earlier in section 3B}
 
 To validate the results obtained by BIANCA, we needed to use a reliable approach marking defect-commits. 
 For this, we turned to Commit-guru [@Rosen2015] which has the ability to unwind the complete history of a project and label commits as defect-commits if they appear to be linked to a closed issue. We use the commit-guru labels as the baseline to compute the precision and recall of BIANCA. 
@@ -270,7 +285,7 @@ The same evaluation process is used by other approaches in the field [@ElEmam200
 
 ## Process of comparing new commits
 
-_COMMENT FOR MATHIEU: This part is a little complex and it is critical to understand it. I recommend adding a figure here to help with the explanation of the methodology described here._
+\comment{Emad}{This part is a little complex and it is critical to understand it. I recommend adding a figure here to help with the explanation of the methodology described here.}
 
 
 As our approach relies on commit pre-hooks to detect risky commit, we had to find a way to *replay* past commits. 
@@ -286,7 +301,7 @@ To measure similarity between pairs of commits, we chose threshold of ($\alpha$ 
 
 ## Evaluation Measures
 
-_COMMENT FOR MATHIEU/WAHAB: We can also use ROC, which I recommend. For some reason our recall is low, but I this is due to two facts: 1) we only detect risky commits that show up in other projects and 2) the risky commit data is unbalanced (i.e., most commits are not risky). Using ROC will help alleviate the second problem._
+\comment{Emad}{We can also use ROC, which I recommend. For some reason our recall is low, but I this is due to two facts: 1) we only detect risky commits that show up in other projects and 2) the risky commit data is unbalanced (i.e., most commits are not risky). Using ROC will help alleviate the second problem.}
 
 We used precision, recall, and F$_1$-measure to evaluate our approach. They are computed using TP (true positives), FP (false positives), FN (false negatives), which are defined as follows:
 
@@ -310,10 +325,10 @@ It is worth mentioning that, in the case of defect prevention, false positives c
 
 ## Results of BIANCA {#sec:result}
 
-_COMMENT FOR MATHIEU/WAHAB: I think a big part of BIANCA is the fact that it shows you potential fixes. That part is not evaluated at all right now. I think we can evaluate it in two possible ways: 1) to run a similarity analysis, e.g., cosine distance, between the actual fix for the defect-commit and the top 3 or top X fixing commits that we recommend or 2) we can take a statistically significant sample (would be around 400 commits) of the 15K risky commits, examine their fixing commits to the top 3 or top X fixing commits. The second appraoch is manually intensive._
+\comment{Emad}{I think a big part of BIANCA is the fact that it shows you potential fixes. That part is not evaluated at all right now. I think we can evaluate it in two possible ways: 1) to run a similarity analysis, e.g., cosine distance, between the actual fix for the defect-commit and the top 3 or top X fixing commits that we recommend or 2) we can take a statistically significant sample (would be around 400 commits) of the 15K risky commits, examine their fixing commits to the top 3 or top X fixing commits. The second appraoch is manually intensive.}
 
 
-\input{tex/result}
+\input{tex/result}		
 
 Table \ref{tab:results} shows the results of applying BIANCA in terms of organization, project name, a short description of the project, the number of classes, the number of commits, the number of defect-commits, the number of defect-commits detected by BIANCA, precision (%), recall (%), F$_1$-measure and the average difference, in days, between detected commit and the _original_ commit inserting the defect for the first time. 
 
@@ -323,8 +338,7 @@ This finding supports the idea that developers of a project are not likely to in
 Indeed, if developers were to introduce the same defect several time inside the same project, then the proportion of commit classified as _risky_ per BIANCA because they match a defect-commit inside the same project would be higher than 8.6%.
 This is a potentially a crucial finding for researchers aiming to achieve cross-project defect prevention, regardless of the technique (i.e. statistical model, AST comparison, code comparison, etc.) employed.
 
-_COMMENT FOR MATHIEU: I believe the low recall is expected, since BIANCA only considers risky commits that are also in other projects_
-
+### Manual Analysis
 
 In what follows, we will describe, in details, the three projects with the highest and the lowest F$_1$-measure, respectively.
 
@@ -334,7 +348,7 @@ The three lowest performing projects are Android
 Annotations by Excilys (100.00% precision and, 1.59% recall, 3.13% F$_1$-measure), che by Eclipse (88.89% precision, 5.33% recall and, 10.05% F$_1$-measure) and, openhab by Openhab 100.00% precision, 7.14% recall and, 13.33% F$_1$-measure).
 To interpret such high and low F$_1$-measures, we conducted a manual analysis of the commit classified as _risky_ by BIANCA for the six projects.
 
-### Otto by Square (96.5%)
+#### Otto by Square (96.5%)
 
 At first, the F$_1$-measure of Otto by Square seems surprising given what features it provides.
 Indeed, otto by Square provides a Guava-based event bus. 
@@ -343,10 +357,7 @@ Through our manual analysis, we found out that out of the 16 _risky_ commit dete
 This is significantly higher than the average of _single project_ defect (8.6%).
 Further investigation of the project management system led us to discover that very few issues have been submitted for this project (15) and, out of the 11 matches inside the Otto project, 7 were trying to fix the same issue that have been submitted and fixed several times instead of re-opening the original issue.
 
-_COMMENT FOR MATHIEU: Do we have the single poject defect percentage for otto?_
-
-
-### JStorm by Alibaba (88.96%)
+#### JStorm by Alibaba (88.96%)
 
 For JStorm by Alibaba, our manual analysis of the _risky_ commits revealed that, in addition of providing stream processes, JStorm mainly supports JSON.
 Unsurprisingly, the commit detected as _risky_ were related to the JSON encoding/decoding functionalities of JStorm. 
@@ -354,14 +365,14 @@ In our dataset, we have several other projects that supports JSON encoding and d
 There is, however, only one project supporting JSON in the same cluster as JStorm: Fastjson by Alibaba.
 FastJSON has a rather large history of defect introducing commits (516) and 18 out of the 21 commits marked as _risky_ by BIANCA were so because they matched defect introducing commit in the FastJSON project.
 
-### Auto by Google (86.76%)
+#### Auto by Google (86.76%)
 
 Google Auto is a code generation engine.
 This code generation engine is used by other Google projects in our database, such as Guava and Guice.
 Most of the Google auto _risky_ commits (79%) have been because they matched commit in the guava and the Guice project.
 As Guice and Guave share the same code-generation engine (Auto) it makes sense that code introducing defects in these projects share the characteristics of commits introducing defects in auto.
 
-### Openhab by Openhab (13.33%)
+#### Openhab by Openhab (13.33%)
 
 Openhab by Openhab provides bus for home automation or smart homes.
 This is a very specific feature.
@@ -370,7 +381,7 @@ In other words, the only project against which BIANCA could have checked for mat
 BIANCA was able to detect 2/28 bugs for Openhab.
 We believe that if we had other home-automation projects in our datasets (such as _HomeAutomation_ a component based for smart home systems [@Seinturier2012]) then, Openhab would not be alone in its cluster and we would have achieved a better F$_1$-measure.
 
-### Che by Eclipse (10.05%)
+#### Che by Eclipse (10.05%)
 
 Eclipse che is part of the Eclipse IDE which provides development support for a wide range of programming languages such as C, C++, Java and others.
 Despite the facts that the Che project has a decent amount of defect introducing commits (169) and that it is in the blue cluster (dominated by Apache) BIANCA was only able to detect 9 _risky_ commits.
@@ -378,7 +389,7 @@ After manual analysis of the 169 defect introducing commit, we were not able to 
 We can only assume that Eclipse's developers are particularly careful on how they use their dependencies and the quality of their code in general.
 Only 2% of their commits are introducing new defects (169/7818).
 
-### Annotations by Excilys (3.13%)
+#### Annotations by Excilys (3.13%)
 
 The last project we analyzed manually is Annotations by Excilys.
 Very much like openhab by Openhab it provides a very particular feature: Java annotations for Android project.
@@ -388,12 +399,28 @@ Consequently, BIANCA performs poorly.
 It is important to note that we do not claim that 37.15% of open-source systems issues are caused by the projects dependencies. 
 To support such a claim, we would need to analyse the 15,316 detected defect-commits and determine how many yields defects that are similar across projects. Studying the similarity of defects across projects is a complex task and may require analysing the defect reports manually. This is left as part of future work. This said, we showed, in this paper, that software systems sharing dependencies also share common issues, irrespective to whether these issues represent similar defects or not.
 
-Finally, we evaluated the efficiency of BIANCA in terms of execution time. BIANCA takes in average 0.8 second (on a i5@1.8Mhz, 4 GiB of RAM and SSD disks on Debian 8 provided by Amazon) to perform a comparison.
-Overall, we performed 497,194,110 comparisons, on 48 amazon virtual machines running in parallel, over three months.
 
+### Random Classifier Comparison
 
-_COMMENT FOR MATHIEU/WAHAB: Can we examine the relationship between the number of dependencies and accuracy of BIANCA as another discussion point._
+The relatively _low_ recall is to be expected, since BIANCA only considers risky commits that are also in other projects.
+We built a random classifier in order to further assess the efficiency of BIANCA. 
+Our random classifier first generate a random number $n$ between 0 and 1 for the 165,912 commits composing our dataset.
+For each commit, if $n$ is below 0.5, then, the commit is classify as non risky. 
+If $n$ is above 0.5, then, the commit is classified as risky.
+As expected by a random classifier, our implementation detected ~50% (82,384 commits) of the commits to be _risky_. 
+It is worth mentioning is that the random classifier achieved 24.9% precision, 49.96% recall and 33.24 F$_1$-measure.
+As our data are heavily unbalanced (i.e. there is much more _healthy_ than _risky_ commits) these numbers are to be expected for a random classifier.
+Indeed, the recall is very close to 50% as one out of two commits is classified as _risky_, then 50% of the commits shall be found. 
+While analyzing the precision, however, we can see that the data is unbalanced.
+We have only two classes to classify our commit into: _risky_ or _healthy_ and ff the data were balanced (i.e. as many _risky_ and _healthy_ commits), then, the precision while predicting _risky_ commit with a random classifier would also be around 50%.
 
+In order to assess the statistical difference between the precision, the recall and the F$_1$-measure of the random classifier compared to BIANCA with ran Mann-Whitney tests comparing the precision, the recall and the F$_1$-measure obtained for each project.
+The precision of BIANCA and the F$_1$-measure are significantly superior to the random classifier with a p-values < .0001.
+The recall of the random classifier is not significantly higher than the recall of BIANCA with a p-value = 0.2327.
+
+Doing better than a random classifier is not a measure of performance per se, however, it does showcase that predicting the least represented class in an unbalanced bi-class distribution is challenging.
+
+### Analysis of the fixes similarity
 
 # Threats to validity {#sec:threats}
 
@@ -416,11 +443,11 @@ In conclusion, internal and external validity have both been minimized by choosi
 
 # Discussion {#sec:discuss}
 
-_COMMENT: THIS IS STILL A WORK IN PROGRESS. I'D LIKE TO HAVE YOUR INPUTS ON WHAT SHOULD GO HERE._
+\comment{Mathieu}{THIS IS STILL A WORK IN PROGRESS. I'D LIKE TO HAVE YOUR INPUTS ON WHAT SHOULD GO HERE.}
 
-_COMMENT FOR MATHIEU/WAHAB: 1. A possible discussion point to examine is how much history is needed vs. accuracy of BIANCA_
-_COMMENT FOR MATHIEU/WAHAB: 2. Can we examine the relationship between $\alpha$ and accuracy._
-_COMMENT FOR MATHIEU/WAHAB: 3.Can we examine the relationship between the number of dependencies a project has and accuracy of BIANCA as another discussion point._
+\comment{Emad}{A possible discussion point to examine is how much history is needed vs. accuracy of BIANCA}
+\comment{Emad}{Can we examine the relationship between $\alpha$ and accuracy.}
+\comment{Emad}{Can we examine the relationship between the number of dependencies a project has and accuracy of BIANCA as another discussion point.}
 
 In this section, we discuss the key lessons learned while designing and validating BIANCA.
 

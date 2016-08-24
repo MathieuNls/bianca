@@ -3,7 +3,9 @@
 \usepackage[linesnumbered]{algorithm2e}
 \usepackage[utf8]{inputenc}
 \usepackage{multirow}
+\usepackage{color}
 
+\newcommand{\comment}[2]{{\color{red}{#1: #2}}\\}
 
 $if(linestretch)$
 \usepackage{setspace}
