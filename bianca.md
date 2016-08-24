@@ -58,13 +58,6 @@ Other work focused on the prediction of risky chagnes. Kim et al. proposed the c
 
 Our work shares a similar goal to the work on the prediction of risky changes, however, BIANCA takes a different approach in that it uses knowledge from the dependencies of a project to determine risky changes.
 
-Predicting crashes, faults, and bugs is a very popular research area. The main goal of existing studies is to save on manpower when dealing with bugs and crashes. There are two distinct trends in crash, fault and bug prediction: History analysis and current version analysis.
-
-In the history analysis, researchers extract and interpret information from the system. 
-The idea is that the files or locations that are the most frequently changed are those that are more likely to contain bugs. 
-Additionally, some of these approaches also assume that locations linked to a previous bug are likely to be linked to a bug in the future. 
-On the other hand, approaches using only the current version to predict bugs assume that the current version, i.e., its design, call graph, quality metrics and more, will trigger the appearance of the bug in the future. Consequently, they do no require the history and only need the source code of the current version.
-
 ## Automaitc patch gneration
 
 _COMMENT: Need to complete_
@@ -72,6 +65,14 @@ _COMMENT: Need to complete_
 ## File, module and risky change prediction
 
 _COMMENT: Old related works section_
+
+Predicting crashes, faults, and bugs is a very popular research area. The main goal of existing studies is to save on manpower when dealing with bugs and crashes. There are two distinct trends in crash, fault and bug prediction: History analysis and current version analysis.
+
+In the history analysis, researchers extract and interpret information from the system. 
+The idea is that the files or locations that are the most frequently changed are those that are more likely to contain bugs. 
+Additionally, some of these approaches also assume that locations linked to a previous bug are likely to be linked to a bug in the future. 
+On the other hand, approaches using only the current version to predict bugs assume that the current version, i.e., its design, call graph, quality metrics and more, will trigger the appearance of the bug in the future. Consequently, they do no require the history and only need the source code of the current version.
+
 ## Approaches based on change logs {#sec:change-logs-approaches}
 
 Approaches based on change logs rely on mining  historical data of the application such as the source code *diffs*. 
