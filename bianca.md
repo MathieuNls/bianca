@@ -58,7 +58,7 @@ Our work shares a similar goal to the work on the prediction of risky changes, h
 
 ## Automaitc patch gneration
 
-_COMMENT: Need to complete_
+\comment{Emad}{Need to complete}
 
 ## File, module and risky change prediction
 
