@@ -4,6 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{multirow}
 \usepackage{color}
+\usepackage{pgfplots}
 
 \newcommand{\comment}[2]{{\color{red}{#1: #2}}\\}
 

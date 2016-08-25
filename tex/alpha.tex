@@ -1,0 +1,18 @@
+\begin{figure}
+
+\begin{tikzpicture}
+\begin{axis}[
+xlabel={Similarity Threshold $\alpha$},
+ylabel={Precentage},
+legend pos=north west
+]
+\addplot table [x=alpha, y=f1, col sep=comma] {data/alpha.csv};
+\addlegendentry{F$_1$-measure}
+\addplot table [x=alpha, y=precision, col sep=comma] {data/alpha.csv};
+\addlegendentry{Precision}
+\addplot table [x=alpha, y=recall, col sep=comma] {data/alpha.csv};
+\addlegendentry{Recall}
+\end{axis}
+\end{tikzpicture}
+\caption{Precision, Recall and F$_1$-measure variations according to $\alpha$\label{fig:alpha-deter}}
+\end{figure}
