@@ -220,10 +220,7 @@ In order to choose our threshold, we could not run all the experiments with all 
 Indeed, the experimentation took nearly three months on 48 Amazon VPS (Virtual Private Server) running in parallel.
 Instead, we used a random 1% subsample of our dataset and incremented alpha from 1 to 100%.
 Figure \ref{fig:alpha-deter} presents the result obtained with $\alpha$ between 30% and 40%.
-The current value offers the best results with our subsample.
-We also used another random 10% subsample of our dataset and tried every $\alpha$ between 30% and 40%.
-Once again, $\alpha$ = 35% yielded the best result.
-Consequently, we used  $\alpha$ = 35% as a threshold for our experimentation.
+The current value offers the best results with our random subsample.
 
 
 \input{tex/alpha}
