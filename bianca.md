@@ -52,69 +52,15 @@ All these approaches, proved software metrics to be useful at detecting software
 
 Other approaches use historical development data, often referred to as process metrics. Naggapan and Ball [@Nagappan] studied the feasibility of using relative churn metrics to prediction buggy modules in the Windows Server 2003. Other work by used past changes and defects to predict buggy locations (e.g., [@Hassan2005], [@Ostrand2005]). Hassan and Holt proposed an approach that highlights the top ten most susceptible locations to have a bug using heuristics based on file-level metrics [@Hassan2005]. They find that locations that have been recently modified and fixed locations are the most defect-prone. Similarly, Ostrand *et al.* [@Ostrand2005] predict future crash location by combining the data from changed and past defect locations. They validate their approach on industrial systems at AT&T. They showed that data from prior changes and defects can effectively defect-prone locations for open-source and industrial systems. Kim *et al.* [@Kim2007a] proposed the bug cache approach, which is an improved technique over Hassan and Holt's approach [@Hassan2005]. Zimmerman
 
-Other work focused on the prediction of risky changes. Kim et al. proposed the change classification problem, which predicts whether a change is buggy or clean [@kim2008classifying]. Hassan [@Hassan2009] used the entropy of changes to predict risky changes. They find that the more complex a change is, the more likely it is to introduce a defect. Kamei *et al.* performed a large-scale empirical study on change classification [@kamei2013large]. They aforementioned studies find that size of a change and the history of the files being changed (i.e., how buggy they are in the past) are the best indicators of risky changes.
+Other work focused on the prediction of risky changes. Kim et al. proposed the change classification problem, which predicts whether a change is buggy or clean [@SunghunKim2008]. Hassan [@Hassan2009] used the entropy of changes to predict risky changes. They find that the more complex a change is, the more likely it is to introduce a defect. Kamei *et al.* performed a large-scale empirical study on change classification [@Kamei2013]. They aforementioned studies find that size of a change and the history of the files being changed (i.e., how buggy they are in the past) are the best indicators of risky changes.
 
 Our work shares a similar goal to the work on the prediction of risky changes, however, BIANCA takes a different approach in that it uses knowledge from the dependencies of a project to determine risky changes.
 
 ## Automatic patch generation
 
-Since BIANCA not only flags risky changes, but also provides developers with fixes that have been applied in the past, automatic patch generation work is also related. Pan *et al.* [@Pan2009EMSE] identified 27 bug fixing patterns that can be applied to fix software bugs in Java programs. They showed that between 45.7 - 63.6\% of the bugs can be fixed with their patterns. Later, Kim *et al.* [@Kim2013ICSE] generated patches from human-written patches and showed that their tool, PAR, successfully generated patches for 27 of 119 bugs. Tao *et al.* [@Tao2014FSE] also showed that automatically generated patches can assist developers in debugging tasks. Other work also focused on determining how to best generate acceptable and high quality patches, e.g. [@Dallmeier2009ASE] [@Goues2012ICSE], and determine what bugs are best fit for automatic patch generation [@Xuan2016ISSRE].
-
+Since BIANCA not only flags risky changes, but also provides developers with fixes that have been applied in the past, automatic patch generation work is also related. Pan *et al.* [@Pan2008] identified 27 bug fixing patterns that can be applied to fix software bugs in Java programs. They showed that between 45.7 - 63.6\% of the bugs can be fixed with their patterns. Later, Kim *et al.* [@Kim2013] generated patches from human-written patches and showed that their tool, PAR, successfully generated patches for 27 of 119 bugs. Tao *et al.* [@tao2014automatically] also showed that automatically generated patches can assist developers in debugging tasks. Other work also focused on determining how to best generate acceptable and high quality patches, e.g. [@Dallmeier; @le2012systematic], and determine what bugs are best fit for automatic patch generation [@le2015should].
 
 Our work differs from the work on automated patch generation in that we do not generate patches, rather we use clone detection to determine the similarity of a change to a previous risky change and suggest to the developer the fixes of the prior risky changes.
-
-\comment{emad}{Old related works section}
-
-Predicting crashes, faults, and bugs is a very popular research area. The main goal of existing studies is to save on manpower when dealing with bugs and crashes. There are two distinct trends in crash, fault and bug prediction: History analysis and current version analysis.
-
-In the history analysis, researchers extract and interpret information from the system. 
-The idea is that the files or locations that are the most frequently changed are those that are more likely to contain bugs. 
-Additionally, some of these approaches also assume that locations linked to a previous bug are likely to be linked to a bug in the future. 
-On the other hand, approaches using only the current version to predict bugs assume that the current version, i.e., its design, call graph, quality metrics and more, will trigger the appearance of the bug in the future. Consequently, they do no require the history and only need the source code of the current version.
-
-## Approaches based on change logs {#sec:change-logs-approaches}
-
-Approaches based on change logs rely on mining  historical data of the application such as the source code *diffs*. 
-A source code *diffs* contains two versions of the same code in one file. 
-Indeed, it contains the lines of code that have been deleted and the one that has been added.
-
-Naggapan *et al.* studied the churns metric and how it can be connected to the apparition of new defects in complex software systems. 
-They established that relative churns are, in fact, a better metric than classical churn [@Nagappan] while studying Windows Server 2003.
-
-Hassan interested himself with the entropy of change, i.e. how complex the change is [@Hassan2009]. 
-Then, the complexity of the change, or entropy, can be used to predict bugs. 
-The more complex a change is, the more likely it is to bring the defect with it.
-Hassan used its entropy metric, with success, on six different systems.
-Before this work, Hassan, in collaboration with Holt proposed an approach that highlights the top ten most susceptible locations to have a bug using heuristics based on *diffs* file metrics [@Hassan2005].
-Moreover, their heuristics also leverage the data of the bug tracking system.
-Indeed, they use the past defect location to predict new ones. The conclusion of these two approaches has been that recently modified and fixed locations where the most defect-prone compared to frequently modified ones.
-
-Similarly to Hassan and Holt, Ostrand *et al.* predict future crash location by combining the data from changed and past defect locations [@Ostrand2005]. 
-The main difference between Hassan and Holt and Ostrand *et al.* is that Ostrand *et al.* validate their approach on industrial systems as they are members of the AT&T lab while Hassan and Hold validated their approach on open-source systems. 
-This proved that these metrics are relevant for open-source and industrial systems.
-
-Kim *et al.* applied the same recipe and mined recent changes and defects with their approach named bug cache [@Kim2007a]. 
-However, they are more accurate than the previous approaches at detecting defect location by taking into account that is more likely for a developer to make a change that introduces a defect when being under pressure. 
-Such changes can be pushed to the revision-control system when deadlines and releases date are approaching.
-
-## Single-version approaches
-
-Approaches belonging to the single-version family will only consider the current version of the software at hand.
-Simply put, they do not leverage the history of changes or bug reports.
-Despite this fact, that one can see as a disadvantage compared to approaches that do leverage history; these approaches yield interesting results using code-based metrics.
-
-Chidamber and Kemerer published the well-known CK metrics suite [@Chidamber1994] for object oriented designs and inspired Moha *et al.* to publish similar metrics for service-oriented programs [@Moha]. 
-Another famous metric suite for assessing the quality of a given software design is Briand's coupling metrics [@Briand1999a].
-
-The CK and Briand’s metrics suites have been used, for example, by Basili *et al.* [@Basili1996], El Emam *et al.* [@ElEmam2001], Subramanyam *et al.* [@Subramanyam2003] and Gyimothy *et al.* [@Gyimothy2005] for object-oriented designs. 
-Service oriented designs have been far less studied than object oriented design as they are relatively new, but, Nayrolles *et al.* [@Nayrolles; @Nayrolles2013d], Demange *et al.* [@demange2013] and Palma *et al.* [@Palma2013] used Moha et *et al.* metric suites to detect software defects.
-All these approaches, proved software metrics to be useful at detecting software fault for object oriented and service oriented designs, respectively.
-
-Finally, Nagappan *et al.* [@Nagappan2005; @Nagappan2006] and Zimmerman [@Zimmermann2007; @Zimmermann2008] further refined metrics-based detection by using statical analysis and call-graph analysis.
-
-
-\comment{mathieu}{Emad, we need to compare to other approaches in terms of precision, recall and methodology. Is there any papers we must compare to ?}
-\comment{Emad}{Sure, I will rework the related works section. I will divide it based on file/module-level prediction and commit-level prediction}
 
 # The BIANCA Approach {#sec:bianca}
 
