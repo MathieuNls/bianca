@@ -39,6 +39,30 @@ The remaining parts of this paper are organized as follows. In Section \ref{sec:
 Then, Sections \ref{sec:threats}, \ref{sec:conclusion} and, \ref{sec:discuss} assess the threats to validity, present the key lessons learned and, a conclusion accompanied with future work, respectively.
 
 # Related Work {#sec:relwork}
+The work most related to our comes from two main areas, work that aims to predict future defects in files, modules and changes and work that aims to propose or generate patches for buggy software.
+
+## File, module and risky change prediction
+
+The majority of previous file/modeul-level prediction work used code or process metrics.
+Approaches using code metrics only use information from the coe iteself and do not use any historical data. Chidamber and Kemerer published the well-known CK metrics suite [@Chidamber1994] for object oriented designs and inspired Moha *et al.* to publish similar metrics for service-oriented programs [@Moha]. Another famous metric suite for assessing the quality of a given software design is Briand's coupling metrics [@Briand1999a].
+
+The CK and Briand’s metrics suites have been used, for example, by Basili *et al.* [@Basili1996], El Emam *et al.* [@ElEmam2001], Subramanyam *et al.* [@Subramanyam2003] and Gyimothy *et al.* [@Gyimothy2005] for object-oriented designs. 
+Service oriented designs have been far less studied than object oriented design as they are relatively new, but, Nayrolles *et al.* [@Nayrolles; @Nayrolles2013d], Demange *et al.* [@demange2013] and Palma *et al.* [@Palma2013] used Moha et *et al.* metric suites to detect software defects.
+All these approaches, proved software metrics to be useful at detecting software fault for object oriented and service oriented designs, respectively. More recently, Nagappan *et al.* [@Nagappan2005; @Nagappan2006] and Zimmerman [@Zimmermann2007; @Zimmermann2008] further refined metrics-based detection by using statical analysis and call-graph analysis.
+
+Other approaches use historical development data, often reffered to as process metrics. Naggapan and Ball [@Nagappan] studied the feasability of using relative churn metrics to prediction buggy modules in the Windows Server 2003. Other work by used past changes and defects to predict buggy locations (e.g., [@Hassan2005], [@Ostrand2005]). Hassan and Holt proposed an approach that highlights the top ten most susceptible locations to have a bug using heuristics based on file-level metrics [@Hassan2005]. They find that locations that have been recently modified and fixed locations are the most defect-prone. Similarly, Ostrand *et al.* [@Ostrand2005] predict future crash location by combining the data from changed and past defect locations. They validate their approach on industrial systems at AT&T. They showed that data from prior changes and defects can effectively defect-prone locations for open-source and industrial systems. Kim *et al.* [@Kim2007a] proposed the bug cache appraoch, which is an improved technique over Hassan and Holt's approach [@Hassan2005]. Zimmerman
+
+Other work focused on the prediction of risky chagnes. Kim et al. proposed the change classification problem, which predicts whether a change is buggy or clean [@kim2008classifying]. Hassan [@Hassan2009] used the entropy of changes to predict risky chagnes. They find that the more complex a change is, the more likely it is to introduce a defect. Kamei *et al.* performed a large-scale empirical study on change classification [@kamei2013large]. They aforementioned studies find that size of a change and the history of the files being changed (i.e., how buggy they are in the past) are the best indicators of risky changes.
+
+Our work shares a similar goal to the work on the prediction of risky changes, however, BIANCA takes a different approach in that it uses knowledge from the dependencies of a project to determine risky changes.
+
+## Automaitc patch gneration
+
+_COMMENT: Need to complete_
+
+## File, module and risky change prediction
+
+\comment{emad}{Old related works section}
 
 Predicting crashes, faults, and bugs is a very popular research area. The main goal of existing studies is to save on manpower when dealing with bugs and crashes. There are two distinct trends in crash, fault and bug prediction: History analysis and current version analysis.
 
@@ -46,7 +70,6 @@ In the history analysis, researchers extract and interpret information from the 
 The idea is that the files or locations that are the most frequently changed are those that are more likely to contain bugs. 
 Additionally, some of these approaches also assume that locations linked to a previous bug are likely to be linked to a bug in the future. 
 On the other hand, approaches using only the current version to predict bugs assume that the current version, i.e., its design, call graph, quality metrics and more, will trigger the appearance of the bug in the future. Consequently, they do no require the history and only need the source code of the current version.
-
 
 ## Approaches based on change logs {#sec:change-logs-approaches}
 
@@ -65,7 +88,7 @@ Before this work, Hassan, in collaboration with Holt proposed an approach that h
 Moreover, their heuristics also leverage the data of the bug tracking system.
 Indeed, they use the past defect location to predict new ones. The conclusion of these two approaches has been that recently modified and fixed locations where the most defect-prone compared to frequently modified ones.
 
-Similarly to Hassan and Hold, Ostrand *et al.* predict future crash location by combining the data from changed and past defect locations [@Ostrand2005]. 
+Similarly to Hassan and Holt, Ostrand *et al.* predict future crash location by combining the data from changed and past defect locations [@Ostrand2005]. 
 The main difference between Hassan and Holt and Ostrand *et al.* is that Ostrand *et al.* validate their approach on industrial systems as they are members of the AT&T lab while Hassan and Hold validated their approach on open-source systems. 
 This proved that these metrics are relevant for open-source and industrial systems.
 
