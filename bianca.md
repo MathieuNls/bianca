@@ -306,12 +306,12 @@ In other words, BIANCA is able to detect _risky_ commits with 90.75% precision, 
 
 ## Manual Analysis
 
-BIANCA performed best when applied to  three projects: Otto by Square (100.00% precision and 76.61% recall, 96.55% F$_1$-measure), JStorm by Alibaba (90.48% precision, 87.50% recall, 88.96% F$_1$-measure), and Auto by Google (90.48% precision, 87.50% recall, 86.76% F$_1$-measure). It performed worse when used with  Android Annotations by Excilys (100.00% precision, 1.59% recall, 3.13% F$_1$-measure) and Che by Eclipse (88.89% precision, 5.33% recall, 10.05% F$_1$-measure), Openhab by Openhab (100.00% precision, 7.14% recall, 13.33% F$_1$-measure). To understand the performance of BIANCA, we conducted a manual analysis of the commits classified as _risky_ by BIANCA for these projects.
+BIANCA performed best when applied to three projects: Otto by Square (100.00% precision and 76.61% recall, 96.55% F$_1$-measure), JStorm by Alibaba (90.48% precision, 87.50% recall, 88.96% F$_1$-measure), and Auto by Google (90.48% precision, 87.50% recall, 86.76% F$_1$-measure). It performed worst when applied to Android Annotations by Excilys (100.00% precision, 1.59% recall, 3.13% F$_1$-measure) and Che by Eclipse (88.89% precision, 5.33% recall, 10.05% F$_1$-measure), Openhab by Openhab (100.00% precision, 7.14% recall, 13.33% F$_1$-measure). To understand the performance of BIANCA, we conducted a manual analysis of the commits classified as _risky_ by BIANCA for these projects.
 
 ### Otto by Square (F$_1$-measure = 96.5%)
 
 At first, the F$_1$-measure of Otto by Square seems surprising given the specific set of features it provides. Otto provides a Guava-based event bus.  While it does have dependencies that  makes it vulnerable to defects in related projects, the fact that it provides specific features makes it, at first sight, unlikely to share defects with other projects.
-Through our manual analysis, we found that out of the 16 _risky_ commits detected by BIANCA, only 11 (68.75%)  matched defect-introducing commits inside the Otto project itself. This is significantly higher than the average number of single-project defects (8.6%). Further investigation of the project management system revealed that a very few issues have been submitted for this project (15) and, out of the 11 matches inside the Otto project, 7 were aiming to fix the same issue that had been submitted and fixed several times instead of re-opening the original issue.
+Through our manual analysis, we found that out of the 16 _risky_ commits detected by BIANCA, only 11 (68.75%) matched defect-introducing commits inside the Otto project itself. This is significantly higher than the average number of single-project defects (8.6%). Further investigation of the project management system revealed that a very few issues have been submitted for this project (15) and, out of the 11 matches inside the Otto project, 7 were aiming to fix the same issue that had been submitted and fixed several times instead of re-opening the original issue.
 
 ### JStorm by Alibaba (F$_1$-measure = 88.96%)
 
@@ -338,8 +338,7 @@ We believe that if we had other home-automation projects in our dataset (such as
 ### Che by Eclipse (F$_1$-measure = 10.05%)
 
 Eclipse Che is part of the Eclipse IDE ttha provides development support for a wide range of programming languages such as C, C++, Java and others.
-Despite the fact that the Che project has a decent amount of defect-commits (169) and that it is in the blue cluster (dominated by Apache,) BIANCA was only able to detect 9 _risky_ commits.
-After manual analysis of the 169 defect-commits, we were not able to draw any conclusion on why we were not able to achieve better performance. We can only assume that Eclipse's developers are particularly careful on how they use their dependencies and the quality of their code in general. Only 2% (169/7,818) of their commits introduce new defects.
+Despite the fact that the Che project has a decent amount of defect-commits (169) and that it is in the blue cluster (dominated by Apache,) BIANCA was only able to detect 9 _risky_ commits. After manual analysis of the 169 defect-commits, we were not able to draw any conclusion on why we were not able to achieve better performance. We can only assume that Eclipse's developers are particularly careful about how they use their dependencies and the quality of their code in general. Only 2% (169/7,818) of their commits introduce new defects.
 
 ### Annotations by Excilys (F$_1$-measure = 3.13%)
 
@@ -357,7 +356,7 @@ In addition, we see a threat to validity that stems from the fact that we only u
 The results may not be generalizable to industrial systems. We intend to undertake these studies in future work.
 
 The programs we used in this study are all based on the Java programming language. 
-This can limit the generalization of the results. 
+This can limit the generalization of the results to pojects written in other languages. 
 However, similar to Java, one can write a TXL grammar for a new language then BIANCA can work since BIANCA relies on TXL. 
 Finally, we use NICAD as the code comparison engine. 
 The accuracy of NICAD affects the accuracy of BIANCA. 
