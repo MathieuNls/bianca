@@ -185,7 +185,8 @@ In this section, we show the effectiveness of BIANCA in detecting risky commits 
 
 To select the projects used to evaluate our approach, we followed three simple criteria. First, the projects need to be in Java and use Maven to manage dependencies. This way, we can automatically extract the dependencies and perform the clustering of projects. The second criterion is to have projects that enjoy a large community support and interest. We selected projects that have at least 2000 followers. A different threshold could be used. Finally, the projects must have a public issue repository to be able to mine their past issues and the fixes. We queried Github with these criteria and retrieved 42 projects (see Table \ref{tab:results} for the list of projects), including those from some of major open-source contributors such as Alibaba, Apache Software Foundation, Eclipse, Facebook, Google and Square. 
 
-\comment{wahab} {the following subsection can be merged with the previous one. BTW, I moved it from the result section to here.}
+\comment{wahab}{the following subsection can be merged with the previous one. BTW, I moved it from the result section to here.}
+
 ## Project Dependency Analysis {#sec:dependencies}
 
 Figure \ref{fig:dep-graph} shows the project dependency graph. The dependency graph is composed of 592 nodes divided into five clusters shown in yellow, red, green, purple and blue. The size of the nodes in Figure \ref{fig:dep-graph} are proportional to the number of connections from and to the other nodes.
@@ -208,7 +209,7 @@ A review of each cluster shows that this partitioning divides projects in terms 
 
 \comment{Emad}{There is a lot of repetition here about commit-guru from section 3B. I say remove the commmit-guru text and just say as discussed earlier in section 3B}
 
-\comment{wahab} {I propose to change to the text to what follows}
+\comment{wahab}{I propose to change to the text to what follows}
 As discussed in Section 3.B, we used Commit-guru to retrieve the complete history of each project and label commits as defect-commits if they appear to be linked to a closed issue. The process used by Commit-guru to identify commits that introduce a defect is simple and reliable in terms of accuracy and computation time [REF TSE]. We use the commit-guru labels as the baseline to compute the precision and recall of BIANCA. Each time BIANCA classifies a commit as _risky_, we can  check if the _risky_ commit is in the database of defect-introducing commits. The same evaluation process is used by related studies  [@ElEmam2001; @Lee2011a; @Bhattacharya2011; @Kpodjedo2010].
 
 
@@ -223,7 +224,7 @@ A developer fixes the defect introduced by $c_1$ in commit $c_2$ and closes $i_1
 From $t_3$ we known that $c_1$ introduced a defect using the process described in Section \ref{sub:golden}.
 If at $t_4$, $c_3$ is pushed to $p_2$ and $c_3$ matches $c_1$ after preprocessing, pretty-printing and formatting, then $c_3$ is classified as _risky_ by BIANCA and $c_2$ is proposed to the developer as a potential solution for the defect introduced in $c_3$.
 
-To measure similarity between pairs of commits, we needto decide on the value of $\alpha$. One possibility would be to test for all possible values of $\alpha$ and pick the one that provides best accuracy (F$_1$-measure). The ROC (Receiver Operating Characteristic) curve can then be used to display the performance of BIANCA with different values of $\alpha$. Running experiments with all possible$\alpha$ turned out to be computationally demanding given the large number of commits (\comment{Wahab}{PLEASE COMPLETE THIS} over XXXX millions of commits). To address this, we selected randomly a sample of 1% commits from our dataset and checked the results by varying $\alpha from 1 to 100%. \comment{wahab} {I suggest to change the figure to show the results from 1 to 100%} Figure \ref{fig:alpha-deter} shows the results . As we can see, setting $\alpha$ = 35% provides best accuracy. It should also be noted that in clone detection a threshold of around 30% is considered an adequate threshold  above which two code blocks are deemed to be clones, especially for clones of Type 3, which contain added or deleted code statements [@Roy2008; @Cordy2011]. With $\alpha$ = 35%, the experiments took nearly three months on 48 Amazon VPS (Virtual Private Server) running in parallel.
+To measure similarity between pairs of commits, we needto decide on the value of $\alpha$. One possibility would be to test for all possible values of $\alpha$ and pick the one that provides best accuracy (F$_1$-measure). The ROC (Receiver Operating Characteristic) curve can then be used to display the performance of BIANCA with different values of $\alpha$. Running experiments with all possible$\alpha$ turned out to be computationally demanding given the large number of commits (\comment{Wahab}{PLEASE COMPLETE THIS} over XXXX millions of commits). To address this, we selected randomly a sample of 1% commits from our dataset and checked the results by varying $\alpha$ from 1 to 100%. \comment{wahab}{I suggest to change the figure to show the results from 1 to 100\%} Figure \ref{fig:alpha-deter} shows the results . As we can see, setting $\alpha$ = 35% provides best accuracy. It should also be noted that in clone detection a threshold of around 30% is considered an adequate threshold  above which two code blocks are deemed to be clones, especially for clones of Type 3, which contain added or deleted code statements [@Roy2008; @Cordy2011]. With $\alpha$ = 35%, the experiments took nearly three months on 48 Amazon VPS (Virtual Private Server) running in parallel.
 
 ## Evaluation Measures
 
@@ -355,12 +356,6 @@ in addition, because it relies on code comparison, BIANCA does not only detect r
 
 To build on this work, we need to conduct a human study with developers in order to gather their feedback on the approach.
 These feedbacks will help us to fine-tune the approach. Also, we want to improve BIANCA to support Type 4 clones to further improve  accuracy .
-
-# Reproduction Package
-
-We provide a reproduction package for this paper. 
-Our reproduction package is available at [http://bit.ly/bianca-icse](http://bit.ly/bianca-icse) and provides the data at different stages of processing (initial, after clustering, final result) in addition to scripts and code used.
-
 
 \newpage
 
