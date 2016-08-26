@@ -290,9 +290,6 @@ The precision of BIANCA and the F$_1$-measure are significantly superior to the 
 The recall of the random classifier is not significantly higher than the recall of BIANCA with a p-value = 0.2327.
 -->
 
-
->>>>>>> Stashed changes
-
 ## Analysis of the Quality of the Fixes Proposed by BIANCA
 
 One of the advantages of BIANCA over other  techniques is that it also proposes fixes for the _risky_ commits at hand.
