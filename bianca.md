@@ -1,7 +1,7 @@
 ---
 title: "BIANCA: Preventing Bug Insertion at Commit-Time Using Dependency Analysis and Clone Detection"
 bibliography: config/library.bib
-abstract: Preventing the introduction of software defects at commit-time is a growing line of research in the software maintenance community. Existing approaches leverage code and process metrics to build statistical models that can effectively prevent defect insertion and propose fixes in a software project. Metrics, however, may vary from one project to another, hindering the reuse of these models. Moreover, these techniques operate within single projects only despite the fact that many projects share dependencies and are, therefore, vulnerable to similar faults. In this paper, we propose a novel approach, called BIANCA, that relies on clone detection and dependency analysis to detect _risky_ commits within and across related projects. When applied to 42 projects, BIANCA achieves an average precision, recall and F-measure of 90.75%, 37.15% and 52.72%, respectively. We also found that only 8.6% of the risky commits detected by BIANCA match other commits from the same project, suggesting that relationships across projects need to be considered for effective prevention of risky commits. In addition, BIANCA is able to propose qualitative fixes to transform _risky_ commits into _healthy_ ones in 78.67% of the cases. 
+abstract: Preventing the introduction of software defects at commit-time is a growing line of research in the software maintenance community. Existing approaches leverage code and process metrics to build statistical models that can effectively prevent defect insertion and propose fixes in a software project. Metrics, however, may vary from one project to another, hindering the reuse of these models. Moreover, these techniques operate within single projects only despite the fact that many projects share dependencies and are, therefore, vulnerable to similar faults. In this paper, we propose a novel approach, called BIANCA, that relies on clone detection and dependency analysis to detect _risky_ commits within and across related projects. When applied to 42 projects, BIANCA achieves an average precision, recall and F-measure of 90.75%, 37.15% and 52.72%, respectively. We also found that only 8.6% of the risky commits detected by BIANCA match other commits from the same project, suggesting that relationships across projects need to be considered for effective prevention of risky commits. In addition, BIANCA is able to propose qualitative fixes to transform _risky_ commits into _non-risky_ ones in 78.67% of the cases. 
 
 author: 
 - name: Mathieu Nayrolles,  Abdelwahab Hamou-Lhadj
@@ -242,7 +242,7 @@ To address this, we selected a sample of 1% commits from the dataset for each pr
 We used precision, recall, and F$_1$-measure to evaluate our approach. They are computed using TP (true positives), FP (false positives), FN (false negatives), which are defined as follows:
 
 - TP: This is the number of defect-commits that were properly classified by BIANCA
-- FP: This is the number of healthy commits that were classified by BIANCA as risky
+- FP: This is the number of non-risky commits that were classified by BIANCA as risky
 - FN: This is the number of defect introducing-commits that were not detected by BIANCA
 - Precision: TP / (TP + FP)
 - Recall: TP / (TP + FN)
@@ -278,10 +278,10 @@ For each commit, if $n$ is below 0.5 then the commit is classified as non risky.
 If $n$ is above 0.5 then the commit is classified as risky.
 As expected by a random classifier, our implementation detected ~50% (82,384 commits) of the commits to be _risky_. 
 It is worth mentioning is that the random classifier achieved 24.9% precision, 49.96% recall and 33.24% F$_1$-measure.
-Since our data are heavily unbalanced (i.e., there are many more _healthy_ than _risky_ commits) these numbers are to be expected for a random classifier.
+Since our data are heavily unbalanced (i.e., there are many more _non-risky_ than _risky_ commits) these numbers are to be expected for a random classifier.
 Indeed, the recall is very close to 50% as one out of two commits is classified as _risky_.
 While analysing the precision, however, we can see that the data is unbalanced.
-We have only two classes to classify our commits into: _risky_ or _healthy_. If the data were balanced (i.e., as many _risky_ and _healthy_ commits), then the precision while predicting _risky_ commit with a random classifier would also be around 50%.
+We have only two classes to classify our commits into: _risky_ or _non-risky_. If the data were balanced (i.e., as many _risky_ and _non-risky_ commits), then the precision while predicting _risky_ commit with a random classifier would also be around 50%.
 In order to assess the statistical difference between the precision, the recall and the F$_1$-measure of the random classifier compared to BIANCA, we ran Mann-Whitney tests comparing the precision, the recall and the F$_1$-measure obtained for each project.
 The precision of BIANCA and the F$_1$-measure are significantly superior to the random classifier with  p-values < .0001.
 The recall of the random classifier is not significantly higher than the recall of BIANCA with p-value = 0.2327.
@@ -305,7 +305,7 @@ In average, the proposed fixes are above the $\alpha$=35% threshold.
 In a per commit basis, BIANCA proposed 101,462 fixes for the  13,899 true positives _risky commits_ (7.3 per commit).
 Out of the 101,462 proposed fixes, 78.67% are above our $\alpha$=35% threshold.
 
-In other words, BIANCA is able to detect _risky_ commits with  90.75% precision, 37.15% recall, and proposes fixes that contain, in average, 40-44% of the actual code needed to transform the _risky_ commit into a _healthy_ one. 
+In other words, BIANCA is able to detect _risky_ commits with  90.75% precision, 37.15% recall, and proposes fixes that contain, in average, 40-44% of the actual code needed to transform the _risky_ commit into a _non-risky_ one. 
 It is still too early to claim whether BIANCA's recommendations can be useful to developers. 
 For this, we need to conduct user study.
 
