@@ -292,25 +292,16 @@ The recall of the random classifier is not significantly higher than the recall 
 
 ## Analysis of the Quality of the Fixes Proposed by BIANCA
 
-One of the advantages of BIANCA over other  techniques is that it also proposes fixes for the _risky_ commits at hand.
-In order to evaluate the quality of the proposed fixes, two approaches were possible: (a) To conduct a human study by asking developers to rate the proposed fixes according to the defects at hand or (b) To compare the proposed fixes with the actual fixes provided by the developers. We chose option (b) and plan to conduct the human study in the future.
+One of the advantages of BIANCA over other techniques is that it also proposes fixes for the _risky_ commits it detects.
+In order to evaluate the quality of the proposed fixes, we compare the proposed fixes with the actual fixes provided by the developers. To do so, we used the same preprocessing steps we applied to incoming commits: extract, pretty-print, normalize and filter the blocks modified by the proposed and actual fixes. Then, the blocks of the actual fixes and the proposed fixes can be compared with our clone comparison engine.
 
-To compare the proposed fixes with the actual fixes, we used the same preprocessing steps we applied to incoming commits: extract, pretty-print, normalize and filter the blocks modified by the proposed and actual fixes. 
-Then, the blocks of the actual fixes and the proposed fixes can be compared with our clone comparison engine.
-
-Similar to other studies recommending fixes, we assess the quality of the first 3 and 5 proposed fixes [@Pan2008; @Kim2013; @tao2014automatically; @Dallmeier; @le2012systematic; @le2015should].
-The average similarity of the first 3 fixes is 40.78% while the similarity of the first five fixes is 44.17%.
-Results are reported in Table \ref{tab:results}.
+Similar to other studies recommending fixes, we assess the quality of the first 3 and 5 proposed fixes [@Pan2008; @Kim2013; @tao2014automatically; @Dallmeier; @le2012systematic; @le2015should]. The average similarity of the first 3 fixes is 40.78% while the similarity of the first five fixes is 44.17%. Results are reported in Table \ref{tab:results}.
 
 In the framework of this study, for a fix to be ranked as qualitative it has to reach our $\alpha$=35% similarity threshold.
-Meaning that the proposed fixed must be at least 35\% similar to the actual fix.
-In average, the proposed fixes are above the $\alpha$=35% threshold.
-In a per commit basis, BIANCA proposed 101,462 fixes for the  13,899 true positives _risky commits_ (7.3 per commit).
-Out of the 101,462 proposed fixes, 78.67% are above our $\alpha$=35% threshold.
+Meaning that the proposed fixed must be at least 35\% similar to the actual fix. On average, the proposed fixes are above the $\alpha$=35% threshold.
+On a per commit basis, BIANCA proposed 101,462 fixes for the 13,899 true positives _risky commits_ (7.3 per commit). Out of the 101,462 proposed fixes, 78.67% are above our $\alpha$=35% threshold.
 
-In other words, BIANCA is able to detect _risky_ commits with  90.75% precision, 37.15% recall, and proposes fixes that contain, in average, 40-44% of the actual code needed to transform the _risky_ commit into a _non-risky_ one. 
-It is still too early to claim whether BIANCA's recommendations can be useful to developers. 
-For this, we need to conduct user study.
+In other words, BIANCA is able to detect _risky_ commits with 90.75% precision, 37.15% recall, and proposes fixes that contain, on average, 40-44% of the actual code needed to transform the _risky_ commit into a _non-risky_ one. It is still too early to claim whether BIANCA's recommendations can be useful to developers. For this, we need to conduct user study, which we plan to do as future work.
 
 
 ## Manual Analysis
