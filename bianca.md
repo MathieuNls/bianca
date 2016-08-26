@@ -152,10 +152,11 @@ We do so by checking the block's beginning and ending with a parentheses algorit
 Then, we send these expanded changesets to TXL for block extraction and formalization.
 
 One important note about this database is that the process can be cold-started.
-A tool supporting BIANCA do not need to *wait* for a project to have issues and fixes to be efficient.
-Indeed, it can leverages the defect-commits and fix-commits of projects in the same clusters that already have an history.
-Consequently, BIANCA is applicable at the beginning of every project.
-The only requirement is to use a dependency manager. 
+A tool supporting BIANCA does not need to *wait* for a project to have issues and fixes to be in effect.
+It can leverage the defect-commits and fix-commits
+of projects in the same cluster that already have a history.
+Therefore, BIANCA is applicable at the beginning of every
+project. The only requirement is to use a dependency manager. 
 
 ## Analysing New Commits Using Pre-Commit Hooks {#sec:online}
 
