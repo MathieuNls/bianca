@@ -41,7 +41,7 @@ The remaining parts of this paper are organized as follows. In Section \ref{sec:
 Then, Sections \ref{sec:threats} and \ref{sec:conclusion} present the threats to validity and a conclusion accompanied with future work.
 
 # Related Work {#sec:relwork}
-The work most related to our comes from two main areas, work that aims to predict future defects in files, modules and changes and work that aims to propose or generate patches for buggy software.
+The work most related to ours comes from two main areas, work that aims to predict future defects in files, modules and changes and work that aims to propose or generate patches for buggy software.
 
 ## File, Module and Risky Change Prediction
 
