@@ -221,7 +221,7 @@ To build the database against which we assess the performance of BIANCA, we use 
 We used Commit-guru to retrieve the complete history of each project and label commits as defect-commits if they appear to be linked to a closed issue. The process used by Commit-guru to identify commits that introduce a defect is simple and reliable in terms of accuracy and computation time [@Kamei2013]. We use the commit-guru labels as the baseline to compute the precision and recall of BIANCA. Each time BIANCA classifies a commit as _risky_, we can  check if the _risky_ commit is in the database of defect-introducing commits. The same evaluation process is used by related studies  [@ElEmam2001; @Lee2011a; @Bhattacharya2011; @Kpodjedo2010].
 The difference between this *golden* database and the database described in Section \ref{sec:offline} is that, with this one, we unwind the whole history instead of building the history as it happens.
 
-## Process of comparing new commits {#sec:newcommits}
+## Process of Comparing New Commits {#sec:newcommits}
 
 Because our approach relies on commit pre-hooks to detect risky commit, we had to find a way to *replay* past commits. 
 To do so, we *cloned* our test subjects, and then created a new branch called *BIANCA*. When created, this branch is reinitialized at the initial state of the project (the first commit) and each commit can be replayed as they have originally been.  For each commit, we store the time taken for *BIANCA* to run, the number of detected clone pairs, and the commits that match the current commit. 
@@ -234,22 +234,34 @@ If at $t_4$, $c_3$ is pushed to $p_2$ and $c_3$ matches $c_1$ after preprocessin
 
 \input{tex/alpha}
 
+<<<<<<< Updated upstream
 To measure similarity between pairs of commits, we need to decide on the value of $\alpha$. One possibility would be to test for all possible values of $\alpha$ and pick the one that provides best accuracy (F$_1$-measure). The ROC (Receiver Operating Characteristic) curve can then be used to display the performance of BIANCA with different values of $\alpha$. Running experiments with all possible $\alpha$ turned out to be computationally demanding given the large number of commits (the need of comparisons required using all possible values of $\alpha$ would be 4e10). 
 
 To address this, we selected a sample of 1% commits from the dataset for each project while keeping the chronological order of commits. We checked the results by varying $\alpha$ from 1% to 100%. Figure \ref{fig:alpha-deter} shows the results. As we can see, setting $\alpha$ = 35% provides best accuracy. It should also be noted that in clone detection a threshold of around 30% is considered an adequate threshold  above which two code blocks are deemed to be clones, especially for clones of Type 3, which contain added or deleted code statements [@Roy2008; @Cordy2011]. With $\alpha$ = 35%, the experiments took nearly three months on 48 Amazon VPS (Virtual Private Server) running in parallel.
+=======
+To measure the similarity between pairs of commits, we need to decide on the value of $\alpha$. One possibility would be to test for all possible values of $\alpha$ and pick the one that provides best accuracy (F$_1$-measure). The ROC (Receiver Operating Characteristic) curve can then be used to display the performance of BIANCA with different values of $\alpha$. Running experiments with all possible $\alpha$ turned out to be computationally demanding given the large number of commits. Testing with all the different values of $\alpha$ amounts to 4e10 comparisons. 
+
+To address this, we randomly selected a sample of 1% commits from our dataset and checked the results by varying $\alpha$ from 1 to 100%. Figure \ref{fig:alpha-deter} shows the results. As we can see, there is a tradeoff between precision and recall, however, after the $\alpha$ = 35% point, we see a drop in recall; hence, we set $\alpha$ = 35% in our experiments. It should also be noted that in clone detection work a threshold of around 30% is considered an adequate threshold above which two code blocks are deemed to be clones, especially for clones of Type 3, which contain added or deleted code statements [@Roy2008; @Cordy2011]. With $\alpha$ = 35%, the experiments took nearly three months to run on 48 Amazon VPS (Virtual Private Server) running in parallel (4e8 comparisons).
+>>>>>>> Stashed changes
 
 ## Evaluation Measures
 
-We used precision, recall, and F$_1$-measure to evaluate our approach. They are computed using TP (true positives), FP (false positives), FN (false negatives), which are defined as follows:
+Similar to prior work focusing on risky commits (e.g., [@SunghunKim2008; @Kamei2013]), we used precision, recall, and F$_1$-measure to evaluate our approach. They are computed using TP (true positives), FP (false positives), FN (false negatives), which are defined as follows:
 
+<<<<<<< Updated upstream
 - TP: This is the number of defect-commits that were properly classified by BIANCA
 - FP: This is the number of non-risky commits that were classified by BIANCA as risky
 - FN: This is the number of defect introducing-commits that were not detected by BIANCA
+=======
+- TP:  is the number of defect-commits that were properly classified by BIANCA
+- FP:  is the number of healthy commits that were classified by BIANCA as risky
+- FN:  is the number of defect introducing-commits that were not detected by BIANCA
+>>>>>>> Stashed changes
 - Precision: TP / (TP + FP)
 - Recall: TP / (TP + FN)
 - F$_1$-measure: 2.(precision.recall)/(precision+recall)
 
-It is worth mentioning that, in the case of defect prevention, false positives can be hard to identify as the defects could be in the code but not yet reported through a bug report (or issue). To address this, we did not include the last six months of history. Following similar studies [@Rosen2015; @Chen2014; @Rosen2015a; @Shihab2013], if a defect is not reported within six months then it does not exist.
+It is worth mentioning that, in the case of defect prevention, false positives can be hard to identify as the defects could be in the code but not yet reported through a bug report (or issue). To address this, we did not include the last six months of history. Following similar studies [@Rosen2015; @Chen2014; @Rosen2015a; @Shihab2013], if a defect is not reported within six months then it is not considered.
 
 # Case Study Results {#sec:result}
 
@@ -257,12 +269,14 @@ In this section, we show the effectiveness of BIANCA in detecting risky commits 
 
 \input{tex/result}		
 
-Table \ref{tab:results} shows the results of applying BIANCA in terms of the company name, project name, a short description of the project, the number of classes, the number of commits, the number of defect-commits, the number of defect-commits detected by BIANCA, precision (%), recall (%), F$_1$-measure and the average difference, in days, between detected commit and the _original_ commit inserting the defect for the first time. 
+Table \ref{tab:results} shows the results of applying BIANCA in terms of the organization, project name, a short description of the project, the number of classes, the number of commits, the number of defect-commits, the number of defect-commits detected by BIANCA, precision (%), recall (%), F$_1$-measure and the average difference, in days, between detected commit and the _original_ commit inserting the defect for the first time. 
 
-With $\alpha$ = 35%, BIANCA achieves in average a precision of 90.75% (13,899/15,316) commits identified as risky. Theses commits triggered the opening of an issue and had to be fixed later on. BIANCA achieves in average 37.15% recall (15,316/41,225) and an average F$_1$ measure of 52.72%.
-Also, out of the 15,316 commits BIANCA classified as _risky_, only 1,320 (8.6%) were because they were matching a defect-commit inside the same project. 
-This finding supports the idea that developers of a project are not likely to introduce the same defect twice while developers of different projects that share  dependencies are, in fact, likely to introduce similar defects.
-We believe this is an important finding for researchers aiming to achieve cross-project defect prevention, regardless of the technique (e.g., statistical model, AST comparison, code comparison, etc.) employed.
+
+With $\alpha$ = 35%, BIANCA achieves, on average, a precision of 90.75% (13,899/15,316) commits identified as risky. These commits triggered the opening of an issue and had to be fixed later on. On the other hand, BIANCA achieves, on average, 37.15% recall (15,316/41,225), and an average F$_1$ measure of 52.72%. The relatively _low_ recall is to be expected, since BIANCA considers risky commits that are also in other projects.
+
+Also, out of the 15,316 commits BIANCA classified as _risky_, only 1,320 (8.6%) were because they were matching a defect-commit inside the same project.
+This finding supports the idea that developers of a project are not likely to introduce the same defect twice while developers of different projects that share  dependencies are, in fact, likely to introduce similar defects. We believe this is an important finding for researchers aiming to achieve cross-project defect prevention, regardless of the technique (e.g., statistical model, AST comparison, code comparison, etc.) employed.
+
 
 
 It is important to note that we do not claim that 37.15% of issues in open-source systems are caused by  project dependencies. 
@@ -272,21 +286,22 @@ In the following subsections, we compare BIANCA with a random classifier, assess
 
 ## Random Classifier Comparison
 
-The relatively _low_ recall is to be expected, since BIANCA considers risky commits that are also in other projects.
-We built a random classifier in order to further assess the effectiveness of BIANCA. 
-Our random classifier first generates a random number $n$ between 0 and 1 for the 165,912 commits composing our dataset.
-For each commit, if $n$ is below 0.5 then the commit is classified as non risky. 
-If $n$ is above 0.5 then the commit is classified as risky.
-As expected by a random classifier, our implementation detected ~50% (82,384 commits) of the commits to be _risky_. 
-It is worth mentioning is that the random classifier achieved 24.9% precision, 49.96% recall and 33.24% F$_1$-measure.
-Since our data are heavily unbalanced (i.e., there are many more _non-risky_ than _risky_ commits) these numbers are to be expected for a random classifier.
-Indeed, the recall is very close to 50% as one out of two commits is classified as _risky_.
-While analysing the precision, however, we can see that the data is unbalanced.
-We have only two classes to classify our commits into: _risky_ or _non-risky_. If the data were balanced (i.e., as many _risky_ and _non-risky_ commits), then the precision while predicting _risky_ commit with a random classifier would also be around 50%.
+Although our average F$_1$ measure of 52.72% may seem low at first glance, achieveing a high F$_1$ measure for unbalanced data is very difficult [@menzies2007problems]. Therefore, a common appraoch to ground detection results is to compare it to a simple baseline.
+
+The random classifier first generates a random number $n$ between 0 and 1 for the 165,912 commits composing our dataset.
+For each commit, if $n$ is greater than 0.5, then the commit is classified as risky and vice versa. As expected by a random classifier, our implementation detected ~50% (82,384 commits) of the commits to be _risky_. It is worth mentioning is that the random classifier achieved 24.9% precision, 49.96% recall and 33.24% F$_1$-measure. Since our data is unbalanced (i.e., there are many more _healthy_ than _risky_ commits) these numbers are to be expected for a random classifier. Indeed, the recall is very close to 50% since a commit can take on one of two classifications, risky or non-risky. While analysing the precision, however, we can see that the data is unbalanced (a random classifier would achieve a precision of 50% on a balanced dataset).
+
+
+It is important to note that the purpose of this analysis is not to say that we outperform a simple random classifier, rather to shed light on the fact that our dataset is unbalanced and achieving an average F$_1$ = 52.72% is non-trivial, especially when a baseline only achieves an F$_1$-measure of 33.24%.
+
+<!--
 In order to assess the statistical difference between the precision, the recall and the F$_1$-measure of the random classifier compared to BIANCA, we ran Mann-Whitney tests comparing the precision, the recall and the F$_1$-measure obtained for each project.
-The precision of BIANCA and the F$_1$-measure are significantly superior to the random classifier with  p-values < .0001.
-The recall of the random classifier is not significantly higher than the recall of BIANCA with p-value = 0.2327.
-Performing better than a random classifier is not a measure of performance per se, however, it shows that predicting the least represented class in an unbalanced bi-class distribution is challenging.
+The precision of BIANCA and the F$_1$-measure are significantly superior to the random classifier with a p-values < .0001.
+The recall of the random classifier is not significantly higher than the recall of BIANCA with a p-value = 0.2327.
+-->
+
+
+>>>>>>> Stashed changes
 
 ## Analysis of the Quality of the Fixes Proposed by BIANCA
 
