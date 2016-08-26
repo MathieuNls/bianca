@@ -14,8 +14,7 @@ xmax=100
 \addlegendentry{Precision}
 \addplot +[mark=none] table [x=alpha, y=recall, col sep=comma] {data/alpha.csv};
 \addlegendentry{Recall}
-\addplot +[mark=none] table [x=alpha, y=35, col sep=comma] {data/alpha.csv};
-\addlegendentry{$\alpha$ = 35\%}
+\node[label={360:{$\alpha$=35\%}},circle,inner sep=2pt] at (axis cs:35,45.6890364256) {};
 \end{axis}
 \end{tikzpicture}
 \caption{Precision, Recall and F$_1$-measure variations according to $\alpha$\label{fig:alpha-deter}}
