@@ -458,6 +458,8 @@ code. Hence, we only process, in an incremental manner, the latest
 modification of the source code instead of the source code as a whole.
 
 
+\input{tex/extract}
+
 We have selected TXL for several reasons. First, TXL is easy to install
 and to integrate with the normal work flow of a developer. Second, it
 was relatively easy to create a grammar that accepts commits as input.
@@ -476,8 +478,6 @@ calling the $~extract\_blocks(Changeset~cs)$ function. In this function,
 we expand our changeset to the left and to the right in order to have a
 complete block.
 
-
-\input{tex/extract}
 
 As depicted below, changesets contain only the modified chunk of code
 and not necessarily complete blocks.
@@ -660,7 +660,6 @@ OpenHab proposes home automation solutions and the Persistence project
 is their data access layer. Finally, the purple cluster is dominated by
 Libdx by Badlogicgames, which is a cross-platform framework for game
 development.
-
 A review of each cluster shows that this partitioning divides projects
 in terms of high-level functionalities. For example, the blue cluster is
 almost entirely composed of projects from the Apache Software
@@ -878,7 +877,7 @@ In other words, BIANCA is able to detect \emph{risky} commits with
 average, 40-44\% of the actual code needed to transform the \emph{risky}
 commit into a \emph{non-risky} one. It is still too early to claim
 whether BIANCA's recommendations can be useful to developers. For this,
-we need to conduct user study, which we plan to do as future work.
+we need to conduct user studies, which we plan to do as future work.
 
 \subsection{Manual Analysis}\label{manual-analysis}
 
@@ -913,7 +912,7 @@ that had been submitted and fixed several times instead of re-opening
 the original issue.
 
 \subsubsection{JStorm by Alibaba (F$_1$-measure =
-88.96\%)}\label{jstorm-by-alibaba-fux5f1-measure-88.96}
+88.96\%)}\label{jstorm-by-alibaba-fux5f1-measure-88.96:}
 
 For JStorm by Alibaba, our manual analysis of the \emph{risky} commits
 revealed that, in addition to providing stream processes, JStorm mainly
@@ -1037,300 +1036,6 @@ be to support Type 4 clones.
 
 \small
 
-{[}1{]} D. Lo, ``A Comparative Study of Supervised Learning Algorithms
-for Re-opened Bug Prediction,'' in \emph{2013 17th european conference
-on software maintenance and reengineering}, 2013, pp. 331--334.
-
-{[}2{]} J. Nam, S. J. Pan, and S. Kim, ``Transfer defect learning,'' in
-\emph{2013 35th international conference on software engineering
-(iCSE)}, 2013, pp. 382--391.
-
-{[}3{]} C. Lewis, Z. Lin, C. Sadowski, X. Zhu, R. Ou, and E. J.
-{Whitehead Jr.}, ``Does bug prediction support human developers?
-findings from a google case study,'' in \emph{International conference
-on software engineering (iCSE) (2013)}, 2013, pp. 372--381.
-
-{[}4{]} B. Johnson, Y. Song, E. Murphy-Hill, and R. Bowdidge, ``Why
-don't software developers use static analysis tools to find bugs?'' in
-\emph{35th international conference on software engineering (iCSE)},
-2013, pp. 672--681.
-
-{[}5{]} The Apache Software Foundation, ``Apache BatchEE.'' 2015.
-
-{[}6{]} Graphwalker, ``GraphWalker for testers.'' 2016.
-
-{[}7{]} {Joshua O'Madadhain, Danyel Fisher, Scott White, Padhraic
-Smyth}Y.-b. B., ``Analysis and Visualization of Network Data using
-JUNG,'' \emph{Journal of Statistical Software}, vol. 10, no. 2, pp.
-1--35, 2005.
-
-{[}8{]} Chris Vignola, ``The Java Community Process(SM) Program - JSRs:
-Java Specification Requests - detail JSR\# 352.'' 2014.
-
-{[}9{]} S. Chidamber and C. Kemerer, ``A metrics suite for object
-oriented design,'' \emph{IEEE Transactions on Software Engineering},
-vol. 20, no. 6, pp. 476--493, Jun. 1994.
-
-{[}10{]} N. Moha, F. Palma, M. Nayrolles, and B. J. Conseil,
-``Specification and Detection of SOA Antipatterns,'' in
-\emph{International conference on service oriented computing}, 2012, pp.
-1--16.
-
-{[}11{]} L. Briand, J. Daly, and J. Wust, ``A unified framework for
-coupling measurement in object-oriented systems,'' \emph{IEEE
-Transactions on Software Engineering}, vol. 25, no. 1, pp. 91--121,
-1999.
-
-{[}12{]} V. Basili, L. Briand, and W. Melo, ``A validation of
-object-oriented design metrics as quality indicators,'' \emph{IEEE
-Transactions on Software Engineering}, vol. 22, no. 10, pp. 751--761,
-1996.
-
-{[}13{]} K. {El Emam}, W. Melo, and J. C. Machado, ``The prediction of
-faulty classes using object-oriented design metrics,'' \emph{Journal of
-Systems and Software}, vol. 56, no. 1, pp. 63--75, Feb. 2001.
-
-{[}14{]} R. Subramanyam and M. Krishnan, ``Empirical analysis of CK
-metrics for object-oriented design complexity: implications for software
-defects,'' \emph{IEEE Transactions on Software Engineering}, vol. 29,
-no. 4, pp. 297--310, Apr. 2003.
-
-{[}15{]} T. Gyimothy, R. Ferenc, and I. Siket, ``Empirical validation of
-object-oriented metrics on open source software for fault prediction,''
-\emph{IEEE Transactions on Software Engineering}, vol. 31, no. 10, pp.
-897--910, Oct. 2005.
-
-{[}16{]} M. Nayrolles, A. Maiga, A. Hamou-lhadj, and A. Larsson, ``A
-Taxonomy of Bugs : An Empircial Study,'' pp. 1--10.
-
-{[}17{]} M. Nayrolles, ``Improving SOA Antipattern Detection in Service
-Based Systems by Mining Execution Traces,'' PhD thesis, 2013.
-
-{[}18{]} A. Demange, N. Moha, and G. Tremblay, ``Detection of SOA
-Patterns,'' in \emph{International conference on service-oriented
-computing}, 2013, pp. 114--130.
-
-{[}19{]} F. Palma, ``Detection of SOA Antipatterns,'' PhD thesis, Ecole
-Polytechnique de Montreal, 2013.
-
-{[}20{]} N. Nagappan and T. Ball, ``Static analysis tools as early
-indicators of pre-release defect density,'' in \emph{Proceedings of the
-27th international conference on software engineering - iCSE '05}, 2005,
-p. 580.
-
-{[}21{]} N. Nagappan, T. Ball, and A. Zeller, ``Mining metrics to
-predict component failures,'' in \emph{Proceeding of the 28th
-international conference on software engineering - iCSE '06}, 2006, p.
-452.
-
-{[}22{]} T. Zimmermann, R. Premraj, and A. Zeller, ``Predicting Defects
-for Eclipse,'' in \emph{Third international workshop on predictor models
-in software engineering (pROMISE'07: iCSE workshops 2007)}, 2007, pp.
-9--9.
-
-{[}23{]} T. Zimmermann and N. Nagappan, ``Predicting defects using
-network analysis on dependency graphs,'' in \emph{Proceedings of the
-13th international conference on software engineering - iCSE '08}, 2008,
-p. 531.
-
-{[}24{]} N. Nagappan and T. Ball, ``Use of relative code churn measures
-to predict system defect density,'' in \emph{Proceedings. 27th
-international conference on software engineering, 2005.}, 2005, pp.
-284--292.
-
-{[}25{]} A. Hassan and R. Holt, ``The top ten list: dynamic fault
-prediction,'' in \emph{21st iEEE international conference on software
-maintenance (iCSM'05)}, 2005, pp. 263--272.
-
-{[}26{]} T. Ostrand, E. Weyuker, and R. Bell, ``Predicting the location
-and number of faults in large software systems,'' \emph{IEEE
-Transactions on Software Engineering}, vol. 31, no. 4, pp. 340--355,
-Apr. 2005.
-
-{[}27{]} S. Kim, T. Zimmermann, E. J. {Whitehead Jr.}, and A. Zeller,
-``Predicting Faults from Cached History,'' in \emph{29th international
-conference on software engineering (iCSE'07)}, 2007, pp. 489--498.
-
-{[}28{]} F. Rahman and P. Devanbu, ``How, and why, process metrics are
-better,'' in \emph{Proceedings of the 2013 international conference on
-software engineering}, 2013, pp. 432--441.
-
-{[}29{]} S. {Sunghun Kim}, E. Whitehead, and Y. {Yi Zhang},
-``Classifying Software Changes: Clean or Buggy?'' \emph{IEEE
-Transactions on Software Engineering}, vol. 34, no. 2, pp. 181--196,
-Mar. 2008.
-
-{[}30{]} A. E. Hassan, ``Predicting faults using the complexity of code
-changes,'' in \emph{2009 iEEE 31st international conference on software
-engineering}, 2009, pp. 78--88.
-
-{[}31{]} Y. Kamei, E. Shihab, B. Adams, A. E. Hassan, A. Mockus, A.
-Sinha, and N. Ubayashi, ``A large-scale empirical study of just-in-time
-quality assurance,'' \emph{IEEE Transactions on Software Engineering},
-vol. 39, no. 6, pp. 757--773, Jun. 2013.
-
-{[}32{]} K. Pan, S. Kim, and E. J. Whitehead, ``Toward an understanding
-of bug fix patterns,'' \emph{Empirical Software Engineering}, vol. 14,
-no. 3, pp. 286--315, Aug. 2008.
-
-{[}33{]} D. Kim, J. Nam, J. Song, and S. Kim, ``Automatic patch
-generation learned from human-written patches,'' in \emph{2013 35th
-international conference on software engineering (iCSE)}, 2013, vol. 1,
-pp. 802--811.
-
-{[}34{]} Y. Tao, J. Kim, S. Kim, and C. Xu, ``Automatically generated
-patches as debugging aids: a human study,'' in \emph{Proceedings of the
-22nd aCM sIGSOFT international symposium on foundations of software
-engineering}, 2014, pp. 64--74.
-
-{[}35{]} V. Dallmeier, A. Zeller, and B. Meyer, ``Generating Fixes from
-Object Behavior Anomalies,'' in \emph{24th iEEE/aCM international
-conference on automated software engineering}, 2009, pp. 550--554.
-
-{[}36{]} C. {Le Goues}, M. Dewey-Vogt, S. Forrest, and W. Weimer, ``A
-systematic study of automated program repair: Fixing 55 out of 105 bugs
-for \$8 each,'' in \emph{2012 34th international conference on software
-engineering (iCSE)}, 2012, pp. 3--13.
-
-{[}37{]} X.-B. D. Le, T.-D. B. Le, and D. Lo, ``Should fixing these
-failures be delegated to automated program repair?'' in \emph{Software
-reliability engineering (iSSRE), 2015 iEEE 26th international symposium
-on}, 2015, pp. 427--437.
-
-{[}38{]} M. Girvan and M. E. J. Newman, ``Community structure in social
-and biological networks,'' \emph{Proceedings of the National Academy of
-Sciences}, vol. 99, no. 12, pp. 7821--7826, Jun. 2002.
-
-{[}39{]} M. E. J. Newman and M. Girvan, ``Finding and evaluating
-community structure in networks,'' \emph{Physical Review E}, vol. 69,
-no. 2, p. 026113, Feb. 2004.
-
-{[}40{]} R. Wu, H. Zhang, S. Kim, and S. Cheung, ``Relink: recovering
-links between bugs and changes,'' in \emph{Proceedings of the 19th aCM
-sIGSOFT symposium and the 13th european conference on foundations of
-software engineering.}, 2011, pp. 15--25.
-
-{[}41{]} C. Rosen, B. Grawi, and E. Shihab, ``Commit guru: analytics and
-risk prediction of software commits,'' in \emph{Proceedings of the 2015
-10th joint meeting on foundations of software engineering - eSEC/fSE
-2015}, 2015, pp. 966--969.
-
-{[}42{]} A. Hindle, D. M. German, and R. Holt, ``What do large commits
-tell us?'' in \emph{Proceedings of the 2008 international workshop on
-mining software repositories - mSR '08}, 2008, p. 99.
-
-{[}43{]} S. Kim, T. Zimmermann, K. Pan, and E. {Jr. Whitehead},
-``Automatic Identification of Bug-Introducing Changes,'' in \emph{21st
-iEEE/aCM international conference on automated software engineering
-(aSE'06)}, 2006, pp. 81--90.
-
-{[}44{]} Y. Kamei, E. Shihab, B. Adams, A. E. Hassan, A. Mockus, A.
-Sinha, and N. Ubayashi, ``A large-scale empirical study of just-in-time
-quality assurance,'' \emph{IEEE Transactions on Software Engineering},
-vol. 39, no. 6, pp. 757--773, Jun. 2013.
-
-{[}45{]} J. R. Cordy, ``Source transformation, analysis and generation
-in TXL,'' in \emph{Proceedings of the 2006 aCM sIGPLAN symposium on
-partial evaluation and semantics-based program manipulation - pEPM '06},
-2006, p. 1.
-
-{[}46{]} T. R. Dean, J. R. Cordy, A. J. Malton, and K. A. Schneider,
-``Agile Parsing in TXL,'' in \emph{Proceedings of iEEE international
-conference on automated software engineering}, vol. 10, pp. 311--336.
-
-{[}47{]} B. Bultena and F. Ruskey, ``An Eades-McKay algorithm for
-well-formed parentheses strings,'' \emph{Information Processing
-Letters}, vol. 68, no. 5, pp. 255--259, 1998.
-
-{[}48{]} J. H. Johnson, ``Identifying redundancy in source code using
-fingerprints,'' in \emph{CASCON '93 proceedings of the 1993 conference
-of the centre for advanced studies on collaborative research: software
-engineering - volume 1}, 1993, pp. 171--183.
-
-{[}49{]} J. H. Johnson, ``Visualizing textual redundancy in legacy
-source,'' in \emph{Proceedings of the 1994 conference of the centre for
-advanced studies on collaborative research}, 1994, p. 32.
-
-{[}50{]} A. Marcus and J. Maletic, ``Identification of high-level
-concept clones in source code,'' in \emph{Proceedings 16th annual
-international conference on automated software engineering (aSE 2001)},
-pp. 107--114.
-
-{[}51{]} U. Manber, ``Finding similar files in a large file system,'' in
-\emph{Usenix winter}, 1994, pp. 1--10.
-
-{[}52{]} S. Ducasse, M. Rieger, and S. Demeyer, ``A Language Independent
-Approach for Detecting Duplicated Code.''
-
-{[}53{]} R. Wettel and R. Marinescu, ``Archeology of code duplication:
-recovering duplication chains from small duplication fragments,'' in
-\emph{Seventh international symposium on symbolic and numeric algorithms
-for scientific computing (sYNASC'05)}, 2005, p. 8 pp.
-
-{[}54{]} J. R. Cordy and C. K. Roy, ``The NiCad Clone Detector,'' in
-\emph{2011 iEEE 19th international conference on program comprehension},
-2011, pp. 219--220.
-
-{[}55{]} C. Kapser and M. W. Godfrey, ``Toward a Taxonomy of Clones in
-Source Code: A Case Study,'' in \emph{International workshop on
-evolution of large scale industrial software architectures}, 2003, pp.
-67--78.
-
-{[}56{]} CHANCHAL K. ROY, ``Detection and Analysis of Near-Miss Software
-Clones,'' PhD thesis, Queen's University, 2009.
-
-{[}57{]} S. Ducasse, M. Rieger, and S. Demeyer, ``A language independent
-approach for detecting duplicated code,'' in \emph{Proceedings iEEE
-international conference on software maintenance - 1999 (iCSM'99).
-'software maintenance for business change' (cat. no.99CB36360)}, 1999,
-pp. 109--118.
-
-{[}58{]} J. W. Hunt and T. G. Szymanski, ``A fast algorithm for
-computing longest common subsequences,'' \emph{Communications of the
-ACM}, vol. 20, no. 5, pp. 350--353, May 1977.
-
-{[}59{]} T. Lee, J. Nam, D. Han, S. Kim, and H. P. In, ``Micro
-interaction metrics for defect prediction,'' in \emph{Proceedings of the
-19th aCM sIGSOFT symposium and the 13th european conference on
-foundations of software engineering - sIGSOFT/fSE '11}, 2011, p. 311.
-
-{[}60{]} P. Bhattacharya and I. Neamtiu, ``Bug-fix time prediction
-models: can we do better?'' in \emph{Proceeding of the 8th working
-conference on mining software repositories - mSR '11}, 2011, p. 207.
-
-{[}61{]} S. Kpodjedo, F. Ricca, P. Galinier, Y.-G. Gu{é}h{é}neuc, and G.
-Antoniol, ``Design evolution metrics for defect prediction in object
-oriented systems,'' \emph{Empirical Software Engineering}, vol. 16, no.
-1, pp. 141--175, Dec. 2010.
-
-{[}62{]} C. K. Roy and J. R. Cordy, ``An Empirical Study of Function
-Clones in Open Source Software,'' in \emph{2008 15th working conference
-on reverse engineering}, 2008, pp. 81--90.
-
-{[}63{]} C. Rosen, B. Grawi, and E. Shihab, ``Commit guru: analytics and
-risk prediction of software commits,'' in \emph{Proceedings of the 2015
-10th joint meeting on foundations of software engineering - eSEC/fSE
-2015}, 2015, pp. 966--969.
-
-{[}64{]} T.-h. Chen, M. Nagappan, E. Shihab, and A. E. Hassan, ``An
-Empirical Study of Dormant Bugs Categories and Subject Descriptors,'' in
-\emph{Mining software repository}, 2014, pp. 82--91.
-
-{[}65{]} E. Shihab, A. Ihara, Y. Kamei, W. M. Ibrahim, M. Ohira, B.
-Adams, A. E. Hassan, and K. I. Matsumoto, ``Studying re-opened bugs in
-open source software,'' \emph{Empirical Software Engineering}, vol. 18,
-no. 5, pp. 1005--1042, 2013.
-
-{[}66{]} T. Menzies, A. Dekhtyar, J. Distefano, and J. Greenwald,
-``Problems with Precision: A Response to` Comments on'Data Mining Static
-Code Attributes to Learn Defect Predictors'','' \emph{IEEE Transactions
-on Software Engineering}, vol. 33, no. 9, p. 637, 2007.
-
-{[}67{]} L. Seinturier, P. Merle, R. Rouvoy, D. Romero, V. Schiavoni,
-and J.-b. Stefani, ``A Component-Based Middleware Platform for
-Reconfigurable Service-Oriented Architectures,'' \emph{Software-Practice
-and experience}, vol. 5, pp. 1--26, 2012.
-
-
+\input{references}
 
 \end{document}
