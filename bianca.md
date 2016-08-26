@@ -234,29 +234,19 @@ If at $t_4$, $c_3$ is pushed to $p_2$ and $c_3$ matches $c_1$ after preprocessin
 
 \input{tex/alpha}
 
-<<<<<<< Updated upstream
-To measure similarity between pairs of commits, we need to decide on the value of $\alpha$. One possibility would be to test for all possible values of $\alpha$ and pick the one that provides best accuracy (F$_1$-measure). The ROC (Receiver Operating Characteristic) curve can then be used to display the performance of BIANCA with different values of $\alpha$. Running experiments with all possible $\alpha$ turned out to be computationally demanding given the large number of commits (the need of comparisons required using all possible values of $\alpha$ would be 4e10). 
-
-To address this, we selected a sample of 1% commits from the dataset for each project while keeping the chronological order of commits. We checked the results by varying $\alpha$ from 1% to 100%. Figure \ref{fig:alpha-deter} shows the results. As we can see, setting $\alpha$ = 35% provides best accuracy. It should also be noted that in clone detection a threshold of around 30% is considered an adequate threshold  above which two code blocks are deemed to be clones, especially for clones of Type 3, which contain added or deleted code statements [@Roy2008; @Cordy2011]. With $\alpha$ = 35%, the experiments took nearly three months on 48 Amazon VPS (Virtual Private Server) running in parallel.
-=======
 To measure the similarity between pairs of commits, we need to decide on the value of $\alpha$. One possibility would be to test for all possible values of $\alpha$ and pick the one that provides best accuracy (F$_1$-measure). The ROC (Receiver Operating Characteristic) curve can then be used to display the performance of BIANCA with different values of $\alpha$. Running experiments with all possible $\alpha$ turned out to be computationally demanding given the large number of commits. Testing with all the different values of $\alpha$ amounts to 4e10 comparisons. 
 
 To address this, we randomly selected a sample of 1% commits from our dataset and checked the results by varying $\alpha$ from 1 to 100%. Figure \ref{fig:alpha-deter} shows the results. As we can see, there is a tradeoff between precision and recall, however, after the $\alpha$ = 35% point, we see a drop in recall; hence, we set $\alpha$ = 35% in our experiments. It should also be noted that in clone detection work a threshold of around 30% is considered an adequate threshold above which two code blocks are deemed to be clones, especially for clones of Type 3, which contain added or deleted code statements [@Roy2008; @Cordy2011]. With $\alpha$ = 35%, the experiments took nearly three months to run on 48 Amazon VPS (Virtual Private Server) running in parallel (4e8 comparisons).
->>>>>>> Stashed changes
+
 
 ## Evaluation Measures
 
 Similar to prior work focusing on risky commits (e.g., [@SunghunKim2008; @Kamei2013]), we used precision, recall, and F$_1$-measure to evaluate our approach. They are computed using TP (true positives), FP (false positives), FN (false negatives), which are defined as follows:
 
-<<<<<<< Updated upstream
-- TP: This is the number of defect-commits that were properly classified by BIANCA
-- FP: This is the number of non-risky commits that were classified by BIANCA as risky
-- FN: This is the number of defect introducing-commits that were not detected by BIANCA
-=======
+
 - TP:  is the number of defect-commits that were properly classified by BIANCA
 - FP:  is the number of healthy commits that were classified by BIANCA as risky
 - FN:  is the number of defect introducing-commits that were not detected by BIANCA
->>>>>>> Stashed changes
 - Precision: TP / (TP + FP)
 - Recall: TP / (TP + FN)
 - F$_1$-measure: 2.(precision.recall)/(precision+recall)
