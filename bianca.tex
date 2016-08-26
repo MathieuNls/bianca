@@ -106,7 +106,7 @@
 \title{\vspace{-1cm}BIANCA: Preventing Bug Insertion at Commit-Time Using Dependency
 Analysis and Clone Detection}
 
-\author{  \IEEEauthorblockN{Mathieu Nayrolles, Abdelwahab Hamou-Lhadj} \IEEEauthorblockA{ SBA Lab, ECE Dept, Concordia University \\ Montréal, QC, Canada \\ {\footnotesize\texttt{\{mathieu.nayrolles, wahab.hamou-lhadj\}@concordia.ca}} \\ \\\vspace{-1.6cm}}  \and  \IEEEauthorblockN{Emad Shihab} \IEEEauthorblockA{ DAS Lab, CSE Dept, Concordia University \\ Montréal, QC, Canada \\ {\footnotesize\texttt{eshihab@cse.concordia.ca}} \\ \vspace{-1.6cm}} }
+\author{  \IEEEauthorblockN{Mathieu Nayrolles, Abdelwahab Hamou-Lhadj} \IEEEauthorblockA{ SBA Lab, ECE Dept, Concordia University \\ Montréal, QC, Canada \\ {\footnotesize\texttt{\{mathieu.nayrolles, wahab.hamou-lhadj\}@concordia.ca}} \\ \\\vspace{-1.5cm}}  \and  \IEEEauthorblockN{Emad Shihab} \IEEEauthorblockA{ DAS Lab, CSE Dept, Concordia University \\ Montréal, QC, Canada \\ {\footnotesize\texttt{eshihab@cse.concordia.ca}} \\ \vspace{-1.5cm}} }
 
 \begin{document}
 \maketitle
@@ -457,6 +457,7 @@ only extract the blocks belonging to the modified parts of the source
 code. Hence, we only process, in an incremental manner, the latest
 modification of the source code instead of the source code as a whole.
 
+
 We have selected TXL for several reasons. First, TXL is easy to install
 and to integrate with the normal work flow of a developer. Second, it
 was relatively easy to create a grammar that accepts commits as input.
@@ -465,7 +466,6 @@ with the ability to customize them to accept changesets (chunks of the
 modified source code that include the added, modified, and deleted
 lines) instead of the whole code.
 
-\input{tex/extract}
 
 Algorithm \ref{alg:extract} presents an overview of the \emph{extract}
 and \emph{save} blocks operations of BIANCA. This algorithm receives as
@@ -475,6 +475,9 @@ changesets. For each changeset (Line 2), we extract the blocks by
 calling the $~extract\_blocks(Changeset~cs)$ function. In this function,
 we expand our changeset to the left and to the right in order to have a
 complete block.
+
+
+\input{tex/extract}
 
 As depicted below, changesets contain only the modified chunk of code
 and not necessarily complete blocks.
