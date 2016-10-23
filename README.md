@@ -12,6 +12,14 @@ The only thing that matters is to save it in text format.
 The pdf generation is based on [Pandoc](http://pandoc.org/). Pandoc transforms the markdown to latex and then, to pdf. 
 Here's the command, assuming pandoc is installed on your system and that you are on the Bianca directory :
 
+### For the paper
+
 ```bash
-pandoc -s -S --filter pandoc-citeproc --number-sections --template="config/default.latex" -o bianca.md.pdf *.md
+pandoc -s -S --filter pandoc-citeproc --number-sections --template="config/default.latex" -o bianca.md.pdf bianca.md
+```
+
+### For the review
+
+```bash
+pandoc icse-reviews.md -o isce-reviews.pdf
 ```
