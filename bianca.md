@@ -22,7 +22,8 @@ keyword:
 
 ---
 
-# Introduction
+Introduction
+============
 
 Research in software maintenance continues to evolve to include areas like mining bug repositories, bug analytic, and bug prevention and reproduction. The ultimate goal is to develop techniques and tools to help software developers detect, correct, and prevent bugs in an effective and efficient manner. 
 
@@ -219,11 +220,10 @@ A review of each cluster shows that this partitioning divides projects in terms 
 
 To build the database against which we assess the performance of BIANCA, we use the same process as discussed in Section \ref{sec:offline}.
 We used Commit-guru to retrieve the complete history of each project and label commits as defect-commits if they appear to be linked to a closed issue. The process used by Commit-guru to identify commits that introduce a defect is simple and reliable in terms of accuracy and computation time [@Kamei2013]. We use the commit-guru labels as the baseline to compute the precision and recall of BIANCA. Each time BIANCA classifies a commit as _risky_, we can  check if the _risky_ commit is in the database of defect-introducing commits. The same evaluation process is used by related studies  [@ElEmam2001; @Lee2011a; @Bhattacharya2011; @Kpodjedo2010].
-The difference between this *golden* database and the database described in Section \ref{sec:offline} is that, with this one, we unwind the whole history instead of building the history as it happens.
 
 ## Process of Comparing New Commits {#sec:newcommits}
 
-Because our approach relies on commit pre-hooks to detect risky commit, we had to find a way to *replay* past commits. 
+Because our approach relies on commit pre-hooks to detect risky commits, we had to find a way to *replay* past commits. 
 To do so, we *cloned* our test subjects, and then created a new branch called *BIANCA*. When created, this branch is reinitialized at the initial state of the project (the first commit) and each commit can be replayed as they have originally been.  For each commit, we store the time taken for *BIANCA* to run, the number of detected clone pairs, and the commits that match the current commit. 
 As an example, let's assume that we have three commits from two projects. 
 At time $t_1$,  commit $c_1$ in project $p_1$ introduces a defect. 
@@ -276,10 +276,10 @@ In the following subsections, we compare BIANCA with a random classifier, assess
 
 ## Random Classifier Comparison
 
-Although our average F$_1$ measure of 52.72% may seem low at first glance, achieveing a high F$_1$ measure for unbalanced data is very difficult [@menzies2007problems]. Therefore, a common appraoch to ground detection results is to compare it to a simple baseline.
+Although our average F$_1$ measure of 52.72% may seem low at first glance, achieving a high F$_1$ measure for unbalanced data is very difficult [@menzies2007problems]. Therefore, a common approach to ground detection results is to compare it to a simple baseline.
 
 The random classifier first generates a random number $n$ between 0 and 1 for the 165,912 commits composing our dataset.
-For each commit, if $n$ is greater than 0.5, then the commit is classified as risky and vice versa. As expected by a random classifier, our implementation detected ~50% (82,384 commits) of the commits to be _risky_. It is worth mentioning is that the random classifier achieved 24.9% precision, 49.96% recall and 33.24% F$_1$-measure. Since our data is unbalanced (i.e., there are many more _healthy_ than _risky_ commits) these numbers are to be expected for a random classifier. Indeed, the recall is very close to 50% since a commit can take on one of two classifications, risky or non-risky. While analysing the precision, however, we can see that the data is unbalanced (a random classifier would achieve a precision of 50% on a balanced dataset).
+For each commit, if $n$ is greater than 0.5, then the commit is classified as risky and vice versa. As expected by a random classifier, our implementation detected ~50% (82,384 commits) of the commits to be _risky_. It is worth mentioning that the random classifier achieved 24.9% precision, 49.96% recall and 33.24% F$_1$-measure. Since our data is unbalanced (i.e., there are many more _healthy_ than _risky_ commits) these numbers are to be expected for a random classifier. Indeed, the recall is very close to 50% since a commit can take on one of two classifications, risky or non-risky. While analysing the precision, however, we can see that the data is unbalanced (a random classifier would achieve a precision of 50% on a balanced dataset).
 
 
 It is important to note that the purpose of this analysis is not to say that we outperform a simple random classifier, rather to shed light on the fact that our dataset is unbalanced and achieving an average F$_1$ = 52.72% is non-trivial, especially when a baseline only achieves an F$_1$-measure of 33.24%.
@@ -337,7 +337,7 @@ We believe that if we had other home-automation projects in our dataset (such as
 
 ### Che by Eclipse (F$_1$-measure = 10.05%)
 
-Eclipse Che is part of the Eclipse IDE ttha provides development support for a wide range of programming languages such as C, C++, Java and others.
+Eclipse Che is part of the Eclipse IDE. Eclipse provides development support for a wide range of programming languages such as C, C++, Java and others.
 Despite the fact that the Che project has a decent amount of defect-commits (169) and that it is in the blue cluster (dominated by Apache,) BIANCA was only able to detect 9 _risky_ commits. After manual analysis of the 169 defect-commits, we were not able to draw any conclusion on why we were not able to achieve better performance. We can only assume that Eclipse's developers are particularly careful about how they use their dependencies and the quality of their code in general. Only 2% (169/7,818) of their commits introduce new defects.
 
 ### Annotations by Excilys (F$_1$-measure = 3.13%)
