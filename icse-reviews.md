@@ -1,7 +1,5 @@
 ﻿%ICSE REVIEW
 
-# ICSE Response
-
 Thanks to the reviewers for their complete and in-depth reviews of our work.
 
 Clone detection [R1-R2]:
