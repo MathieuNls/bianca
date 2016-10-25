@@ -1,48 +1,32 @@
-﻿%ICSE REVIEW
+%ICSE REVIEW
 
-Thanks to the reviewers for their complete and in-depth reviews of our work.
+Thank you for the complete and in-depth reviews of our work.
 
 Clone detection [R1-R2]:
 
-We wrongly reported that the similarity threshold was a standard recommendation for clone detection. 
-As pointed by reviewers, it is a NICAD recommendation, and we will change it for the final version.
-We discuss the choice of the threshold in the threat section.
-As pointed out, NICAD only works with complete JAVA, C# and C files, but we spent a significant amount of time writing a txl grammar that accepts changesets helped by TXL creators and maintainers on http://www.txl.ca/forum/.
+We mistakenly reported that the similarity threshold was a standard recommendation for clone detection, indeed it is a NICAD recommendation, and we will change it for the final version. That said, to the best of our knowledge, it is the threshold most commonly used in the literature. We discuss the choice of the threshold in the threat section. As pointed out, NICAD only works with complete JAVA, C# and C files, but we spent a significant amount of time writing a txl grammar that accepts changesets helped by TXL creators and maintainers on http://www.txl.ca/forum/.
 
 Comparison random/other approaches [R1-R2]:
 
-To the best of our knowledge, this is the first approach to ever use commit code similarity instead of code or process metrics. 
-It is an entirely new way of detecting risky changes.
-Consequently, comparing to other approaches will not be accurate.
-Also, few approaches are cross-project at all because they use code or process metrics and models are not easily adaptable.
-(see Nam, Jaechang, Sinno Jialin Pan, and Sunghun Kim. "Transfer defect learning." In Proceedings of the 2013 International Conference on Software Engineering, pp. 382-391. IEEE Press, 2013.).
-The only reason we compared our approach with a random classifier is to give the reader a sense of the lower bound.
+To the best of our knowledge, this is the first approach to ever use commit code similarity instead of code or process metrics. It is an entirely new way of detecting risky changes. Consequently, comparing to other approaches will not be accurate. Also, few approaches are cross-project at all because they use code or process metrics and models are not easily adaptable. (see Jaechang et al. "Transfer defect learning." In ICSE 2013). The only reason we compared our approach with a random classifier is to have a baseline and show that we perform better than a simple baseline.
 
 Clarification of the approach [R2-R3]:
 
-We can certainly work on clarifying the approach.
-Indeed, the motivating example is confusing, and we will change it for the final version.
-We target any defect and not only libraries misuses.  
-We cluster projects based on their library because it allows computing a measure of similarity between projects without actually reading the source code.
+We can certainly work on clarifying the approach. Indeed, the motivating example is confusing, and we will change it for the final version. We target any defect and not only libraries misuses. We cluster projects based on their library use because it allows to compute a measure of similarity between projects without actually needing access to the source code.
 
 Threats [R1-R2-R3]:
 
-- Choice of the similarity threshold: As for the selection of the similarity measure, indeed, we verify this on a subset of the data, not all the data.
-We would also mention it in the threats.
-Testing all threshold for all the dataset is not computationally possible. It takes each run three months to run on 48 VPS running in parallel.
+Choice of the similarity threshold: As for the selection of the similarity measure, indeed, we verify this on a subset of the data, not all the data. We will also mention it in the threats. Testing all threshold for all the dataset is not computationally possible. It takes each run three months to run on 48 VPS running in parallel.
 
-- Commitguru accuracy: BIANCA indeed relies on commitguru accuracy. However, commitguru is built upon the SZZ algorithm. 
-Consequently, BIANCA depends on of the accuracy of the SZZ algorithm.
-The SZZ algorithm has been widely used in the literature, and its accuracy has been repetitively proven.
+Commitguru accuracy: BIANCA indeed relies on commitguru accuracy. However, commitguru is built upon the SZZ algorithm. Consequently, BIANCA depends on of the accuracy of the SZZ algorithm. The SZZ algorithm has been widely used in the literature, and its accuracy has been repetitively proven.
 
-- Performances: We did not report the time required by BIANCA to compute a single commit. As per clarification rules, we cannot give new information. However, we can say that it is the magnitude of a minute.
+Performances: We did not report the time required by BIANCA to compute a single commit. As per clarification rules, we cannot present new results. However, we can say that it is the magnitude of a minute.
 
-- High rate of defects introducing commits: R3 expresses some skepticism about the rate of defects introducing commits. The rates we report are in line with previous findings (Median = 20%) (Kamei, Y., Shihab, E., Adams, B., Hassan, A. E., Mockus, A., Sinha, A., & Ubayashi, N. (2013). A large-scale empirical study of just-in-time quality assurance. IEEE Transactions on Software Engineering, 39(6), 757–773. https://doi.org/10.1109/TSE.2012.70)
+High rate of defects introducing commits: R3 expresses some skepticism about the rate of defects introducing commits. The rates we report are in line with previous findings (Median = 20%) (Kamei et al. A large-scale empirical study of just-in-time quality assurance. IEEE TSE. https://doi.org/10.1109/TSE.2012.70)
 
 Verifiability [R1-R2-R3]:
 
-We do not have a straightforward reproduction package as our experiments involve virtual machines instrumentation and coordination.
-However, we are happy to share our data:  https://github.com/MathieuNls/bianca-data
+We do not have a straightforward reproduction package as our experiments involve virtual machines instrumentation and coordination. However, we are happy to share our data: https://github.com/MathieuNls/bianca-data
 
 # Review 1
 
