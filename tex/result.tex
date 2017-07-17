@@ -3,11 +3,10 @@
 % \usepackage{graphicx}
 % \usepackage[normalem]{ulem}
 % \useunder{\uline}{\ul}{}
-\begin{table*}[]
-\centering
+\begin{landscape}
+\begin{table}
 \caption{BIANCA results in terms of organization, project name, a short description, number of class, number of commits, number of defect introducing commits, number of risky commit detected, precision (\%), recall (\%), F$_1$-measure (\%), the average similarity of first 3 and 5 proposed fixes with the actual fix and the average time difference between detected and original.}
   \label{tab:results}
-\resizebox{\textwidth}{!}{%
 \begin{tabular}{lllccccccccc}
 \hline
 Organization                & Project Name                                                  & Short Description                                                        & NoC             & \#Commits        & \begin{tabular}[c]{@{}c@{}}Bug  \\Introducing\\ Commit\end{tabular} & Detected       & Precision      & Recall         & F$_1$          & \begin{tabular}[c]{@{}c@{}}Top 3 \\ Fixes \\Similarity\end{tabular} & \begin{tabular}[c]{@{}c@{}}Top 5\\ Fixes\\ Similarity\end{tabular} \\ \hline
@@ -55,5 +54,5 @@ Yahoo                       & anthelion                                         
 Zxing                       & zxing                                                         & 1D/2D barcode image                                                      & 3,030           & 3,253            & 791                                                              & 123            & 94.31          & 15.55          & 26.70          & 29.35                                                             & 37.96                                                              \\ \hline
 \textbf{Total}              & \textbf{}                                                     & \textbf{}                                                                & \textbf{96,003} & \textbf{165,912} & \textbf{41,225}                                                  & \textbf{15316} & \textbf{90.75} & \textbf{37.15} & \textbf{52.72} & \textbf{40.78}                                                    & \textbf{44.17}                                                     \\ \hline
 \end{tabular}%
-}
-\end{table*}
+\end{table}
+\end{landscape}

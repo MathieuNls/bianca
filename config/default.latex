@@ -5,12 +5,12 @@
 \usepackage{multirow}
 \usepackage{color}
 \usepackage{pgfplots}
+\usepackage{rotating}
+\usepackage{pdflscape}
 
-\newcommand{\comment}[2]{{\color{red}{#1: #2}}\\}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
 
 \usepackage[font=small,skip=2pt]{caption}
-\setlength{\belowcaptionskip}{0.1cm}
-\setlength{\textfloatsep}{0.1cm}
 
 $if(linestretch)$
 \usepackage{setspace}
@@ -161,10 +161,10 @@ $if(verbatim-in-note)$
 $endif$
 
 $if(title)$
-\title{\vspace{-1cm}$title$$if(subtitle)$\\\vspace{0.5em}{\large $subtitle$}$endif$}
+\title{$title$$if(subtitle)$\\\vspace{0.5em}{\large $subtitle$}$endif$}
 $endif$
 
-\author{ $for(author)$ \IEEEauthorblockN{$author.name$} \IEEEauthorblockA{ $author.affiliation$ \\ $author.location$ \\ {\footnotesize\texttt{$author.email$}} \\ \vspace{0.3cm}} $sep$ \and $endfor$}
+\author{$for(author)$ \IEEEauthorblockN{$author.name$} \IEEEauthorblockA{ $author.affiliation$ \\ $author.location$ \\ {\footnotesize\texttt{$author.email$}} \\ \vspace{0.3cm}} $sep$ \and $endfor$}
 
 % \author{$for(author)$$if(author.name)$ $author.name$$if(author.affiliation)$ ($author.affiliation$)$endif$\and$else$ $author$ $endif$$endfor$}
 
