@@ -100,14 +100,14 @@ Once the project dependency graph is extracted, we use a clustering algorithm to
 
 To build our database of code blocks that are related to defect-commits and fix-commits, we first need to identify the respective commits. Then, we extract the relevant blocks of code from the commits.
 
-**Extracting Commits:** BIANCA listens to bug (or issue) closing events happening on the project tracking system. Every time an issue is closed, BIANCA retrieves the commit that was used to fix the issue (the fix-commit) as well as the one that introduced the defect (the defect-commit). Retrieving fix-commits, however, is known to be a challenging task [@Wu2011]. This is because the link between the project tracking system and the code version control system is not always explicit. In an ideal situation, developers would add a reference to the issue they work on inside the description of the commit. But this good practice is not always followed. To make the link between fix-commits and their related issues, we turn to a modified version of the back-end of commit-guru [@Rosen2015a]. Commit-guru is a tool, developed by Rosen _et al._  [@Rosen2015a] to detect _risky commits_. In order to identify risky commits, Commit-guru builds a statistical model using change metrics (i.e.,  amount of lines added, amount of lines deleted, amount of files modified, etc.) from past commits known to have introduced defects in the past.
+**Extracting Commits:** BIANCA listens to bug (or issue) closing events happening on the project tracking system. Every time an issue is closed, BIANCA retrieves the commit that was used to fix the issue (the fix-commit) as well as the one that introduced the defect (the defect-commit). Retrieving fix-commits, however, is known to be a challenging task [@Wu2011]. This is because the link between the project tracking system and the code version control system is not always explicit. In an ideal situation, developers would add a reference to the issue they work on inside the description of the commit. But this good practice is not always followed. To make the link between fix-commits and their related issues, we turn to a modified version of the back-end of commit-guru [@Rosen2015]. Commit-guru is a tool, developed by Rosen _et al._  [@Rosen2015] to detect _risky commits_. In order to identify risky commits, Commit-guru builds a statistical model using change metrics (i.e.,  amount of lines added, amount of lines deleted, amount of files modified, etc.) from past commits known to have introduced defects in the past.
 
 Commit-guru's back-end has three major components: ingestion, analysis, and prediction. We reuse the ingestion part of the analysis components for BIANCA. The ingestion component is responsible for ingesting (i.e., downloading) a given repository.
 Once the repository is entirely downloaded on a local server, each commit history is analysed. Commits are classified using the list of keywords proposed by Hindle *et al.* [@Hindle2008]. Commit-guru implements the SZZ algorithm [@Kim2006c] to detect risky changes, where it performs the SCM blame/annotate function on all the modified lines of code for their corresponding files on the fix-commit's parents. This returns the commits that previously modified these lines of code and are flagged as the bug introducing commits (i.e., the defect-commits). Priori work showed that Commit-guru is effective in identifying defect-commits and their corresponding fixing commits [@Kamei2013a] and to date, the SZZ algorithm, which Commit-guru uses, is considered to be the state-of-the-art in detecting risky commits \red{and its accuracy has been repetitively proven in the literrature}. Note that we could use a simpler and more established tool such as Relink [@Wu2011] to link the commits to their issues and re-implement the classification proposed by Hindle *et al.* [@Hindle2008] on top of it. However, commit-guru has the advantage of being open-source, making it possible to  modify it to fit our needs and fine-tune its performance.
 
 **Extracting Code Blocks:** To extract code blocks from fix-commits and defect-commits,  we rely on TXL [@Cordy2006a], which is a first-order functional programming over linear term rewriting, developed by Cordy et al. [@Cordy2006a]. For TXL to work, one has to write a grammar describing the syntax of the source language and the transformations needed. TXL has three main phases: *parse*, *transform*, *unparse*. In the parse phase, the grammar controls not only the input but also the output forms. The following code sample---extracted from the official documentation---shows a grammar matching an *if-then-else* statement in C with some special keywords: [IN] (indent), [EX] (exdent) and [NL] (newline) that will be used in the output form.
 
-```bash
+```c
 define if_statement
   if ( [expr] ) [IN][NL]
 [statement] [EX]
@@ -203,7 +203,7 @@ In addition to the pretty-printing, code can be normalized and filtered to detec
 
 The extracted, pretty-printed, normalized and filtered blocks are marked as potential clones using a Longest Common Subsequence (LCS) algorithm [@Hunt1977]. Then, a percentage of unique statements can be computed and, given the threshold $\alpha$, the blocks are marked as clones.
 
-Another important aspect of the design of BIANCA is the ability to provide guidance to developers on how to improve the risky  commits. We achieve this by extracting from the database the fix-commit corresponding to the matching defect-commit and present it to the developer. We believe that this makes BIANCA a practical approach for the developers as they will know why a given modification has been reported as risky in terms of code; this is something that is not supported by techniques based on statistical models (e.g., [@Kamei2013a; @Rosen2015a]).  
+Another important aspect of the design of BIANCA is the ability to provide guidance to developers on how to improve the risky  commits. We achieve this by extracting from the database the fix-commit corresponding to the matching defect-commit and present it to the developer. We believe that this makes BIANCA a practical approach for the developers as they will know why a given modification has been reported as risky in terms of code; this is something that is not supported by techniques based on statistical models (e.g., [@Kamei2013a; @Rosen2015]).  
 A tool that supports BIANCA should have enough flexibility to allow developers to enable or disable the recommendations made by BIANCA. 
 Furthermore, because BIANCA acts before the commit reaches the central repository, it prevents unfortunate pulls of defects by other members of the organization. 
 
@@ -274,7 +274,7 @@ Similar to prior work focusing on risky commits (e.g., [@SunghunKim2008; @Kamei2
 - Recall: TP / (TP + FN)
 - F$_1$-measure: 2.(precision.recall)/(precision+recall)
 
-It is worth mentioning that, in the case of defect prevention, false positives can be hard to identify as the defects could be in the code but not yet reported through a bug report (or issue). To address this, we did not include the last six months of history. Following similar studies [@Rosen2015; @Chen2014; @Rosen2015a; @Shihab2013], if a defect is not reported within six months then it is not considered.
+It is worth mentioning that, in the case of defect prevention, false positives can be hard to identify as the defects could be in the code but not yet reported through a bug report (or issue). To address this, we did not include the last six months of history. Following similar studies [@Rosen2015; @Chen2014; @Shivaji2013; Kamei2013b], if a defect is not reported within six months then it is not considered.
 
 # Case Study Results {#sec:result}
 
@@ -363,7 +363,34 @@ Our interpretation of the manual analysis of the best and worst performing proje
 
 ## Human Analysis of the Quality of the Fixes Proposed by BIANCA
 
+\red{
+In order to further assess the quality of the fixes proposed by BIANCA we conducted an user study.
+For this user study we asked students at different levels (BS.c, Ms.c and Ph.D), in different fields (Computer Sciences, Electrical and Computer Engineering, Software Engineering) and attending different universities (Concordia University - Canada, UQAM - Canada, ETS - Canada, Cesi.Exia - France).
+In addition to students we requested the assesment of seasoned software engineers from three different companies.
+Overall, we requested the participation of 100 people (70 students and 30 professionals) and got a reply rate of 23\% (19 students and 4 professionals).
+No incentive was given to students nor professionals for their participation and we allowed up to 15 days to take the survey.
+Table \ref{tab:students} shows the distribution of students with regards to their universities, fields and levels of study students universities, departements and levels of study.
+}
 
+\input{tex/students}
+
+
+\red{
+We presented participants with three assets: (1) The changeset that introduced a bug; (2) The changeset that fixed the bug and (3) the top 5 fixes proposed by BIANCA in terms of similarity percentage.
+Without any time limit participants are then asked to rate the usefulness of the proposed 30 randomly selected fix-suites (5*30) on scale from 1 (not usefull) to 5 (very usefull).  
+Participants were allowed to quit the survey at any one point.
+The average completion percentage of our survey is 56\% (17/30).
+}
+
+\red{
+The results of the survey are plublicly of the user study are plublicly avalaible at:
+}
+
+
+## Examples of Proposed Fixes
+
+\red{In this section we present five actual fix-proposed fix couple.
+The presented proposed-fix is the top 1 fix.}
 
 
 # Threats to Validity {#sec:threats}
@@ -388,7 +415,7 @@ In conclusion, internal and external validity have both been minimized by choosi
 In this paper, we presented BIANCA (Bug Insertion ANticipation by Clone Analysis at commit time), an approach that detects risky commits (i.e., a commit that is likely to introduce a bug) with  90.75% precision and 37.15% recall.
 BIANCA uses clone detection techniques and project dependency analysis to detect risky commits within and across dependant projects.  BIANCA operates at commit-time, i.e., before the commits  reach the central repository. In addition, because it relies on code comparison, BIANCA does not only detect risky commits but also makes recommendations to developers on how to fix them. We believe that this makes BIANCA a practical approach for preventing bugs and proposing corrective measures that integrates well with the developers work flow through the commit mechanism.  
 
-To build on this work, we need to conduct a human study with developers in order to gather their feedback on the approach.
+To build on this work, we need to conduct a human study with developers in order to gather their feedback on the approach. 
 The feedback obtained will help us fine-tune the approach. Also, we want to examine the relationship between project cluster measures (such as betweenness) and the performance of BIANCA. Finally, another improvement to BIANCA would be to support Type 4 clones.
 
 # Reproduction Package & Dataset
@@ -398,10 +425,9 @@ Providing a straightforward reproduction package in this condition is very chall
 However, we are happy to share our consilolidated dataset: https://github.com/MathieuNls/bianca-data.
 The dataset is composed of three compressed MySQL formatted tables: clones, commits and repository.
 The clone table stores the relationship between set of similar commits.
-The commits themselves are in the commit table with details about their author, repository, commit message and all the metrics found in commit guru \cite{Rosen2015b}.
+The commits themselves are in the commit table with details about their author, repository, commit message and all the metrics found in commit guru \cite{Rosen2015}.
 Finally, the repository table describe the repository used in terms of url, name and ingestion status.
-}
-
+} 
 
 # Acknowledgments
 
