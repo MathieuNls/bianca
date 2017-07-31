@@ -377,7 +377,7 @@ Table \ref{tab:students} shows the distribution of students with regards to thei
 
 \red{
 We presented participants with three assets: (1) The changeset that introduced a bug; (2) The changeset that fixed the bug and (3) the top 5 fixes proposed by BIANCA in terms of similarity percentage.
-Without any time limit participants are then asked to rate the usefulness of the proposed 30 randomly selected fix-suites (5*30) on scale from 1 (not usefull) to 5 (very usefull).  
+Without any time limit participants are then asked to rate the usefulness of the top first proposed fix from 30 randomly selected fix-suites on scale from 1 (not usefull) to 5 (very usefull).  
 Participants were allowed to quit the survey at any one point.
 The average completion percentage of our survey is 56\% (17/30).
 }
