@@ -1,4 +1,4 @@
----
+﻿---
 title: "BIANCA: Preventing Bug Insertion at Commit-Time Using Dependency Analysis and Clone Detection"
 bibliography: config/library.bib
 abstract:  Preventing the introduction of software defects at commit-time is a growing line of research in the software maintenance community. Existing approaches leverage code and process metrics to build statistical models that can effectively prevent defect insertion and propose fixes in a software project. Metrics, however, may vary from one project to another, hindering the reuse of these models. Moreover, these techniques operate within single projects only despite the fact that many projects share dependencies and are, therefore, vulnerable to similar faults. In this paper, we propose a novel approach, called BIANCA, that relies on clone detection and dependency analysis to detect _risky_ commits within and across related projects. When applied to 42 projects, BIANCA achieves an average precision, recall and F-measure of 90.75%, 37.15% and 52.72%, respectively. We also found that only 8.6% of the risky commits detected by BIANCA match other commits from the same project, suggesting that relationships across projects need to be considered for effective prevention of risky commits. In addition, BIANCA is able to propose qualitative fixes to transform _risky_ commits into _non-risky_ ones in 78.67% of the cases. 
@@ -373,29 +373,29 @@ Out of the 250 manually analyzed proposed fixes, we were able to confirm that 34
 A direct solution is where the fix applied in $c_a$ could be easily adapted to fix the bug of $c_b$ by, for example, changing only variables and function names. 
 Ultimately the fix applied in $c_b$ is extremely similar to the one applied in $c_a$.
 Another 126 (50.4\%) proposed fixes have been manually identified as providing directions towards the fix.
-Fixes that provide a direction toward a fix means that the fix applied in $c_a$ would need significant transformation in order to be used in $c_b$. 
-Significant transformation can involve large refactoring, eleminating or adding part of the fix, adapt data structures and so on.
-Identifying proposed fixes that provide a direction toward the actual fix require a significant time investement as  $c_a$ and $c_b$. have be toroughly understood. 
+Fixes that provide a direction toward a fix means that the fix applied in $c_a$ would need significant transformations in order to be used in $c_b$. 
+Significant transformation can involve large refactoring, eliminating or add part of the fix, adapt data structures and so on.
+Identifying proposed fixes that provide a direction toward the actual fix require a significant time investment as  $c_a$ and $c_b$ have been thoroughly understood. 
 In addition, the systems where $c_a$ and $c_b$ have been applied have to be understood too in order to assess the pertinence and quality of $c_a$ with regards to $c_b$. 
 In order to identify proposed fixes that provide directions towards the actual fix, we allowed ourselves a 30 minutes period. 
 In this 30 minutes period, we were investigating both systems and trying to understand the proposed fixes in their contexts. 
-After the 30 minutes, if we were unable to distinguish a similarity between the fix of  $c_a$ and  the one of $c_b$; then, we categorize the proposed fix as not helpfull.
+After the 30 minutes, if we were unable to distinguish a similarity between the fix of  $c_a$ and the one of $c_b$; then, we categorize the proposed fix as not helpful.
 While 30 minutes can be perceived as long period of time to analyze the output of tools such as BIANCA, we have to keep into account that developers exposed to these results would have already have a comprehensive understanding of their system and, most likely, would be able to understand the other system quicker than we could.
 In addition, 30 minutes out of the bug fixing process of industrial java systems is representing only 10.4\% of the total time required to fix a bug according to Weiss \textit{et al} \cite{Weiss2007}. In their attempt to predict \textit{how long would it take to fix a bug} they discovered that the average time to craft a fix was 4.8$\pm$6.3 hours in one open-source java industrialize-sized system called JBoss [?].
 We argue that, even if 30 minutes are required to identify a direction from a proposed fix it will still save time over the 4.8 $\pm$6.3 hours required on JBoss.
-Indeed, fixes proposed the developers have to be from systems that are in the same cluster with regards to their depedencies.
-Consequently, it is likely that the developer would recognize types and structures comming from the other system as they are also used in the system at hand.
-To summarize, 86 proposed fixes have been identified as direct solution in a few minutes while 126 fixes have been identified as providing directions towards the acutal fix within a 30 minutes period. 
+Indeed, fixes proposed the developers have to be from systems that are in the same cluster with regards to their dependencies.
+Consequently, it is likely that the developer would recognise types and structures coming from the other system as they are also used in the system at hand.
+To summarise, 86 proposed fixes have been identified as a direct solution in a few minutes while 126 fixes have been identified as providing directions towards the actual fix within a 30 minutes period. 
 Finally, we were not able to manually identify any relevant similarity, inside our 30 minutes period, for 38 proposed fixes (15.2\%).
 Overall, the manual analysis took over 100 hours.
 }
 
 \red{
-In what follows we present hand picked diffs that shows example of directly applicable fixes and fixes that give direction toward the actual fix. 
+In what follows we present hand picked diffs that show examples of directly applicable fixes and fixes that give direction toward the actual fix. 
 Diffs are a representation of two different version of the same source code. 
 The version before the commit and the version after the commit.
 The modifications between the two versions are identified by "-"s and "+"s.
-If a line starts with a "-" it means that the given line has been deleted and is not longer present in the after-commit version of the code.
+If a line starts with a "-", it means that the given line has been deleted and is not longer present in the after-commit version of the code.
 In the opposite, if a line begins with a "+"; then, this line has been added to the source code and will be present in the after-commit version of the code.
 Finally, the "$@@$" signs determine where the code snippet take place in the overall file by specifying the line number in the before- and after- commit versions of the source code. 
 }
@@ -409,13 +409,13 @@ In this next example, we present two couples $c_{a_1}$ (figure \ref{fig:orient})
 \red{
 In this next example, we present two couples $c_{a_3}$ (figure \ref{fig:orient}) and $c_{b_3}$ (figure \ref{fig:jsoup} that belong to Jsoup and Orientdb, respectively.
 $c_{a_3}$ has been commited in November 2013 while $c_{b_3}$ came two years later in October 2015.
-This is an example where the proposed fix give a direction towards the actual fix.
+This is an example where the proposed fix gives a direction towards the actual fix.
 In  $c_{a_3}$ and $c_{b_3}$ we can see that the developers are working with the \texttt{StringBuilder} class. 
 The \texttt{StringBuilder} class is explained as follows in the Java documentation: \textit{A mutable sequence of characters. This class provides an API compatible with StringBuffer, but with no guarantee of synchronization. This class is designed for use as a drop-in replacement for StringBuffer in places where the string buffer was being used by a single thread (as is generally the case). Where possible, it is recommended that this class be used in preference to StringBuffer as it will be faster under most implementations.}
 Developers usually use the \texttt{StringBuilder} class to build strings using the \texttt{append} and \texttt{insert} methods.
 Using the \texttt{StringBuilder} class rather than plain string concatenation (i.e. using the \texttt{+} operator) is a good Java practice as it improves performances. 
-In both cases, the code have been modified to avoid the appending of \texttt{null} string.
-On JSoup, it is done by the method \texttt{shouldCollapseAttribute} which is responsible to find the value is empty.
+In both cases, the code has been modified to avoid the appending of \texttt{null} string.
+On JSoup, it is done by the method \texttt{shouldCollapseAttribute} which is responsible to find out if the value is empty.
 On Orientdb, it is done by a simple null check on the string named \texttt{right}.
 Note that this kind of \textit{bug} would not have been picked up by a static analysis tool such as PMD \cite{pmd} because it is \textit{legal} to pass a null string as a parameter of function expecting a string.
 In both cases, however, the developers were tasked to avoid the appending of null strings.
@@ -429,7 +429,7 @@ The first pattern is linked to the desire of a developer to produce a backward c
 As presented in Figure \ref{fig:backward} the developer replace the invocation to the \texttt{isEmpty} method to an invocation of \texttt{length() == 0} in order to make its code compatible with Java 1.5. 
 Indeed, Java, in its 1.5 version does not provide the \texttt{isEmpty} method which was introduced later. 
 Here, we can suspect that the development environment of the developer does not match the production environment and, consequently, a regression has been introduced.
-This fix-pattern of replacing a newly added method in a library by an old one occured 3  times in our direct fix category. 
+This fix-pattern of replacing a newly added method in a library by an old one occurred three times in our direct fix category. 
 Consequently, we investigated further in the 15,316 results and found 363 instances of this pattern.
 This pattern accounts for 2.35\% of the total detection. 
 }
@@ -437,16 +437,12 @@ This pattern accounts for 2.35\% of the total detection.
 \input{tex/backward.tex}
 
 \red{
-Another interesting patterns we were able to detect in the 250 bugs randomly selected (2/250) and confirm in the remaining 15,116 (is a pattern involving the java keyword \texttt{final} (48/15,116).
-In Java, the keyword refers to the non-transitiviy or immutability of variables. 
-<<<<<<< HEAD
+Another interesting pattern we were able to detect in the 250 bugs randomly selected (2/250) and confirm in the remaining 15,116 (is a pattern involving the java keyword \texttt{final} (48/15,116).
+In Java, the keyword refers to the non-transitivity or immutability of variables. 
 As investigated by Colblenz \textit{et al.} that important requirements, such as expressing immutability constraints, were completely understood nor available in Java [@coblenz2016exploring].
-=======
-As investigated by Colblenz \textit{et al.} that important requirements, such as expressing immutability constraints, were completely understood nor available in Java.
->>>>>>> cf51ed833009fbbc7b7e2b740266d6f52571ffbf
 The use of this keyword by junior software developer is often adhoc.
 In many instances, we found developer fixing a bug report stating that a given variable should not change regardless of the on-going event.
-Rather than fixing the root cause (i.e. understanting why and where the variable changes) developers use the final keyword. 
+Rather than fixing the root cause (i.e. understanding why and where the variable changes) developers use the final keyword. 
 It is noteworthy that an attempt to modify the value of a final variable, in Java, would result in a compilation error.
 Figure \ref{fig:final} show a commit displaying this fix-pattern.
 }
@@ -465,7 +461,7 @@ These wrapped types contain a single field (the primitive type they wrap) and se
 The wrapped types, as \texttt{Object}, can be \texttt{null} and invoking one of their method on a \texttt{null} instance would result in a \texttt{null pointer exception}.
 We found 2/250 and 192/15,316 instances of null-checking wrapped types as displayed in Figure \ref{fig:null}.
 Unlike the first two patterns, this last pattern could be detected by static checker such as PMD.
-However, it seams that this particuliar case evades the detection of potentially null objects access.
+However, it seems that this particular case evades the detection of potentially null objects access.
 }
 
 \input{tex/nullcheck.tex}
@@ -474,12 +470,12 @@ However, it seams that this particuliar case evades the detection of potentially
 
 The selection of target systems is one of the common threats to validity for approaches aiming to improve the analysis of software systems. 
 It is possible that the selected programs share common properties that we are not aware of and therefore, invalidate our results. 
-However, the systems analysed by BIANCA were selected from Github based on their popularity and the ability to mine their past issues and also to retrieve their dependencies. Any project that satisfies these criteria would be included in the analysis.  Moreover, the systems vary in terms of purpose, size, and history. 
+However, the systems analyzed by BIANCA were selected from Github based on their popularity and the ability to mine their past issues and also to retrieve their dependencies. Any project that satisfies these criteria would be included in the analysis.  Moreover, the systems vary in terms of purpose, size, and history. 
 In addition, we see a threat to validity that stems from the fact that we only used open-source systems. 
 The results may not be generalizable to industrial systems. We intend to undertake these studies in future work.
 
 The programs we used in this study are all based on the Java programming language. 
-This can limit the generalization of the results to pojects written in other languages. 
+This can limit the generalization of the results to projects written in other languages. 
 However, similar to Java, one can write a TXL grammar for a new language then BIANCA can work since BIANCA relies on TXL. 
 Finally, we use NICAD as the code comparison engine. 
 The accuracy of NICAD affects the accuracy of BIANCA. 
@@ -525,3 +521,4 @@ We are also greatful to the students and engineers that participated in our user
 <!-- End Footnotes text -->
 
 \small
+
