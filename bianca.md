@@ -439,7 +439,11 @@ This pattern accounts for 2.35\% of the total detection.
 \red{
 Another interesting patterns we were able to detect in the 250 bugs randomly selected (2/250) and confirm in the remaining 15,116 (is a pattern involving the java keyword \texttt{final} (48/15,116).
 In Java, the keyword refers to the non-transitiviy or immutability of variables. 
+<<<<<<< HEAD
 As investigated by Colblenz \textit{et al.} that important requirements, such as expressing immutability constraints, were completely understood nor available in Java [@coblenz2016exploring].
+=======
+As investigated by Colblenz \textit{et al.} that important requirements, such as expressing immutability constraints, were completely understood nor available in Java.
+>>>>>>> cf51ed833009fbbc7b7e2b740266d6f52571ffbf
 The use of this keyword by junior software developer is often adhoc.
 In many instances, we found developer fixing a bug report stating that a given variable should not change regardless of the on-going event.
 Rather than fixing the root cause (i.e. understanting why and where the variable changes) developers use the final keyword. 
