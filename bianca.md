@@ -504,8 +504,7 @@ Finally, the repository table describe the repository used in terms of url, name
 
 # Acknowledgments
 
-\red{We are thankful to amazon for their awseducate plateform without which this study would have cost thousands of dollars in server fees.
-We are also greatful to the students and engineers that participated in our user study.}
+\red{We are thankful to amazon for their awseducate plateform without which this study would have cost thousands of dollars in server fees.}
 
 # References
 
