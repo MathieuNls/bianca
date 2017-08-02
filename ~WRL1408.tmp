@@ -266,13 +266,6 @@ To address this, we randomly selected a sample of 1% commits from our dataset an
 
 With $\alpha$ = 35%, the experiments took nearly three months to run on 48 Amazon VPS (Virtual Private Server) running in parallel (4e8 comparisons).
 
-\red{While running our experimentations required a large amount of computational power and time, analyzing one incoming commit and proposing the related fix take, in average, 72 seconds on an average workstation (quad-core @ 3.2GHz with 8 GB of RAM).
-In that time, the commit is first abstracted via pretty-printing and then, compared to known bug-introducing changes. 
-If the commit is flagged as a bug-introducing change, then, we fetch the fixes of the bug-introducing changes that match the incoming commit. 
-The time it takes to analyze an incoming commit progresses with the length of the incoming commit and number of known bug-introducing changes.
-}
-
-
 
 ## Evaluation Measures
 
