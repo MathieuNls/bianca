@@ -361,37 +361,110 @@ Very much like Openhab by Openhab, it provides a very particular set of features
 
 Our interpretation of the manual analysis of the best and worst performing projects is that BIANCA performs best when applied to clusters that contain projects that are similar in terms of features, domain or intent. These projects tend to be interconnected through dependencies. In the future, we intend to study the correlation between the cluster betweenness measure and the performance of BIANCA. 
 
-## Human Analysis of the Quality of the Fixes Proposed by BIANCA
+## Manual Analysis of the Quality of the Fixes Proposed by BIANCA
 
 \red{
-In order to further assess the quality of the fixes proposed by BIANCA we conducted an user study.
-For this user study we asked students at different levels (BS.c, Ms.c and Ph.D), in different fields (Computer Sciences, Electrical and Computer Engineering, Software Engineering) and attending different universities (Concordia University - Canada, UQAM - Canada, ETS - Canada, Cesi.Exia - France).
-In addition to students we requested the assesment of seasoned software engineers from three different companies.
-Overall, we requested the participation of 100 people (70 students and 30 professionals) and got a reply rate of 23\% (19 students and 4 professionals).
-No incentive was given to students nor professionals for their participation and we allowed up to 15 days to take the survey.
-Table \ref{tab:students} shows the distribution of students with regards to their universities, fields and levels of study students universities, departements and levels of study.
+In order to further assess the quality of the fixes proposed by BIANCA we manually analysed 250 randomly selected solution proposed by BIANCA (1.63\% of 15,316).
+A proposed solution, in BIANCA terms, is composed of two bug-introducing change and fix couple; $c_a$ and $c_b$.
+To analyse the quality of the fixes we manually compare the fix applied in $c_a$ to the one applied in $c_b$. 
+In this section, we provide a sub-sample of the 250 proposed fixes we analyzed. 
+This sample is not randomly selected but composed of pertinent examples hand-picked by one of the authors.
+Out of the 250 manually analyzed proposed fixes, we were able to confirm that 34.4\% of them (86/250) would have provided a direct solution to the bug to fix. 
+A direct solution is where the fix applied in $c_a$ could be easily adapted to fix the bug of $c_b$ by, for example, changing only variables and function names. 
+Ultimately the fix applied in $c_b$ is extremely similar to the one applied in $c_a$.
+Another 126 (50.4\%) proposed fixes have been manually identified as providing directions towards the fix.
+Fixes that provide a direction toward a fix means that the fix applied in $c_a$ would need significant transformation in order to be used in $c_b$. 
+Significant transformation can involve large refactoring, eleminating or adding part of the fix, adapt data structures and so on.
+Identifying proposed fixes that provide a direction toward the actual fix require a significant time investement as  $c_a$ and $c_b$. have be toroughly understood. 
+In addition, the systems where $c_a$ and $c_b$ have been applied have to be understood too in order to assess the pertinence and quality of $c_a$ with regards to $c_b$. 
+In order to identify proposed fixes that provide directions towards the actual fix, we allowed ourselves a 30 minutes period. 
+In this 30 minutes period, we were investigating both systems and trying to understand the proposed fixes in their contexts. 
+After the 30 minutes, if we were unable to distinguish a similarity between the fix of  $c_a$ and  the one of $c_b$; then, we categorize the proposed fix as not helpfull.
+While 30 minutes can be perceived as long period of time to analyze the output of tools such as BIANCA, we have to keep into account that developers exposed to these results would have already have a comprehensive understanding of their system and, most likely, would be able to understand the other system quicker than we could.
+In addition, 30 minutes out of the bug fixing process of industrial java systems is representing only 10.4\% of the total time required to fix a bug according to Weiss \textit{et al} \cite{Weiss2007}. In their attempt to predict \textit{how long would it take to fix a bug} they discovered that the average time to craft a fix was 4.8$\pm$6.3 hours in one open-source java industrialize-sized system called JBoss [?].
+We argue that, even if 30 minutes are required to identify a direction from a proposed fix it will still save time over the 4.8 $\pm$6.3 hours required on JBoss.
+Indeed, fixes proposed the developers have to be from systems that are in the same cluster with regards to their depedencies.
+Consequently, it is likely that the developer would recognize types and structures comming from the other system as they are also used in the system at hand.
+To summarize, 86 proposed fixes have been identified as direct solution in a few minutes while 126 fixes have been identified as providing directions towards the acutal fix within a 30 minutes period. 
+Finally, we were not able to manually identify any relevant similarity, inside our 30 minutes period, for 38 proposed fixes (15.2\%).
+Overall, the manual analysis took over 100 hours.
 }
 
-\input{tex/students}
+\red{
+In what follows we present hand picked diffs that shows example of directly applicable fixes and fixes that give direction toward the actual fix. 
+Diffs are a representation of two different version of the same source code. 
+The version before the commit and the version after the commit.
+The modifications between the two versions are identified by "-"s and "+"s.
+If a line starts with a "-" it means that the given line has been deleted and is not longer present in the after-commit version of the code.
+In the opposite, if a line begins with a "+"; then, this line has been added to the source code and will be present in the after-commit version of the code.
+Finally, the "$@@$" signs determine where the code snippet take place in the overall file by specifying the line number in the before- and after- commit versions of the source code. 
+}
+
+\red{
+In this next example, we present two couples $c_{a_1}$ (figure \ref{fig:orient}) and $c_{b_1}$ (figure \ref{fig:jsoup} that belong to X and Y, respectively. null check
+}
+
 
 
 \red{
-We presented participants with three assets: (1) The changeset that introduced a bug; (2) The changeset that fixed the bug and (3) the top 5 fixes proposed by BIANCA in terms of similarity percentage.
-Without any time limit participants are then asked to rate the usefulness of the top first proposed fix from 30 randomly selected fix-suites on scale from 1 (not usefull) to 5 (very usefull).  
-Participants were allowed to quit the survey at any one point.
-The average completion percentage of our survey is 56\% (17/30).
+In this next example, we present two couples $c_{a_3}$ (figure \ref{fig:orient}) and $c_{b_3}$ (figure \ref{fig:jsoup} that belong to Jsoup and Orientdb, respectively.
+$c_{a_3}$ has been commited in November 2013 while $c_{b_3}$ came two years later in October 2015.
+This is an example where the proposed fix give a direction towards the actual fix.
+In  $c_{a_3}$ and $c_{b_3}$ we can see that the developers are working with the \texttt{StringBuilder} class. 
+The \texttt{StringBuilder} class is explained as follows in the Java documentation: \textit{A mutable sequence of characters. This class provides an API compatible with StringBuffer, but with no guarantee of synchronization. This class is designed for use as a drop-in replacement for StringBuffer in places where the string buffer was being used by a single thread (as is generally the case). Where possible, it is recommended that this class be used in preference to StringBuffer as it will be faster under most implementations.}
+Developers usually use the \texttt{StringBuilder} class to build strings using the \texttt{append} and \texttt{insert} methods.
+Using the \texttt{StringBuilder} class rather than plain string concatenation (i.e. using the \texttt{+} operator) is a good Java practice as it improves performances. 
+In both cases, the code have been modified to avoid the appending of \texttt{null} string.
+On JSoup, it is done by the method \texttt{shouldCollapseAttribute} which is responsible to find the value is empty.
+On Orientdb, it is done by a simple null check on the string named \texttt{right}.
+Note that this kind of \textit{bug} would not have been picked up by a static analysis tool such as PMD \cite{pmd} because it is \textit{legal} to pass a null string as a parameter of function expecting a string.
+In both cases, however, the developers were tasked to avoid the appending of null strings.
 }
+
+\input{tex/diff1.tex}
 
 \red{
-The results of the survey are plublicly of the user study are plublicly avalaible at:
+In addition to the presented couples of fix/proposed-fix presented our manual analysis yield some interesting insights on fix patterns that span accross clusters.
+The first pattern is linked to the desire of a developer to produce a backward compatible source code.
+As presented in Figure \ref{fig:backward} the developer replace the invocation to the \texttt{isEmpty} method to an invocation of \texttt{length() == 0} in order to make its code compatible with Java 1.5. 
+Indeed, Java, in its 1.5 version does not provide the \texttt{isEmpty} method which was introduced later. 
+Here, we can suspect that the development environment of the developer does not match the production environment and, consequently, a regression has been introduced.
+This fix-pattern of replacing a newly added method in a library by an old one occured 3  times in our direct fix category. 
+Consequently, we investigated further in the 15,316 results and found 363 instances of this pattern.
+This pattern accounts for 2.35\% of the total detection. 
 }
 
+\input{tex/backward.tex}
 
-## Examples of Proposed Fixes
+\red{
+Another interesting patterns we were able to detect in the 250 bugs randomly selected (2/250) and confirm in the remaining 15,116 (is a pattern involving the java keyword \texttt{final} (48/15,116).
+In Java, the keyword refers to the non-transitiviy or immutability of variables. 
+As investigated by Colblenz \textit{et al.} that important requirements, such as expressing immutability constraints, were completely understood nor available in Java [@coblenz2016exploring].
+The use of this keyword by junior software developer is often adhoc.
+In many instances, we found developer fixing a bug report stating that a given variable should not change regardless of the on-going event.
+Rather than fixing the root cause (i.e. understanting why and where the variable changes) developers use the final keyword. 
+It is noteworthy that an attempt to modify the value of a final variable, in Java, would result in a compilation error.
+Figure \ref{fig:final} show a commit displaying this fix-pattern.
+}
 
-\red{In this section we present five actual fix-proposed fix couple.
-The presented proposed-fix is the top 1 fix.}
+\input{tex/final.tex}
 
+\red{
+The last pattern we discovered consists in null-checking wrapped types such as \texttt{Integer}. 
+In Java, eight primitive types exist: boolean, byte, char, short, int, long, float and double. 
+These types are the most basic data types available and are not extending the top-most class \texttt{Object}.
+The primitive types cannot have \texttt{null} as value. 
+For example, the default value of an \texttt{int} is \texttt{0}.
+All other classes of Java are, by default, specialization of \texttt{Object}.
+In addition to these primitive type, the JDK (Java Development Kit) contains wrapped types that wraps the value of a primitive types in an \texttt{Object}. 
+These wrapped types contain a single field (the primitive type they wrap) and several methods for conversion and comparison, for example.
+The wrapped types, as \texttt{Object}, can be \texttt{null} and invoking one of their method on a \texttt{null} instance would result in a \texttt{null pointer exception}.
+We found 2/250 and 192/15,316 instances of null-checking wrapped types as displayed in Figure \ref{fig:null}.
+Unlike the first two patterns, this last pattern could be detected by static checker such as PMD.
+However, it seams that this particuliar case evades the detection of potentially null objects access.
+}
+
+\input{tex/nullcheck.tex}
 
 # Threats to Validity {#sec:threats}
 
@@ -423,7 +496,7 @@ The feedback obtained will help us fine-tune the approach. Also, we want to exam
 \red{As described in section \ref{sec:newcommits} our experimentations rely heavily on virtual machines instrumentation and coordination. 
 Providing a straightforward reproduction package in this condition is very challenging.
 However, we are happy to share our consilolidated dataset: https://github.com/MathieuNls/bianca-data.
-The dataset is composed of three compressed MySQL formatted tables: clones, commits and repository.
+The dataset is composed of three compressed PostgresSQL formatted tables: clones, commits and repository.
 The clone table stores the relationship between set of similar commits.
 The commits themselves are in the commit table with details about their author, repository, commit message and all the metrics found in commit guru \cite{Rosen2015}.
 Finally, the repository table describe the repository used in terms of url, name and ingestion status.
