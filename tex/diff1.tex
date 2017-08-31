@@ -1,16 +1,16 @@
 \lstset{language=Java}
 
 \begin{figure*}
-\begin{lstlisting}
+\begin{lstlisting}[moredelim={[is][keywordstyle]{||}{||}}]
 @@ -34,7 +35,11 @@ public Object jjtAccept(OrientSqlVisitor visitor, Object data) {
     public void toString(Map<Object, Object> params, StringBuilder builder) {
       expression.toString(params, builder);
       builder.append(" MATCHES ");
  -    builder.append(right);
- +    if(right!=null) {
- +      builder.append(right);
- +    }else{
- +      rightParam.toString(params, builder);
+ || +    if(right!=null) { ||  
+ || +      builder.append(right); ||
+ || +    }else{ ||
+ || +      rightParam.toString(params, builder); ||
  +    }
     }
 \end{lstlisting}
@@ -18,7 +18,7 @@
 \end{figure*}
 
 \begin{figure*}
-\begin{lstlisting}
+\begin{lstlisting}[moredelim={[is][keywordstyle]{||}{||}}]
      protected void html(StringBuilder accum, Document.OutputSettings out) {
  -        accum
  -            .append(key)
@@ -26,11 +26,11 @@
  -            .append(Entities.escape(value, out))
  -            .append("\"");
  +        accum.append(key);
- +        if (!shouldCollapseAttribute(out)) {
- +            accum.append("=\"");
- +            Entities.escape(accum, value, out, true, false, false);
- +            accum.append('"');
- +        }
+ || +        if (!shouldCollapseAttribute(out)) { ||
+ || +            accum.append("=\""); ||
+  +            Entities.escape(accum, value, out, true, false, false);
+  +            accum.append('"');
+ || +        }
       }
   
       /**

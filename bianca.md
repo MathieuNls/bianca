@@ -108,7 +108,7 @@ To build our database of code blocks that are related to defect-commits and fix-
 **Extracting Commits:** BIANCA listens to bug (or issue) closing events happening on the project tracking system. Every time an issue is closed, BIANCA retrieves the commit that was used to fix the issue (the fix-commit) as well as the one that introduced the defect (the defect-commit). Retrieving fix-commits, however, is known to be a challenging task [@Wu2011]. This is because the link between the project tracking system and the code version control system is not always explicit. In an ideal situation, developers would add a reference to the issue they work on inside the description of the commit. But this good practice is not always followed. To make the link between fix-commits and their related issues, we turn to a modified version of the back-end of commit-guru [@Rosen2015]. Commit-guru is a tool, developed by Rosen _et al._  [@Rosen2015] to detect _risky commits_. In order to identify risky commits, Commit-guru builds a statistical model using change metrics (i.e.,  amount of lines added, amount of lines deleted, amount of files modified, etc.) from past commits known to have introduced defects in the past.
 
 Commit-guru's back-end has three major components: ingestion, analysis, and prediction. We reuse the ingestion part of the analysis components for BIANCA. The ingestion component is responsible for ingesting (i.e., downloading) a given repository.
-Once the repository is entirely downloaded on a local server, each commit history is analysed. Commits are classified using the list of keywords proposed by Hindle *et al.* [@Hindle2008]. Commit-guru implements the SZZ algorithm [@Kim2006c] to detect risky changes, where it performs the SCM blame/annotate function on all the modified lines of code for their corresponding files on the fix-commit's parents. This returns the commits that previously modified these lines of code and are flagged as the bug introducing commits (i.e., the defect-commits). Priori work showed that Commit-guru is effective in identifying defect-commits and their corresponding fixing commits [@Kamei2013a] and to date, the SZZ algorithm, which Commit-guru uses, is considered to be the state-of-the-art in detecting risky commits \red{and its accuracy has been repetitively proven in the literrature}. Note that we could use a simpler and more established tool such as Relink [@Wu2011] to link the commits to their issues and re-implement the classification proposed by Hindle *et al.* [@Hindle2008] on top of it. However, commit-guru has the advantage of being open-source, making it possible to  modify it to fit our needs and fine-tune its performance.
+Once the repository is entirely downloaded on a local server, each commit history is analysed. Commits are classified using the list of keywords proposed by Hindle *et al.* [@Hindle2008]. Commit-guru implements the SZZ algorithm [@Kim2006c] to detect risky changes, where it performs the SCM blame/annotate function on all the modified lines of code for their corresponding files on the fix-commit's parents. This returns the commits that previously modified these lines of code and are flagged as the bug introducing commits (i.e., the defect-commits). Priori work showed that Commit-guru is effective in identifying defect-commits and their corresponding fixing commits [@Kamei2013a] and to date, the SZZ algorithm, which Commit-guru uses, is considered to be the state-of-the-art in detecting risky commits \red{and its accuracy has been repetitively shown[@Kamei2013; @Rosen2015b] in the literrature}. Note that we could use a simpler and more established tool such as Relink [@Wu2011] to link the commits to their issues and re-implement the classification proposed by Hindle *et al.* [@Hindle2008] on top of it. However, commit-guru has the advantage of being open-source, making it possible to  modify it to fit our needs and fine-tune its performance.
 
 **Extracting Code Blocks:** To extract code blocks from fix-commits and defect-commits,  we rely on TXL [@Cordy2006a], which is a first-order functional programming over linear term rewriting, developed by Cordy et al. [@Cordy2006a]. For TXL to work, one has to write a grammar describing the syntax of the source language and the transformations needed. TXL has three main phases: *parse*, *transform*, *unparse*. In the parse phase, the grammar controls not only the input but also the output forms. The following code sample---extracted from the official documentation---shows a grammar matching an *if-then-else* statement in C with some special keywords: [IN] (indent), [EX] (exdent) and [NL] (newline) that will be used in the output form.
 
@@ -176,7 +176,7 @@ There are two groups of hooks: client-side and server-side. Client-side hooks ar
 
 To compare the extracted blocks to the ones in the database, we resort to clone detection techniques, more specifically, text-based clone detection techniques. This is because lexical and syntactic analysis approaches (alternatives to text-based comparisons) would require a complete program to work, i.e., a program that compiles.  In the relatively wide-range of tools and techniques that exist to detect clones by considering code as text [@Johnson1993;  @Johnson1994; @Marcus; @Manber1994; @StephaneDucasse; @Wettel2005], we selected NICAD as the main text-based method for comparing code blocks [@Cordy2011] for several reasons. 
 First, NICAD is built on top of TXL, which we also used in the previous phase.  Second, NICAD can detect Types 1, 2 and 3 software clones [@CoryKapser]. Type 1 clones are copy-pasted blocks of code that only differ from each other in terms of non-code artefacts such as indentation, whitespaces, comments and so on.  Type 2 clones are blocks of code that are syntactically identical except literals, identifiers, and types that can be modified. Also, Type 2 clones share the particularities of Type 1 about indentation, whitespaces, and comments. Type 3 clones are similar to Type 2 clones in terms of modification of literals, identifiers, types, indentation, whitespaces, and comments but also contain added or deleted code statements. BIANCA detects Type 3 clones since they can contain added or deleted code statements, which make them suitable for comparing commit code blocks.
-\red{The one caveat of using NICAD is that it only works with complete JAVA, C\# and C files. To circonvent this issue, we spent a significant amount of time writing a txl grammar that accepts changesets (instead of complete files) helped by TXL creators and maintainers on http://www.txl.ca/forum/.}
+\red{The problem with the current implementation of NICAD is that it only considers complete Java, C#, and C files. We needed to adapt NICAD to process changesets. With the aid of TXL designers, we developed a TXL grammar for changesets.}
 
 NICAD works in three phases: *Extraction*, *Comparison* and *Reporting*. 
 During the *Extraction* phase all potential clones are identified, pretty-printed, and extracted. 
@@ -260,9 +260,8 @@ To measure the similarity between pairs of commits, we need to decide on the val
 
 To address this, we randomly selected a sample of 1% commits from our dataset and checked the results by varying $\alpha$ from 1 to 100%. Figure \ref{fig:alpha-deter} shows the results. As we can see, there is a tradeoff between precision and recall, however, after the $\alpha$ = 35% point, we see a drop in recall; hence, we set $\alpha$ = 35% in our experiments.
 
-\red{While $\alpha$ = 35\% is not a general rule in clone detection work a threshold of around 30\% is considered an adequate by NICAD according to their user manual. This is espacially true for Type 3 clones which contain added or deleted code statements.}
-
-[@Roy2008; @Cordy2011].
+\red{While $\alpha$ = 35\% is not a general rule in clone detection work 
+the best trade-off between precision and recall is obtained when alpha = 35%.  In addition, Roy et al. [@Roy2008; @Cordy2011] showed using empirical studies that using NICAD with a threshold around 30%, the default setting, provides good results for the detection Type 3 clones. This is easily understandable for Type 3 clones which contain added or deleted code statements.}
 
 With $\alpha$ = 35%, the experiments took nearly three months to run on 48 Amazon VPS (Virtual Private Server) running in parallel (4e8 comparisons).
 
@@ -305,7 +304,7 @@ This finding supports the idea that developers of a project are not likely to in
 It is important to note that we do not claim that 37.15% of issues in open-source systems are caused by  project dependencies. 
 To support such a claim, we would need to analyse the 15,316 detected defect-commits and determine how many yield defects that are similar across projects. Studying the similarity of defects across projects is a complex task and may require analysing the defect reports manually. This is left as  future work. This said, we showed, in this paper, that software systems sharing dependencies also share common issues, irrespective to whether these issues represent similar defects or not.
 
-In the following subsections, we compare BIANCA with a random classifier, assess the quality of the proposed fixes, and present the findings of our manual analysis.
+\red{In the following subsections, we compare BIANCA with a random classifier, analyze the best and worst performing projects, assess the quality of the proposed fixes and present some cross-cluster fix patterns we discovered.}
 
 ## Random Classifier Comparison
 
@@ -318,21 +317,9 @@ For each commit, if $n$ is greater than 0.5, then the commit is classified as ri
 
 It is important to note that the purpose of this analysis is not to say that we outperform a simple random classifier, rather to shed light on the fact that our dataset is unbalanced and achieving an average F$_1$ = 52.72% is non-trivial, especially when a baseline only achieves an F$_1$-measure of 33.24%.
 
+## Performances of the best and worst performing projects.
 
-## Automatic Analysis of the Quality of the Fixes Proposed by BIANCA
-
-One of the advantages of BIANCA over other techniques is that it also proposes fixes for the _risky_ commits it detects.
-In order to evaluate the quality of the proposed fixes, we compare the proposed fixes with the actual fixes provided by the developers. To do so, we used the same preprocessing steps we applied to incoming commits: extract, pretty-print, normalize and filter the blocks modified by the proposed and actual fixes. Then, the blocks of the actual fixes and the proposed fixes can be compared with our clone comparison engine.
-
-Similar to other studies recommending fixes, we assess the quality of the first 3 and 5 proposed fixes [@Pan2008; @Kim2013; @tao2014automatically; @Dallmeier; @le2012systematic; @le2015should]. The average similarity of the first 3 fixes is 40.78% while the similarity of the first five fixes is 44.17%. Results are reported in Table \ref{tab:results}.
-
-In the framework of this study, for a fix to be ranked as qualitative it has to reach our $\alpha$=35% similarity threshold.
-Meaning that the proposed fixed must be at least 35\% similar to the actual fix. On average, the proposed fixes are above the $\alpha$=35% threshold.
-On a per commit basis, BIANCA proposed 101,462 fixes for the 13,899 true positives _risky commits_ (7.3 per commit). Out of the 101,462 proposed fixes, 78.67% are above our $\alpha$=35% threshold.
-
-In other words, BIANCA is able to detect _risky_ commits with 90.75% precision, 37.15% recall, and proposes fixes that contain, on average, 40-44% of the actual code needed to transform the _risky_ commit into a _non-risky_ one. It is still too early to claim whether BIANCA's recommendations can be useful to developers. For this, we need to conduct user study, which we plan to do as future work.
-
-BIANCA performed best when applied to three projects: Otto by Square (100.00% precision and 76.61% recall, 96.55% F$_1$-measure), JStorm by Alibaba (90.48% precision, 87.50% recall, 88.96% F$_1$-measure), and Auto by Google (90.48% precision, 87.50% recall, 86.76% F$_1$-measure). It performed worst when applied to Android Annotations by Excilys (100.00% precision, 1.59% recall, 3.13% F$_1$-measure) and Che by Eclipse (88.89% precision, 5.33% recall, 10.05% F$_1$-measure), Openhab by Openhab (100.00% precision, 7.14% recall, 13.33% F$_1$-measure). To understand the performance of BIANCA, we conducted a manual analysis of the commits classified as _risky_ by BIANCA for these projects.
+\red{In this section, we present insights on the best and worst performing projects in terms of bug introduction prevention.}
 
 ### Otto by Square (F$_1$-measure = 96.5%)
 
@@ -373,23 +360,34 @@ Very much like Openhab by Openhab, it provides a very particular set of features
 
 Our interpretation of the manual analysis of the best and worst performing projects is that BIANCA performs best when applied to clusters that contain projects that are similar in terms of features, domain or intent. These projects tend to be interconnected through dependencies. In the future, we intend to study the correlation between the cluster betweenness measure and the performance of BIANCA. 
 
-## Manual Analysis of the Quality of the Fixes Proposed by BIANCA
+## Analysis of the Quality of the Fixes Proposed by BIANCA
+
+One of the advantages of BIANCA over other techniques is that it also proposes fixes for the _risky_ commits it detects.
+In order to evaluate the quality of the proposed fixes, we compare the proposed fixes with the actual fixes provided by the developers. To do so, we used the same preprocessing steps we applied to incoming commits: extract, pretty-print, normalize and filter the blocks modified by the proposed and actual fixes. Then, the blocks of the actual fixes and the proposed fixes can be compared with our clone comparison engine.
+
+Similar to other studies recommending fixes, we assess the quality of the first 3 and 5 proposed fixes [@Pan2008; @Kim2013; @tao2014automatically; @Dallmeier; @le2012systematic; @le2015should]. The average similarity of the first 3 fixes is 44.17% while the similarity of the first five fixes is  40.78%. Results are reported in Table \ref{tab:results}.
+
+In the framework of this study, for a fix to be ranked as qualitative it has to reach $\alpha$=35% similarity threshold.
+Meaning that the proposed fixed must be at least 35\% similar to the actual fix. On average, the proposed fixes are above the $\alpha$=35% threshold.
+On a per commit basis, BIANCA proposed 101,462 fixes for the 13,899 true positives _risky commits_ (7.3 per commit). Out of the 101,462 proposed fixes, 78.67% are above $\alpha$=35% threshold.
+
+In other words, BIANCA is able to detect _risky_ commits with 90.75% precision, 37.15% recall, and proposes fixes that contain, on average, 40-44% of the actual code needed to transform the _risky_ commit into a _non-risky_ one. It is still too early to claim whether BIANCA's recommendations can be useful to developers. For this, we need to conduct user study, which we plan to do as future work.
+
+BIANCA performed best when applied to three projects: Otto by Square (100.00% precision and 76.61% recall, 96.55% F$_1$-measure), JStorm by Alibaba (90.48% precision, 87.50% recall, 88.96% F$_1$-measure), and Auto by Google (90.48% precision, 87.50% recall, 86.76% F$_1$-measure). It performed worst when applied to Android Annotations by Excilys (100.00% precision, 1.59% recall, 3.13% F$_1$-measure) and Che by Eclipse (88.89% precision, 5.33% recall, 10.05% F$_1$-measure), Openhab by Openhab (100.00% precision, 7.14% recall, 13.33% F$_1$-measure). To understand the performance of BIANCA, we conducted a manual analysis of the commits classified as _risky_ by BIANCA for these projects.
 
 \red{
-In order to further assess the quality of the fixes proposed by BIANCA we manually analysed 250 randomly selected solution proposed by BIANCA (1.63\% of 15,316).
-A proposed solution, in BIANCA terms, is composed of two bug-introducing change and fix couple; $c_a$ and $c_b$.
-To analyse the quality of the fixes we manually compare the fix applied in $c_a$ to the one applied in $c_b$. 
-Out of the 250 manually analyzed proposed fixes, we were able to confirm that 34.4\% of them (86/250) would have provided a direct solution to the bug to fix. 
-A direct solution is where the fix applied in $c_a$ could be easily adapted to fix the bug of $c_b$ by, for example, changing only variables and function names. 
-Ultimately the fix applied in $c_b$ is extremely similar to the one applied in $c_a$.
-Another 126 (50.4\%) proposed fixes have been manually identified as providing directions towards the fix.
-Fixes that provide a direction toward a fix means that the fix applied in $c_a$ would need significant transformations in order to be used in $c_b$. 
-Significant transformation can involve large refactoring, eliminating or add part of the fix, adapt data structures and so on.
-Identifying proposed fixes that provide a direction toward the actual fix require a significant time investment as  $c_a$ and $c_b$ have to be thoroughly understood. 
-In addition, the systems where $c_a$ and $c_b$ have been applied have to be understood too in order to assess the pertinence and quality of $c_a$ with regards to $c_b$. 
-In order to identify proposed fixes that provide directions towards the actual fix, we allowed ourselves a 30 minutes period. 
-In this 30 minutes period, we were investigating both systems and trying to understand the proposed fixes in their contexts. 
-After the 30 minutes, if we were unable to distinguish a similarity between the fix of  $c_a$ and the one of $c_b$; then, we categorize the proposed fix as not helpful.
+In order to further assess the quality of the fixes proposed by BIANCA we randomly selected 250 proposed fixes and manually compared them to the actual fixes provided by the developers. 
+For each fix, we looked at the proposed modifications (i.e. code diff) and the actual modification made by the developer of the system to fix the bug.}
+
+\red{For 34.45\% (86/250) of the manually analyzed fixes, we were able to identify the statements to be reused from the proposed fix in order to create the actual fix in less than five minutes. For another 126 proposed fix (50.4\%), we were able to identified the statements to be reused in less than 30 minutes.}
+
+\red{
+	Concretely, for each proposed fix, we analyze two sets of modifications. The first set contains the actual modifications made by the developers to fix the bug while the second set contains BIANCA's proposal.
+	After both sets are displayed on screen using the integrated diff viewer of git, we started a timer with a 30 minutes limit.
+	When we identified the statement to reuse, we stop the timer and noted the time it took.
+}
+
+\red{
 While 30 minutes can be perceived as long period of time to analyze the output of tools such as BIANCA, we have to keep into account that developers exposed to these results would already have a comprehensive understanding of their system and, most likely, would be able to understand the other system quicker than we could.
 In addition, 30 minutes out of the bug fixing process of industrial java systems is representing only 10.4\% of the total time required to fix a bug according to Weiss \textit{et al} \cite{Weiss2007}. In their attempt to predict \textit{how long would it take to fix a bug} they discovered that the average time to craft a fix was 4.8$\pm$6.3 hours in one open-source java industrialize-sized system called JBoss [?].
 We argue that, even if 30 minutes are required to identify a direction from a proposed fix it will still save time over the 4.8 $\pm$6.3 hours required on JBoss.
@@ -408,12 +406,13 @@ The modifications between the two versions are identified by "-"s and "+"s.
 If a line starts with a "-", it means that the given line has been deleted and is no longer present in the after-commit version of the code.
 In the opposite, if a line begins with a "+"; then, this line has been added to the source code and will be present in the after-commit version of the code.
 Finally, the "$@@$" signs determine where the code snippet take place in the overall file by specifying the line number in the before- and after- commit versions of the source code. 
+The lines in bold are the one we triggered the match between the proposed fix and the actual fix.
 }
 
-### Direct Fixes
+### Less than 5 minutes fixes
 
 \red{
-In this first example, we present two couples $c_{a_1}$ (figure \ref{fig:null1}) and $c_{b_1}$ (figure \ref{fig:null2} that belong to Okhttp and Druid , respectively.
+In this first example, we present two couples (figures \ref{fig:null1} and  \ref{fig:null2} that belong to Okhttp and Druid , respectively.
 While this is to be expected, while analysing similar bug fixes across many projects, one of the recurring instances is the null check.
 Here, developers try to invoke a function on a null reference which leads to a null pointer exception.
 If the exception is not properly handled, the program crashes.
@@ -430,13 +429,13 @@ We argue, however, that providing a defect detection and a possible fix from a s
 
 \red{
 The first couple we presented is a relatively simple case. 
-In this second example, we present two new couples  $c_{a_2}$ and $c_{b_2}$ who are related to race conditions in multi-threaded code.
+In this second example, we present two new couples who are related to race conditions in multi-threaded code.
 More specifically to the fact of freeing ressources in case a thread crashes with a \texttt{finally} block to follow the \texttt{try} and \texttt{catch} blocks.
 In the \texttt{try} block, the threads are launched and, in case an exception happens the \texttt{catch} block is executed.
-However, if the developer closes the resources consumed by the thread at the end of the \texttt{try} block, then, in the case of an exception, the resources would be freed.
+However, if the developer closes the resources consumed by the thread at the end of the \texttt{try} block, then, in the case of an exception, the resources would not be freed.
 Instead of duplicating the resources management code in the \texttt{try} and \texttt{catch} blocks a good practice would be to have it in a \texttt{finally} block that always executes itself; regardless of an exception happening or not.
 In the commit presented by Figure \ref{fix:thread1} we can see that a large refactoring has been done in order to prevent crashed thread to keep using resources.
-In Figure \ref{fig:thread1} we present only the subset of the commit that triggered the match rather than the commit in its entirety.
+In Figure \ref{fig:thread1} we present only the sourounding of subset of the commit that triggered the match rather than the commit in its entirety.
 The whole commit changed 44 files with 1,994 additions and 1,335 deletions.
 We can see that a  \texttt{try} block have been appended with a  \texttt{finally} block.
 In the previous version of the file, the multithreaded code was wrapped by a  \texttt{try} block without \texttt{finally}.
@@ -449,13 +448,13 @@ When commit the commit \#4de39f274d033e9241eb84061d848dfb610d2b67 was analyzed b
 \input{tex/thread.tex}
 
 
-### Fixes providing a direction
+### Less than 30 minutes fixes
 
 \red{
-In this next example, we present two couples $c_{a_3}$ (figure \ref{fig:orient}) and $c_{b_3}$ (figure \ref{fig:jsoup} that belong to Jsoup and Orientdb, respectively.
-$c_{a_3}$ has been commited in November 2013 while $c_{b_3}$ came two years later in October 2015.
+In this next example, we present two couples; figure \ref{fig:orient}) and figure \ref{fig:jsoup that belong to Jsoup and Orientdb, respectively.
+The first commit has been commited in November 2013 while the second came two years later in October 2015.
 This is an example where the proposed fix gives a direction towards the actual fix.
-In  $c_{a_3}$ and $c_{b_3}$ we can see that the developers are working with the \texttt{StringBuilder} class. 
+In these fixes we can see that the developers are working with the \texttt{StringBuilder} class. 
 The \texttt{StringBuilder} class is explained as follows in the Java documentation: \textit{A mutable sequence of characters. This class provides an API compatible with StringBuffer, but with no guarantee of synchronization. This class is designed for use as a drop-in replacement for StringBuffer in places where the string buffer was being used by a single thread (as is generally the case). Where possible, it is recommended that this class be used in preference to StringBuffer as it will be faster under most implementations.}
 Developers usually use the \texttt{StringBuilder} class to build strings using the \texttt{append} and \texttt{insert} methods.
 Using the \texttt{StringBuilder} class rather than plain string concatenation (i.e. using the \texttt{+} operator) is a good Java practice as it improves performances. 
@@ -468,15 +467,15 @@ In both cases, however, the developers were tasked to avoid the appending of nul
 
 \input{tex/diff1.tex}
 
-### Cross-clusters fix-patterns
+## Cross-clusters fix-patterns
 
 \red{
-In addition to the presented couples of fix/proposed-fix presented in the previous two sections, our manual analysis yield some interesting insights on fix patterns that span across clusters.
+In addition to the presented couples of fix/proposed-fix presented in the previous section, our manual analysis yield some interesting insights on fix patterns that span across clusters.
 The first pattern is linked to the desire of a developer to produce a backward compatible source code.
 As presented in Figure \ref{fig:backward} the developer replace the invocation to the \texttt{isEmpty} method to an invocation of \texttt{length() == 0} in order to make its code compatible with Java 1.5. 
 Indeed, Java, in its 1.5 version does not provide the \texttt{isEmpty} method which was introduced later. 
 Here, we can suspect that the development environment of the developer does not match the production environment and, consequently, a regression has been introduced.
-This fix-pattern of replacing a newly added method in a library by an old one occurred three times in our direct fix category. 
+This fix-pattern of replacing a newly added method in a library by an old one occurred three times in our \textit{leess than 5 minutes} category. 
 Consequently, we investigated further in the 15,316 results and found 363 instances of this pattern.
 This pattern accounts for 2.35\% of the total detection. 
 }
@@ -486,7 +485,7 @@ This pattern accounts for 2.35\% of the total detection.
 \red{
 Another interesting pattern we were able to detect in the 250 bugs randomly selected (2/250) and confirm in the remaining 15,116 (is a pattern involving the java keyword \texttt{final} (48/15,116).
 In Java, the keyword refers to the non-transitivity or immutability of variables. 
-As investigated by Colblenz \textit{et al.} that important requirements, such as expressing immutability constraints, were completely understood nor available in Java \ref{@coblenz2016exploring}.
+Colblenz \textit{et al.} discovered that important requirements, such as expressing immutability constraints, were not completely understood nor available in Java \ref{@coblenz2016exploring}.
 The use of this keyword by junior software developer is often adhoc.
 In many instances, we found developer fixing a bug report stating that a given variable should not change regardless of the on-going event.
 Rather than fixing the root cause (i.e. understanding why and where the variable changes) developers use the final keyword. 
@@ -504,7 +503,7 @@ The primitive types cannot have \texttt{null} as value.
 For example, the default value of an \texttt{int} is \texttt{0}.
 All other classes of Java are, by default, specialization of \texttt{Object}.
 In addition to these primitive type, the JDK (Java Development Kit) contains wrapped types that wrap the value of a primitive type in an \texttt{Object}. 
-These wrapped types contain a single field (the primitive type they wrap) and several methods for conversion and comparison, for example.
+These wrapped types contain a single field (the primitive type they wrap) and contain several methods for conversion and comparison.
 The wrapped types, as \texttt{Object}, can be \texttt{null} and invoking one of their method on a \texttt{null} instance would result in a \texttt{null pointer exception}.
 We found 2/250 and 192/15,316 instances of null-checking wrapped types as displayed in Figure \ref{fig:null}.
 Unlike the first two patterns, this last pattern could be detected by static checker such as PMD.
@@ -513,7 +512,24 @@ However, it seems that this particular case evades the detection of potentially 
 
 \input{tex/nullcheck.tex}
 
-# Threats to Validity {#sec:threats}
+# Discussion {#sec:threats}
+
+\red{In this section we propose a discussion on limitations and threats to validity.}
+
+## Limitations
+
+\red{
+We identified three main limitations impacting BIANCA. 
+First, BIANCA relies on similarity between systems to be efficient. 
+Applying BIANCA on only systems would dramatically reduce its performances. 
+This first limitation leads us to the second one. 
+The computational time required to extract all the fixes from dozens of systems is very high as presented in section \ref{sec:experimentations}.
+Finally, the third limitation we identified is that BIANCA is best leverage inside an ecosystem with many projects. 
+However, in such an ecosystem it is likely that many programming languages would be used.
+As BIANCA only analyzes Java commmits it will not be able to leverage the diversity of the ecosystem.	
+}
+
+## Threats to validity
 
 The selection of target systems is one of the common threats to validity for approaches aiming to improve the analysis of software systems. 
 It is possible that the selected programs share common properties that we are not aware of and therefore, invalidate our results. 
