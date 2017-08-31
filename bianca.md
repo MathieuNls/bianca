@@ -176,7 +176,7 @@ There are two groups of hooks: client-side and server-side. Client-side hooks ar
 
 To compare the extracted blocks to the ones in the database, we resort to clone detection techniques, more specifically, text-based clone detection techniques. This is because lexical and syntactic analysis approaches (alternatives to text-based comparisons) would require a complete program to work, i.e., a program that compiles.  In the relatively wide-range of tools and techniques that exist to detect clones by considering code as text [@Johnson1993;  @Johnson1994; @Marcus; @Manber1994; @StephaneDucasse; @Wettel2005], we selected NICAD as the main text-based method for comparing code blocks [@Cordy2011] for several reasons. 
 First, NICAD is built on top of TXL, which we also used in the previous phase.  Second, NICAD can detect Types 1, 2 and 3 software clones [@CoryKapser]. Type 1 clones are copy-pasted blocks of code that only differ from each other in terms of non-code artefacts such as indentation, whitespaces, comments and so on.  Type 2 clones are blocks of code that are syntactically identical except literals, identifiers, and types that can be modified. Also, Type 2 clones share the particularities of Type 1 about indentation, whitespaces, and comments. Type 3 clones are similar to Type 2 clones in terms of modification of literals, identifiers, types, indentation, whitespaces, and comments but also contain added or deleted code statements. BIANCA detects Type 3 clones since they can contain added or deleted code statements, which make them suitable for comparing commit code blocks.
-\red{The problem with the current implementation of NICAD is that it only considers complete Java, C#, and C files. We needed to adapt NICAD to process changesets. With the aid of TXL designers, we developed a TXL grammar for changesets.}
+\red{The problem with the current implementation of NICAD is that it only considers complete Java, C\#, and C files. We needed to adapt NICAD to process changesets. With the aid of TXL designers, we developed a TXL grammar for changesets.}
 
 NICAD works in three phases: *Extraction*, *Comparison* and *Reporting*. 
 During the *Extraction* phase all potential clones are identified, pretty-printed, and extracted. 
@@ -261,7 +261,7 @@ To measure the similarity between pairs of commits, we need to decide on the val
 To address this, we randomly selected a sample of 1% commits from our dataset and checked the results by varying $\alpha$ from 1 to 100%. Figure \ref{fig:alpha-deter} shows the results. As we can see, there is a tradeoff between precision and recall, however, after the $\alpha$ = 35% point, we see a drop in recall; hence, we set $\alpha$ = 35% in our experiments.
 
 \red{While $\alpha$ = 35\% is not a general rule in clone detection work 
-the best trade-off between precision and recall is obtained when alpha = 35%.  In addition, Roy et al. [@Roy2008; @Cordy2011] showed using empirical studies that using NICAD with a threshold around 30%, the default setting, provides good results for the detection Type 3 clones. This is easily understandable for Type 3 clones which contain added or deleted code statements.}
+the best trade-off between precision and recall is obtained when $\alpha$ = 35\%.  In addition, Roy et al. [@Roy2008; @Cordy2011] showed using empirical studies that using NICAD with a threshold around 30\%, the default setting, provides good results for the detection Type 3 clones. This is easily understandable for Type 3 clones which contain added or deleted code statements.}
 
 With $\alpha$ = 35%, the experiments took nearly three months to run on 48 Amazon VPS (Virtual Private Server) running in parallel (4e8 comparisons).
 
@@ -412,7 +412,7 @@ The lines in bold are the one we triggered the match between the proposed fix an
 ### Less than 5 minutes fixes
 
 \red{
-In this first example, we present two couples (figures \ref{fig:null1} and  \ref{fig:null2} that belong to Okhttp and Druid , respectively.
+In this first example, we present two couples figures \ref{fig:null1} and  \ref{fig:null2} that belong to Okhttp and Druid , respectively.
 While this is to be expected, while analysing similar bug fixes across many projects, one of the recurring instances is the null check.
 Here, developers try to invoke a function on a null reference which leads to a null pointer exception.
 If the exception is not properly handled, the program crashes.
@@ -451,7 +451,7 @@ When commit the commit \#4de39f274d033e9241eb84061d848dfb610d2b67 was analyzed b
 ### Less than 30 minutes fixes
 
 \red{
-In this next example, we present two couples; figure \ref{fig:orient}) and figure \ref{fig:jsoup that belong to Jsoup and Orientdb, respectively.
+In this next example, we present two couples; figure \ref{fig:orient} and figure \ref{fig:jsoup} that belong to Jsoup and Orientdb, respectively.
 The first commit has been commited in November 2013 while the second came two years later in October 2015.
 This is an example where the proposed fix gives a direction towards the actual fix.
 In these fixes we can see that the developers are working with the \texttt{StringBuilder} class. 
@@ -483,7 +483,7 @@ This pattern accounts for 2.35\% of the total detection.
 \input{tex/backward.tex}
 
 \red{
-Another interesting pattern we were able to detect in the 250 bugs randomly selected (2/250) and confirm in the remaining 15,116 (is a pattern involving the java keyword \texttt{final} (48/15,116).
+Another interesting pattern we were able to detect in the 250 bugs randomly selected (2/250) and confirm in the remaining 15,116 is a pattern involving the java keyword \texttt{final} (48/15,116).
 In Java, the keyword refers to the non-transitivity or immutability of variables. 
 Colblenz \textit{et al.} discovered that important requirements, such as expressing immutability constraints, were not completely understood nor available in Java \ref{@coblenz2016exploring}.
 The use of this keyword by junior software developer is often adhoc.
