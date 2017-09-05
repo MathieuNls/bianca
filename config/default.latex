@@ -9,6 +9,7 @@
 \usepackage{pdflscape}
 
 \newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
 
 \usepackage[font=small,skip=2pt]{caption}
 
