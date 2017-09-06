@@ -1,16 +1,16 @@
 \lstset{language=Java}
 
 \begin{figure*}
-\begin{lstlisting}[moredelim={[is][\color{red}]{||}{||}}]
+\begin{lstlisting}[moredelim={[is][\color{red}]{|||}{|||}}]
 @@ -34,7 +35,11 @@ public Object jjtAccept(OrientSqlVisitor visitor, Object data) {
     public void toString(Map<Object, Object> params, StringBuilder builder) {
       expression.toString(params, builder);
       builder.append(" MATCHES ");
  -    builder.append(right);
- || +    if(right!=null) { ||  
- || +      builder.append(right); ||
- || +    }else{ ||
- || +      rightParam.toString(params, builder); ||
+||| +    if(right!=null) {|||  
+||| +      builder.append(right);|||
+||| +    }else{|||
+||| +      rightParam.toString(params, builder);|||
  +    }
     }
 \end{lstlisting}
@@ -18,23 +18,23 @@
 \end{figure*}
 
 \begin{figure*}
-\begin{lstlisting}[moredelim={[is][\color{red}]{||}{||}}]
-     protected void html(StringBuilder accum, Document.OutputSettings out) {
+\begin{lstlisting}[moredelim={[is][\color{red}]{|||}{|||}}]
+ @@ -100,6 +111,15 @@   protected void html(StringBuilder accum, Document.OutputSettings out) {
  -        accum
  -            .append(key)
  -            .append("=\"")
  -            .append(Entities.escape(value, out))
  -            .append("\"");
  +        accum.append(key);
- || +        if (!shouldCollapseAttribute(out)) { ||
- || +            accum.append("=\""); ||
+ ||| +        if (!shouldCollapseAttribute(out)) { |||
+ ||| +            accum.append("=\""); |||
   +            Entities.escape(accum, value, out, true, false, false);
   +            accum.append('"');
- || +        }
+ ||| +        }|||
       }
   
       /**
- @@ -100,6 +111,15 @@ protected boolean isDataAttribute() {
+ protected boolean isDataAttribute() {
           return key.startsWith(Attributes.dataPrefix) && key.length() 
             > Attributes.dataPrefix.length();
       }
@@ -44,7 +44,7 @@
  +     */
  +    protected final boolean shouldCollapseAttribute(Document.OutputSettings out) {
  +        return ("".equals(value) || value.equalsIgnoreCase(key))
- +                && out.syntax() == Document.OutputSettings.Syntax.html
+ +                && out.syntax() || Document.OutputSettings.Syntax.html
  +                && Arrays.binarySearch(booleanAttributes, key) >= 0;
  +    }
  +

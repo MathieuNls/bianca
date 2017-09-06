@@ -1,0 +1,1 @@
+pandoc -s -S --filter pandoc-citeproc --number-sections --template="config/default.latex" -o bianca.md.pdf bianca.md

@@ -277,10 +277,7 @@ It is worth mentioning that, in the case of defect prevention, false positives c
 
 In this section, we show the effectiveness of BIANCA in detecting risky commits using clone detection and project dependency analysis. The main research question addressed by this case study is: _Can we detect risky commits using code comparison within and across related projects, and if so, what would be the accuracy?_
 
-\input{tex/result}		
-
 Table \ref{tab:results} shows the results of applying BIANCA in terms of the organization, project name, a short description of the project, the number of classes, the number of commits, the number of defect-commits, the number of defect-commits detected by BIANCA, precision (%), recall (%), F$_1$-measure and the average difference, in days, between detected commit and the _original_ commit inserting the defect for the first time. 
-
 
 With $\alpha$ = 35%, BIANCA achieves, on average, a precision of 90.75% (13,899/15,316) commits identified as risky. These commits triggered the opening of an issue and had to be fixed later on. On the other hand, BIANCA achieves, on average, 37.15% recall (15,316/41,225), and an average F$_1$ measure of 52.72%. The relatively _low_ recall is to be expected, since BIANCA considers risky commits that are also in other projects.
 
@@ -288,7 +285,12 @@ Also, out of the 15,316 commits BIANCA classified as _risky_, only 1,320 (8.6%) 
 This finding supports the idea that developers of a project are not likely to introduce the same defect twice while developers of different projects that share dependencies are, in fact, likely to introduce similar defects. We believe this is an important finding for researchers aiming to achieve cross-project defect prevention, regardless of the technique (e.g., statistical model, AST comparison, code comparison, etc.) employed.
 
 It is important to note that we do not claim that 37.15% of issues in open-source systems are caused by project dependencies. 
-To support such a claim, we would need to analyse the 15,316 detected defect-commits and determine how many yield defects that are similar across projects. Studying the similarity of defects across projects is a complex task and may require analysing the defect reports manually. This is left as  future work. This said, we showed, in this paper, that software systems sharing dependencies also share common issues, irrespective to whether these issues represent similar defects or not.
+To support such a claim, we would need to analyse the 15,316 detected defect-commits and determine how many yield defects that are similar across projects. 
+
+\input{tex/result}		
+
+Studying the similarity of defects across projects is a complex task and may require analysing the defect reports manually. This is left as  future work. 
+This said, we showed, in this paper, that software systems sharing dependencies also share common issues, irrespective to whether these issues represent similar defects or not.
 
 The experiments took nearly three months using 48 Amazon Virtual Private Servers running in parallel. When deployed, the most time consuming part of BIANCA is spent on building the model of known bug-introducing commits. \red{Once this done, it takes in average 72 seconds on a typical workstation (quad-core @ 3.2GHz with 8 GB of RAM) to analyze an incoming commit. }
 
@@ -368,34 +370,38 @@ In other words, BIANCA is able to detect _risky_ commits with 90.75% precision, 
 To further assess the quality of the fixes proposed by BIANCA, we randomly took 250 BIANCA-proposed fixes and manually compared them with the actual fixes provided by the developers. For each fix, we looked at the proposed modifications (i.e., code diff) and the actual modification made by the developer of the system to fix the bug. We were able to identify the statements from the proposed fix that can be reused to create a fix similar to the one developers would propose in 85\% of the cases. For the remaining cases, it was difficult to understand the changes that the developers made, mainly because of our lack of familiarity of the systems under study. We recognize that a better evaluation of the quality of BIANCA-proposed fixes would be to conduct a user study. We intend to do this as part of future work. In what follows, we present examples of how BIANCA-proposed fixes.
 The lines highlighted in red are the one which triggered the match.}
 
-\red{
-In Figures \ref{fig:null1} and  \ref{fig:null2}, we show two commits that belong to the Okhttp and Druid systems, respectively.  The Okhttp commit was submitted in February 2014, while the one from Druid was submitted in April 2016. The Druid commit was introduced to fix a bug, which was caused by a prior commit, submitted in March 2016. The bug consisted of invoking a function on a null reference, which led to a null pointer exception, causing the system to crash. This bug could have been avoided if if the Druid developers had access to the Okhttp commit.  
-}
-
-\wahab{Put the figures here. Should we show the March 2016 commit as well? Also please put the lines in questions in a red box}
-\mathieu{The lines are now in red. The figures should be closer to the text and the commit from March was already present}
 
 \input{tex/null.tex}
 
 \red{
-In this second example, we present a case where BIANCA could have been used to avoid inserting a bug related to race conditions in multi-threaded code.}
+In Figures \ref{fig:null2} and \ref{fig:null1}, we show two commits that belong to the Okhttp and Druid systems, respectively.  The Okhttp commit was submitted in February 2014, while the one from Druid was submitted in April 2016. The Druid commit was introduced to fix a bug, which was caused by a prior commit, submitted in March 2016. The bug consisted of invoking a function on a null reference, which led to a null pointer exception, causing the system to crash. This bug could have been avoided if if the Druid developers had access to the Okhttp commit.  
+}
 
-\wahab{Wahab: You need to change the text below to follow the same format as in the first  and third examples that I modified.  You need to say which systems we are talking about here, show the two commit couple. After that you should explain the situation by referring to the commits. It is important that the reader get the impression that this analysis is done systematically. }
+\wahab{Put the figures here. Should we show the March 2016 commit as well? Also please put the lines in questions in a red box}
+\mathieu{The lines are now in red. The figures should be closer to the text.}
 
 \red{
-In Figure \ref{fig:thread1}, we present only the sourounding of subset of the commit that triggered the match rather than the commit in its entirety.
+In this second example, we present a case where BIANCA could have been used to avoid inserting a bug related to race conditions in multi-threaded code.}
+
+\wahab{You need to change the text below to follow the same format as in the first  and third examples that I modified.  You need to say which systems we are talking about here, show the two commit couple. After that you should explain the situation by referring to the commits. It is important that the reader get the impression that this analysis is done systematically. }
+
+\mathieu{done}
+
+\input{tex/thread.tex}
+
+\red{
+In Figures \ref{fig:thread1} and \ref{fig:thread2}, we show two commits that belong to the Netty and Okhttp systems, respectively. 
+For Figure \ref{fig:thread1}, we present only the sourounding of subset of the commit that triggered the match rather than the commit in its entirety.
 The whole commit changed 44 files with 1,994 additions and 1,335 deletions.
-We can see that a  \texttt{try} block have been appended with a  \texttt{finally} block.
-In the previous version of the file, the multithreaded code was wrapped by a  \texttt{try} block without \texttt{finally}.
-In the \texttt{finally}, the resources used by the thread are managed.
-This commit, belonging to Netty was submitted on June 2014.
-Three years later, a similar commit has been submitted to Okhttp to fix a thread leak introduced by commit \#4de39f274d033e9241eb84061d848dfb610d2b67.
-When commit the commit \#4de39f274d033e9241eb84061d848dfb610d2b67 was analyzed by BIANCA, it is flagged as a potential bug introducing change and the Netty's  commit \#085a61a310187052e32b4a0e7ae9700dbe926848 proposed as a potential fix
+The Netty commit was submitted in June 2014 while the one from OKHttp was submitted in January 2017. 
+The bug is consisted in resources leak in multithreaded environments.
+The similarity between both commits comes from the \texttt{try} and \texttt{catch} blocks associated with the exceptions used.
 More specifically to the fact of freeing resources in case a thread crashes with a \texttt{finally} block to follow the \texttt{try} and \texttt{catch} blocks.
 In the \texttt{try} block, the threads are launched and, in case an exception happens the \texttt{catch} block is executed.
 However, if the developer closes the resources consumed by the thread at the end of the \texttt{try} block, then, in the case of an exception, the resources would not be freed.
 Instead of duplicating the resources management code in the \texttt{try} and \texttt{catch} blocks a good practice would be to have it in a \texttt{finally} block that always executes itself; regardless of an exception happening or not.
 In the commit presented by Figure \ref{fix:thread1} we can see that a large refactoring has been done in order to prevent crashed thread to keep using resources.
+This bug could have been avoided if if the Okhttp developers had access to the Netty commit.  
 }
 
 \red{
@@ -413,9 +419,57 @@ In both cases, the code has been modified to avoid the appending of \texttt{null
 
 \input{tex/diff1.tex}
 
+## Cross-clusters fix-patterns
+
+\red{
+In addition to the presented couples of fix/proposed-fix presented in the previous section, our manual analysis yield some interesting insights on fix patterns that span across clusters.
+The bugs fixed by these patterns have been the root cause of crashes.}
+
+\red{
+The first pattern is linked to the need to achieve backward compatibility of source code.
+As presented in Figure \ref{fig:backward} the developer replace the invocation to the \texttt{isEmpty} method to an invocation of \texttt{length() == 0} in order to make its code compatible with Java 1.5. 
+Indeed, Java, in its 1.5 version does not provide the \texttt{isEmpty} method which was introduced later. 
+Here, we can suspect that the development environment of the developer does not match the production environment and, consequently, a regression has been introduced.
+This fix-pattern of replacing a newly added method in a library by an old one occurred three times in our \textit{leess than 5 minutes} category. 
+Consequently, we investigated further in the 15,316 results and found 363 instances of this pattern.
+This pattern accounts for 2.35\% of the total detection. 
+}
+
+\input{tex/backward.tex}
+
+\red{
+Another interesting pattern we were able to detect in the 250 bugs randomly selected (2/250) and confirm in the remaining 15,116 is a pattern involving the java keyword \texttt{final} (48/15,116).
+In Java, the keyword refers to the non-transitivity or immutability of variables. 
+Colblenz \textit{et al.} discovered that important requirements, such as expressing immutability constraints, were not completely understood nor available in Java \ref{@coblenz2016exploring}.
+The use of this keyword by junior software developer is often adhoc.
+In many instances, we found developer fixing a bug report stating that a given variable should not change regardless of the on-going event.
+Rather than fixing the root cause (i.e. understanding why and where the variable changes) developers use the final keyword. 
+It is noteworthy that an attempt to modify the value of a final variable, in Java, would result in a compilation error.
+Figure \ref{fig:final} show a commit displaying this fix-pattern.
+}
+
+\input{tex/final.tex}
+
+\red{
+The last pattern we discovered consists in null-checking wrapped types such as \texttt{Integer}. 
+In Java, eight primitive types exist: boolean, byte, char, short, int, long, float and double. 
+These types are the most basic data types available and are not extending the top-most class \texttt{Object}.
+The primitive types cannot have \texttt{null} as value. 
+For example, the default value of an \texttt{int} is \texttt{0}.
+All other classes of Java are, by default, specialization of \texttt{Object}.
+In addition to these primitive type, the JDK (Java Development Kit) contains wrapped types that wrap the value of a primitive type in an \texttt{Object}. 
+These wrapped types contain a single field (the primitive type they wrap) and contain several methods for conversion and comparison.
+The wrapped types, as \texttt{Object}, can be \texttt{null} and invoking one of their method on a \texttt{null} instance would result in a \texttt{null pointer exception}.
+We found 2/250 and 192/15,316 instances of null-checking wrapped types as displayed in Figure \ref{fig:null}.
+Unlike the first two patterns, this last pattern could be detected by static checker such as PMD.
+However, it seems that this particular case evades the detection of potentially null objects access.
+}
+
 \input{tex/nullcheck.tex}
 
 # Discussion {#sec:threats}
+
+\red{In this section we propose a discussion on limitations and threats to validity.}
 
 ## Limitations
 

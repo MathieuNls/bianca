@@ -1,16 +1,16 @@
 \begin{figure*}
-\begin{lstlisting}
+\begin{lstlisting}[moredelim={[is][\color{red}]{|||}{|||}}]
 
 @@ -478,9 +478,9 @@ private void syncMetaFromCache(String topologyId, 
     TopologyMetricContext context)
       private void syncMetaFromRemote(String topologyId, TopologyMetricContext context) {
           try {
               int memSize = context.getMemMeta().size();
- -            int zkSize = (Integer) stormClusterState.get_topology_metric(topologyId);
- +            Integer zkSize = (Integer)stormClusterState.get_topology_metric(topologyId);
+ |||-            int zkSize = (Integer) stormClusterState.get_topology_metric(topologyId);|||
+ |||+            Integer zkSize = (Integer)stormClusterState.get_topology_metric(topologyId);|||
   
- -            if (memSize != zkSize) {
- +            if (zkSize != null  && memSize != zkSize.intValue()) {
+ |||-            if (memSize != zkSize) {|||
+ |||+            if (zkSize != null  && memSize != zkSize.intValue()) {|||
                   ConcurrentMap<String, Long> memMeta = context.getMemMeta();
                   for (MetaType metaType : MetaType.values()) {
                       List<MetricMeta> metaList = metricQueryClient.getMetricMeta(
@@ -23,5 +23,5 @@
  +} 
 
 \end{lstlisting}
-\caption{JStorm commit \#6dc60b06a0a8880cf37c88a462a213737703be80\label{fig:backward}}
+\caption{JStorm commit \#6dc60b06a0a8880cf37c88a462a213737703be80\label{fig:null}}
 \end{figure*}
