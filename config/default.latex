@@ -7,7 +7,7 @@
 \usepackage{pgfplots}
 \usepackage{rotating}
 \usepackage{pdflscape}
-
+\usepackage{float}
 \newcommand{\red}[1]{\textcolor{red}{#1}}
 \newcommand{\wahab}[1]{\textcolor{blue}{Wahab: #1}}
 \newcommand{\mathieu}[1]{\textcolor{blue}{Mathieu: #1}}
