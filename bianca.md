@@ -257,7 +257,7 @@ If at $t_4$, $c_3$ is pushed to $p_2$ and $c_3$ matches $c_1$ after preprocessin
 
 To measure the similarity between pairs of commits, we need to decide on the value of $\alpha$. One possibility would be to test for all possible values of $\alpha$ and pick the one that provides best accuracy (F$_1$-measure). The ROC (Receiver Operating Characteristic) curve can then be used to display the performance of BIANCA with different values of $\alpha$. Running experiments with all possible $\alpha$ turned out to be computationally demanding given the large number of commits. Testing with all the different values of $\alpha$ amounts to 4e10 comparisons. 
 
-To address this, we randomly selected a sample of 1% commits from our dataset and checked the results by varying $\alpha$ from 1 to 100%. Figure \ref{fig:alpha-deter} shows the results. The best trade-off between precision and recall is obtained when $\alpha$ = 35\%.  In addition, Roy et al. [@Roy2008; @Cordy2011] showed using empirical studies that using NICAD with a threshold around 30\%, the default setting, provides good results for the detection Type 3 clones. For these reasons, we set $\alpha$ = 35\% in our experiments.}
+To address this, we randomly selected a sample of 1% commits from our dataset and checked the results by varying $\alpha$ from 1 to 100%. Figure \ref{fig:alpha-deter} shows the results. The best trade-off between precision and recall is obtained when $\alpha$ = 35\%.  \red{In addition, Roy et al. [@Roy2008; @Cordy2011] showed using empirical studies that using NICAD with a threshold around 30\%, the default setting, provides good results for the detection Type 3 clones. For these reasons, we set $\alpha$ = 35\% in our experiments.}
 
 ## Evaluation Measures
 
@@ -271,7 +271,7 @@ Similar to prior work focusing on risky commits (e.g., [@SunghunKim2008; @Kamei2
 - Recall: TP / (TP + FN)
 - F$_1$-measure: 2.(precision.recall)/(precision+recall)
 
-It is worth mentioning that, in the case of defect prevention, false positives can be hard to identify as the defects could be in the code but not yet reported through a bug report (or issue). To address this, we did not include the last six months of history. Following similar studies [@Rosen2015; @Chen2014; @Shivaji2013; Kamei2013b], if a defect is not reported within six months then it is not considered.
+It is worth mentioning that, in the case of defect prevention, false positives can be hard to identify as the defects could be in the code but not yet reported through a bug report (or issue). To address this, we did not include the last six months of history. Following similar studies [@Rosen2015; @Chen2014; @Shivaji2013; @Kamei2013b], if a defect is not reported within six months then it is not considered.
 
 # Case Study Results {#sec:result}
 
@@ -406,7 +406,7 @@ This bug could have been avoided if if the Okhttp developers had access to the N
 
 \red{
 Another example would be the one depicted in Figures \ref{fig:orient} and \ref{fig:jsoup},  showing two commits that belong to the JSoup and Orientdb systems, respectively.
-The first commit was submitted in November 2013, while the Orientdb was submitted two years later in October 2015. The  Orientdb commit was used to fix a bug introduced by a commit that was submitted in XXXXX. This bug would have been avoided if  the developer had access to the JSoup commit, that is here proposed by BIANCA as the closest match.}
+The first commit was submitted in November 2013, while the Orientdb was submitted two years later in October 2015. The  Orientdb commit was used to fix a bug introduced by a commit that was submitted earlier in October 2015. This bug would have been avoided if  the developer had access to the JSoup commit, that is here proposed by BIANCA as the closest match.}
 
 \red{
 In these fixes, we can see that the developers are working with the \texttt{StringBuilder} class. 
@@ -478,11 +478,11 @@ We identified three main limitations of our approach, BIANCA, that require furth
 
 \red{
 BIANCA is designed to work on multiple related systems. Applying BIANCA on a single system will most likely be 
-ineffective; it is unlikely to have a large number of similar bugs within the same system. For single systems, we recommend the use of statistical models based on process and code metrics for the detection of risky commits such as the ones developed by XXXX et al. [REF]. A metric-based solution, however, may turn to be ineffective when applied across systems because of the difficulty associated with identifying common thresholds that are applicable to a wide range of systems.    
+ineffective; it is unlikely to have a large number of similar bugs within the same system. For single systems, we recommend the use of statistical models based on process and code metrics for the detection of risky commits such as the ones developed by Kamei et al. and Rolsen et al. [@Kamei2013; @Rosen2015b]. A metric-based solution, however, may turn to be ineffective when applied across systems because of the difficulty associated with identifying common thresholds that are applicable to a wide range of systems.    
 }
 
 \red{
-The second limitation is related to scalability of the approach. Because BIANCA operates on multiple systems, we need to build a model that comprises all their commits, which is a time consuming process. It took approximately XXXX to build the model for our experiments. }
+The second limitation is related to scalability of the approach. Because BIANCA operates on multiple systems, we need to build a model that comprises all their commits, which is a time consuming process. It took nearly  three months using 48 Amazon Virtual Private Servers running in parallel to build the model for our experiments. }
 
 \red{
 The third limitation we identified has to do with the fact that BIANCA is designed to work with Java systems only. It is however common to have a multitude of programming languages used in an environment with many inter-related systems. We intend to extend BIANCA to process commits from other languages as well.
