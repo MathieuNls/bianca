@@ -9,7 +9,8 @@
 \usepackage{pdflscape}
 
 \newcommand{\red}[1]{\textcolor{red}{#1}}
-\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\wahab}[1]{\textcolor{blue}{Wahab: #1}}
+\newcommand{\mathieu}[1]{\textcolor{blue}{Mathieu: #1}}
 
 \usepackage[font=small,skip=2pt]{caption}
 

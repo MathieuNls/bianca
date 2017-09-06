@@ -365,18 +365,22 @@ On a per commit basis, BIANCA proposed 101,462 fixes for the 13,899 true positiv
 In other words, BIANCA is able to detect _risky_ commits with 90.75% precision, 37.15% recall, and proposes fixes that contain, on average, 40-44% of the actual code needed to transform the _risky_ commit into a _non-risky_ one. 
 
 \red{
-To further assess the quality of the fixes proposed by BIANCA, we randomly took 250 BIANCA-proposed fixes and manually compared them with the actual fixes provided by the developers. For each fix, we looked at the proposed modifications (i.e., code diff) and the actual modification made by the developer of the system to fix the bug. We were able to identify the statements from the proposed fix that can be reused to create a fix similar to the one developers would propose in 85\% of the cases. For the remaining cases, it was difficult to understand the changes that the developers made, mainly because of our lack of familiarity of the systems under study. We recognize that a better evaluation of the quality of BIANCA-proposed fixes would be to conduct a user study. We intend to do this as part of future work. In what follows, we present examples of how BIANCA-proposed fixes.}
+To further assess the quality of the fixes proposed by BIANCA, we randomly took 250 BIANCA-proposed fixes and manually compared them with the actual fixes provided by the developers. For each fix, we looked at the proposed modifications (i.e., code diff) and the actual modification made by the developer of the system to fix the bug. We were able to identify the statements from the proposed fix that can be reused to create a fix similar to the one developers would propose in 85\% of the cases. For the remaining cases, it was difficult to understand the changes that the developers made, mainly because of our lack of familiarity of the systems under study. We recognize that a better evaluation of the quality of BIANCA-proposed fixes would be to conduct a user study. We intend to do this as part of future work. In what follows, we present examples of how BIANCA-proposed fixes.
+The lines highlighted in red are the one which triggered the match.}
 
 \red{
 In Figures \ref{fig:null1} and  \ref{fig:null2}, we show two commits that belong to the Okhttp and Druid systems, respectively.  The Okhttp commit was submitted in February 2014, while the one from Druid was submitted in April 2016. The Druid commit was introduced to fix a bug, which was caused by a prior commit, submitted in March 2016. The bug consisted of invoking a function on a null reference, which led to a null pointer exception, causing the system to crash. This bug could have been avoided if if the Druid developers had access to the Okhttp commit.  
 }
 
-\blue{Wahab: Put the figures here. Should we show the March 2016 commit as well? Also please put the lines in questions in a red box}
+\wahab{Put the figures here. Should we show the March 2016 commit as well? Also please put the lines in questions in a red box}
+\mathieu{The lines are now in red. The figures should be closer to the text and the commit from March was already present}
 
 \input{tex/null.tex}
 
 \red{
-In this second example, we present a case where BIANCA could have been used to avoid inserting a bug related to race conditions in multi-threaded code.  \blue{Wahab: You need to change the text below to follow the same format as in the first  and third examples that I modified.  You need to say which systems we are talking about here, show the two commit couple. After that you should explain the situation by referring to the commits. It is important that the reader get the impression that this analysis is done systematically. }
+In this second example, we present a case where BIANCA could have been used to avoid inserting a bug related to race conditions in multi-threaded code.  
+
+\wahab{Wahab: You need to change the text below to follow the same format as in the first  and third examples that I modified.  You need to say which systems we are talking about here, show the two commit couple. After that you should explain the situation by referring to the commits. It is important that the reader get the impression that this analysis is done systematically. }
 
 \red{
 In Figure \ref{fig:thread1}, we present only the sourounding of subset of the commit that triggered the match rather than the commit in its entirety.
