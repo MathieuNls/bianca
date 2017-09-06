@@ -378,7 +378,7 @@ In Figures \ref{fig:null1} and  \ref{fig:null2}, we show two commits that belong
 \input{tex/null.tex}
 
 \red{
-In this second example, we present a case where BIANCA could have been used to avoid inserting a bug related to race conditions in multi-threaded code.  
+In this second example, we present a case where BIANCA could have been used to avoid inserting a bug related to race conditions in multi-threaded code.}
 
 \wahab{Wahab: You need to change the text below to follow the same format as in the first  and third examples that I modified.  You need to say which systems we are talking about here, show the two commit couple. After that you should explain the situation by referring to the commits. It is important that the reader get the impression that this analysis is done systematically. }
 
