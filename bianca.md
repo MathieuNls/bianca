@@ -1,4 +1,4 @@
-﻿---
+---
 title: "BIANCA: Preventing Bug Insertion at Commit-Time Using Dependency Analysis and Clone Detection"
 bibliography: config/library.bib
 abstract:  Preventing the introduction of software defects at commit-time is a growing line of research in the software maintenance community. Existing approaches leverage code and process metrics to build statistical models that can effectively prevent defect insertion and propose fixes in a software project. Metrics, however, may vary from one project to another, hindering the reuse of these models. Moreover, these techniques operate within single projects only despite the fact that many projects share dependencies and are, therefore, vulnerable to similar faults. In this paper, we propose a novel approach, called BIANCA, that relies on clone detection and dependency analysis to detect _risky_ commits within and across related projects. When applied to 42 projects, BIANCA achieves an average precision, recall and F-measure of 90.75%, 37.15% and 52.72%, respectively. We also found that only 8.6% of the risky commits detected by BIANCA match other commits from the same project, suggesting that dependencies among projects need to be considered for effective prevention of risky commits. In addition, BIANCA is able to propose qualitative fixes to transform _risky_ commits into _non-risky_ ones in 78.67% of the cases. 
@@ -36,9 +36,7 @@ In this paper, we propose a novel bug prevention approach at commit-time, called
 
 One particular aspect of BIANCA is its ability to  detect risky commits not only by comparing them to commits of a single project but also to those belonging to other projects that share common dependencies.  This is important because complex software systems are not designed in a monolithic way. They have dependencies that make them vulnerable to similar faults. For example, Apache BatchEE [@TheApacheSoftwareFoundation2015] and GraphWalker [@Graphwalker2016] both depend on JUNG (Java Universal Network/Graph Framework) [@JoshuaOMadadhain].  BatchEE provides an implementation of the jsr-352 (Batch Applications for the Java Platform) specification [@ChrisVignola2014] while GraphWalker is an open source model-based testing tool for test automation. These two systems are designed for different purposes. BatchEE is used  to do batch processing in Java, whereas GraphWalker is used to design unit tests using a graph representation of code. Nevertheless, because both Apache BatchEE and GraphWalker rely on JUNG, the developers of these projects made similar mistakes when building upon JUNG. The issue reports Apache BatchEE #69 and  GraphWalker #44 indicate that the developers of these projects made similar mistakes when using the graph visualization component of JUNG. To detect commits across related projects, BIANCA resorts to project dependency analysis.
 \red{
-Note that we do not detect only the bugs resulting of library usage but rather leverage the fact that if two systems use the same set of library then, they are likely to be open to the same flaws. 
-The rationale behind this is that if two systems share a significatif subset of dependencies, then, they are partially trying to achieve similar behaviour.
-Shared defects and fixes can be found in these similar parts. 
+Note that we do not detect only the bugs resulting from library usage but rather leverage the fact that if two systems use the same libraries then they are likely vulnerable to the same flaws.  
 }
 
 Another advantage of BIANCA is that it uses commits that are used to fix previous defect-introducing commits to provide guidance to the developers on how to improve risky commits. This way, BIANCA goes one step further than existing techniques by providing developers with a potential fix for their risky commits.
@@ -107,7 +105,7 @@ To build our database of code blocks that are related to defect-commits and fix-
 **Extracting Commits:** BIANCA listens to bug (or issue) closing events happening on the project tracking system. Every time an issue is closed, BIANCA retrieves the commit that was used to fix the issue (the fix-commit) as well as the one that introduced the defect (the defect-commit). Retrieving fix-commits, however, is known to be a challenging task [@Wu2011]. This is because the link between the project tracking system and the code version control system is not always explicit. In an ideal situation, developers would add a reference to the issue they work on inside the description of the commit. But this good practice is not always followed. To make the link between fix-commits and their related issues, we turn to a modified version of the back-end of commit-guru [@Rosen2015]. Commit-guru is a tool, developed by Rosen _et al._  [@Rosen2015] to detect _risky commits_. In order to identify risky commits, Commit-guru builds a statistical model using change metrics (i.e.,  amount of lines added, amount of lines deleted, amount of files modified, etc.) from past commits known to have introduced defects in the past.
 
 Commit-guru's back-end has three major components: ingestion, analysis, and prediction. We reuse the ingestion part of the analysis components for BIANCA. The ingestion component is responsible for ingesting (i.e., downloading) a given repository.
-Once the repository is entirely downloaded on a local server, each commit history is analysed. Commits are classified using the list of keywords proposed by Hindle *et al.* [@Hindle2008]. Commit-guru implements the SZZ algorithm [@Kim2006c] to detect risky changes, where it performs the SCM blame/annotate function on all the modified lines of code for their corresponding files on the fix-commit's parents. This returns the commits that previously modified these lines of code and are flagged as the bug introducing commits (i.e., the defect-commits). Priori work showed that commit-guru is effective in identifying defect-commits and their corresponding fixing commits [@Kamei2013a] and the SZZ algorithm, used by commit-guru, is considered to be the state-of-the-art in detecting risky commits \red{and its accuracy has been repetitively shown in the  [@Kamei2013; @Rosen2015b]}. Note that we could use a simpler and more established tool such as Relink [@Wu2011] to link the commits to their issues and re-implement the classification proposed by Hindle *et al.* [@Hindle2008] on top of it. However, commit-guru has the advantage of being open-source, making it possible to  modify it to fit our needs by fine-tuning its performance.
+Once the repository is entirely downloaded on a local server, each commit history is analysed. Commits are classified using the list of keywords proposed by Hindle *et al.* [@Hindle2008]. Commit-guru implements the SZZ algorithm [@Kim2006c] to detect risky changes, where it performs the SCM blame/annotate function on all the modified lines of code for their corresponding files on the fix-commit's parents. This returns the commits that previously modified these lines of code and are flagged as the bug introducing commits (i.e., the defect-commits). Priori work showed that commit-guru is effective in identifying defect-commits and their corresponding fixing commits [@Kamei2013a] and the SZZ algorithm, used by commit-guru, is shown to be effective in detecting risky commits [@Kamei2013; @Rosen2015b]. Note that we could use a simpler and more established tool such as Relink [@Wu2011] to link the commits to their issues and re-implement the classification proposed by Hindle *et al.* [@Hindle2008] on top of it. However, commit-guru has the advantage of being open-source, making it possible to  modify it to fit our needs by fine-tuning its performance.
 
 **Extracting Code Blocks:** To extract code blocks from fix-commits and defect-commits,  we rely on TXL [@Cordy2006a], which is a first-order functional programming over linear term rewriting, developed by Cordy et al. [@Cordy2006a]. For TXL to work, one has to write a grammar describing the syntax of the source language and the transformations needed. TXL has three main phases: *parse*, *transform*, *unparse*. In the parse phase, the grammar controls not only the input but also the output forms. The following code sample---extracted from the official documentation---shows a grammar matching an *if-then-else* statement in C with some special keywords: [IN] (indent), [EX] (exdent) and [NL] (newline) that will be used in the output form.
 
@@ -257,7 +255,7 @@ If at $t_4$, $c_3$ is pushed to $p_2$ and $c_3$ matches $c_1$ after preprocessin
 
 To measure the similarity between pairs of commits, we need to decide on the value of $\alpha$. One possibility would be to test for all possible values of $\alpha$ and pick the one that provides best accuracy (F$_1$-measure). The ROC (Receiver Operating Characteristic) curve can then be used to display the performance of BIANCA with different values of $\alpha$. Running experiments with all possible $\alpha$ turned out to be computationally demanding given the large number of commits. Testing with all the different values of $\alpha$ amounts to 4e10 comparisons. 
 
-To address this, we randomly selected a sample of 1% commits from our dataset and checked the results by varying $\alpha$ from 1 to 100%. Figure \ref{fig:alpha-deter} shows the results. The best trade-off between precision and recall is obtained when $\alpha$ = 35\%.  \red{In addition, Roy et al. [@Roy2008; @Cordy2011] showed using empirical studies that using NICAD with a threshold around 30\%, the default setting, provides good results for the detection Type 3 clones. For these reasons, we set $\alpha$ = 35\% in our experiments.}
+To address this, we randomly selected a sample of 1% commits from our dataset and checked the results by varying $\alpha$ from 1 to 100%. Figure \ref{fig:alpha-deter} shows the results. The best trade-off between precision and recall is obtained when $\alpha$ = 35\%.  \red{This threshold is in line with the findings of Roy et al. [@Roy2008; @Cordy2011] who showed through empirical studies that using NICAD with a threshold of around 30\%, the default setting, provides good results for the detection of Type 3 clones. For these reasons, we set $\alpha$ = 35\% in our experiments.}
 
 ## Evaluation Measures
 
@@ -292,16 +290,16 @@ To support such a claim, we would need to analyse the 15,316 detected defect-com
 Studying the similarity of defects across projects is a complex task and may require analysing the defect reports manually. This is left as  future work. 
 This said, we showed, in this paper, that software systems sharing dependencies also share common issues, irrespective to whether these issues represent similar defects or not.
 
-The experiments took nearly three months using 48 Amazon Virtual Private Servers running in parallel. When deployed, the most time consuming part of BIANCA is spent on building the model of known bug-introducing commits. \red{Once this done, it takes in average 72 seconds on a typical workstation (quad-core @ 3.2GHz with 8 GB of RAM) to analyze an incoming commit. }
+The experiments took nearly three months using 48 Amazon Virtual Private Servers running in parallel. When deployed, the most time consuming part of BIANCA was spent on building the model of known bug-introducing commits. {Once the model was built, it took, in average, 72 seconds to analyze an incoming commit on a typical workstation (quad-core @ 3.2GHz with 8 GB of RAM). 
 
-\red{In the following subsections, we compare BIANCA with a random classifier, analyze the best and worst performing projects and assess the quality of the proposed fixes.}
+In the following subsections, we compare BIANCA with a random classifier, analyze the best and worst performing projects and assess the quality of the proposed fixes.
 
 
 ## Random Classifier Comparison
 
 Although our average F$_1$ measure of 52.72% may seem low at first glance, achieving a high F$_1$ measure for unbalanced data is very difficult [@menzies2007problems]. Therefore, a common approach to ground detection results is to compare it to a simple baseline.
 
-\red{To the best of our knowledge, this is the first approach that relies on  code similarity instead of code or process metrics for the detection of risky commits. Comparing it to other approaches will not be accurate. In addition, existing metric-based techniques (e.g., \cite{Nam2013}) detect risky commits within single projects only. BIANCA, on the other hand, operates across projects. We compared BIANCA  with a random classifier to have a baseline and show that we perform better than a simple baseline.}
+To the best of our knowledge, this is the first approach that relies on  code similarity instead of code or process metrics for the detection of risky commits. Comparing it to other approaches will not be accurate. In addition, existing metric-based techniques \red{(e.g., \cite{Nam2013})} detect risky commits within single projects only. BIANCA, on the other hand, operates across projects. We compared BIANCA  with a random classifier to have a baseline and show that we perform better than a simple baseline.
 
 The random classifier first generates a random number $n$ between 0 and 1 for the 165,912 commits composing our dataset.
 For each commit, if $n$ is greater than 0.5, then the commit is classified as risky and vice versa. As expected by a random classifier, our implementation detected ~50% (82,384 commits) of the commits to be _risky_. It is worth mentioning that the random classifier achieved 24.9% precision, 49.96% recall and 33.24% F$_1$-measure. Since our data is unbalanced (i.e., there are many more _healthy_ than _risky_ commits) these numbers are to be expected for a random classifier. Indeed, the recall is very close to 50% since a commit can take on one of two classifications, risky or non-risky. While analysing the precision, however, we can see that the data is unbalanced (a random classifier would achieve a precision of 50% on a balanced dataset).
@@ -367,41 +365,31 @@ On a per commit basis, BIANCA proposed 101,462 fixes for the 13,899 true positiv
 In other words, BIANCA is able to detect _risky_ commits with 90.75% precision, 37.15% recall, and proposes fixes that contain, on average, 40-44% of the actual code needed to transform the _risky_ commit into a _non-risky_ one. 
 
 \red{
-To further assess the quality of the fixes proposed by BIANCA, we randomly took 250 BIANCA-proposed fixes and manually compared them with the actual fixes provided by the developers. For each fix, we looked at the proposed modifications (i.e., code diff) and the actual modification made by the developer of the system to fix the bug. We were able to identify the statements from the proposed fix that can be reused to create a fix similar to the one developers would propose in 85\% of the cases. For the remaining cases, it was difficult to understand the changes that the developers made, mainly because of our lack of familiarity of the systems under study. We recognize that a better evaluation of the quality of BIANCA-proposed fixes would be to conduct a user study. We intend to do this as part of future work. In what follows, we present examples of how BIANCA-proposed fixes.
-The lines highlighted in red are the one which triggered the match.}
+To further assess the quality of the fixes proposed by BIANCA, we randomly took 250 BIANCA-proposed fixes and manually compared them with the actual fixes provided by the developers. For each fix, we looked at the proposed modifications (i.e., code diff) and the actual modification made by the developer of the system to fix the bug. 
+
+We were able to identify the statements from the proposed fixes that can be reused to create fixes similar to the ones that developers had proposed in 85\% of the cases. For the remaining cases, it was difficult to understand the changes that the developers made, mainly because of our lack of familiarity of the systems under study. We recognize that a better evaluation of the quality of BIANCA-proposed fixes would be to conduct a user study. We intend to do this as part of future work. In what follows, we present examples of BIANCA-proposed fixes that were detected as similar to fixes proposed by developers. 
+
+.}
 
 
 \input{tex/null.tex}
 
 \red{
-In Figures \ref{fig:null2} and \ref{fig:null1}, we show two commits that belong to the Okhttp and Druid systems, respectively.  The Okhttp commit was submitted in February 2014, while the one from Druid was submitted in April 2016. The Druid commit was introduced to fix a bug, which was caused by a prior commit, submitted in March 2016. The bug consisted of invoking a function on a null reference, which led to a null pointer exception, causing the system to crash. This bug could have been avoided if if the Druid developers had access to the Okhttp commit.  
+In Figures \ref{fig:null2} and \ref{fig:null1}, we show two commits that belong to the Okhttp and Druid systems, respectively. In these figures, the statements shown in red are the ones that triggered the match between the two commits. The Okhttp commit was submitted in February 2014, while the one from Druid was submitted in April 2016. The Druid commit was introduced to fix a bug, which was caused by a prior commit, submitted in March 2016. The bug consisted of invoking a function on a null reference, which led to a null pointer exception, causing the system to crash. This bug could have been avoided if if the Druid developers had access to the Okhttp commit.  
 }
-
-\wahab{Put the figures here. Should we show the March 2016 commit as well? Also please put the lines in questions in a red box}
-\mathieu{The lines are now in red. The figures should be closer to the text.}
-
 \red{
 In this second example, we present a case where BIANCA could have been used to avoid inserting a bug related to race conditions in multi-threaded code.}
-
-\wahab{You need to change the text below to follow the same format as in the first  and third examples that I modified.  You need to say which systems we are talking about here, show the two commit couple. After that you should explain the situation by referring to the commits. It is important that the reader get the impression that this analysis is done systematically. }
-
-\mathieu{done}
 
 \input{tex/thread.tex}
 
 \red{
 In Figures \ref{fig:thread1} and \ref{fig:thread2}, we show two commits that belong to the Netty and Okhttp systems, respectively. 
-For Figure \ref{fig:thread1}, we present only the sourounding of subset of the commit that triggered the match rather than the commit in its entirety.
-The whole commit changed 44 files with 1,994 additions and 1,335 deletions.
-The Netty commit was submitted in June 2014 while the one from OKHttp was submitted in January 2017. 
-The bug is consisted in resources leak in multithreaded environments.
-The similarity between both commits comes from the \texttt{try} and \texttt{catch} blocks associated with the exceptions used.
-More specifically to the fact of freeing resources in case a thread crashes with a \texttt{finally} block to follow the \texttt{try} and \texttt{catch} blocks.
-In the \texttt{try} block, the threads are launched and, in case an exception happens the \texttt{catch} block is executed.
-However, if the developer closes the resources consumed by the thread at the end of the \texttt{try} block, then, in the case of an exception, the resources would not be freed.
-Instead of duplicating the resources management code in the \texttt{try} and \texttt{catch} blocks a good practice would be to have it in a \texttt{finally} block that always executes itself; regardless of an exception happening or not.
-In the commit presented by Figure \ref{fix:thread1} we can see that a large refactoring has been done in order to prevent crashed thread to keep using resources.
-This bug could have been avoided if if the Okhttp developers had access to the Netty commit.  
+For Figure \ref{fig:thread1}, we present an excerpt of the commit that triggered the match. The whole commit affected  44 files with 1,994 additions and 1,335 deletions. The Netty commit was submitted in June 2014 while the one from OKHttp was submitted in January 2017.  The bug consisted of resource leakage in a multi-threaded environment.
+The similarity between the two commits comes from the \texttt{try} and \texttt{catch} blocks associated with the used exceptions, more precisely, the fact of freeing resources in case a thread crashes with a \texttt{finally} block to follow the \texttt{try} and \texttt{catch} blocks.
+In the \texttt{try} block, the threads are launched and, in case an exception happens, the \texttt{catch} block is executed.
+However, if the developer closes the resources consumed by the thread at the end of the \texttt{try} block then, in the case of an exception, the resources would not be freed.
+Instead of duplicating the resource management code in the \texttt{try} and \texttt{catch} blocks, a good practice would be to have it in a \texttt{finally} block that always executes  regardless of whether an exception is thrown or not.
+In the commit presented by Figure \ref{fix:thread1}, we can see that a large refactoring has been done in order to prevent crashed threads to keep using resources. This bug could have been avoided if the Okhttp developers had access to the Netty commit.  
 }
 
 \red{
@@ -419,53 +407,7 @@ In both cases, the code has been modified to avoid the appending of \texttt{null
 
 \input{tex/diff1.tex}
 
-## Cross-clusters fix-patterns
 
-\red{
-In addition to the presented couples of fix/proposed-fix presented in the previous section, our manual analysis yield some interesting insights on fix patterns that span across clusters.
-The bugs fixed by these patterns have been the root cause of crashes.}
-
-\red{
-The first pattern is linked to the need to achieve backward compatibility of source code.
-As presented in Figure \ref{fig:backward} the developer replace the invocation to the \texttt{isEmpty} method to an invocation of \texttt{length() == 0} in order to make its code compatible with Java 1.5. 
-Indeed, Java, in its 1.5 version does not provide the \texttt{isEmpty} method which was introduced later. 
-Here, we can suspect that the development environment of the developer does not match the production environment and, consequently, a regression has been introduced.
-This fix-pattern of replacing a newly added method in a library by an old one occurred three times in our \textit{leess than 5 minutes} category. 
-Consequently, we investigated further in the 15,316 results and found 363 instances of this pattern.
-This pattern accounts for 2.35\% of the total detection. 
-}
-
-\input{tex/backward.tex}
-
-\red{
-Another interesting pattern we were able to detect in the 250 bugs randomly selected (2/250) and confirm in the remaining 15,116 is a pattern involving the java keyword \texttt{final} (48/15,116).
-In Java, the keyword refers to the non-transitivity or immutability of variables. 
-Colblenz \textit{et al.} discovered that important requirements, such as expressing immutability constraints, were not completely understood nor available in Java \ref{@coblenz2016exploring}.
-The use of this keyword by junior software developer is often adhoc.
-In many instances, we found developer fixing a bug report stating that a given variable should not change regardless of the on-going event.
-Rather than fixing the root cause (i.e. understanding why and where the variable changes) developers use the final keyword. 
-It is noteworthy that an attempt to modify the value of a final variable, in Java, would result in a compilation error.
-Figure \ref{fig:final} show a commit displaying this fix-pattern.
-}
-
-\input{tex/final.tex}
-
-\red{
-The last pattern we discovered consists in null-checking wrapped types such as \texttt{Integer}. 
-In Java, eight primitive types exist: boolean, byte, char, short, int, long, float and double. 
-These types are the most basic data types available and are not extending the top-most class \texttt{Object}.
-The primitive types cannot have \texttt{null} as value. 
-For example, the default value of an \texttt{int} is \texttt{0}.
-All other classes of Java are, by default, specialization of \texttt{Object}.
-In addition to these primitive type, the JDK (Java Development Kit) contains wrapped types that wrap the value of a primitive type in an \texttt{Object}. 
-These wrapped types contain a single field (the primitive type they wrap) and contain several methods for conversion and comparison.
-The wrapped types, as \texttt{Object}, can be \texttt{null} and invoking one of their method on a \texttt{null} instance would result in a \texttt{null pointer exception}.
-We found 2/250 and 192/15,316 instances of null-checking wrapped types as displayed in Figure \ref{fig:null}.
-Unlike the first two patterns, this last pattern could be detected by static checker such as PMD.
-However, it seems that this particular case evades the detection of potentially null objects access.
-}
-
-\input{tex/nullcheck.tex}
 
 # Discussion {#sec:threats}
 
@@ -500,7 +442,8 @@ This can limit the generalization of the results to projects written in other la
 However, similar to Java, one can write a TXL grammar for a new language then BIANCA can work since BIANCA relies on TXL. 
 
 Moreover, we use NICAD as the code comparison engine. The accuracy of NICAD affects the accuracy of BIANCA. 
-This said, since NICAD has been tested on large systems, we are confident that it is a suitable engine for comparing code using TXL. Also, there is nothing that prevents us from using other text-based code comparisons engines, if need be. 
+This said, since NICAD has been tested on large systems, we are confident that it is a suitable engine for comparing code using TXL. Also, there is nothing that prevents from using other text-based code comparisons engines. Another threats related to the use of NICAD is the use of 35\% as a similarity threshold. A different threshold may affect the results. We chose this threshold because it resulted in best trade-off between precision and recall when  analysing a subset of the dataset. We also relied on previous studies, in which the creators of NICAD Roy et al. [@Roy2008;
+@Cordy2011] showed that a threshold of around 30\% usually provides good accuracy. 
 
 Finally, part of the analysis of the BIANCA proposed fixes that we did was based on manual comparison of the BIANCA fixes with those proposed by developers. Although we exercised great care in analyzing all the fixes, we may have misunderstood some aspects of the commits.  
 
@@ -508,26 +451,25 @@ In conclusion, internal and external validity have both been minimized by choosi
 
 # Conclusion {#sec:conclusion}
 
-In this paper, we presented BIANCA (Bug Insertion ANticipation by Clone Analysis at commit time), an approach that detects risky commits (i.e., a commit that is likely to introduce a bug) with  90.75% precision and 37.15% recall.
-BIANCA uses clone detection techniques and project dependency analysis to detect risky commits within and across dependant projects.  BIANCA operates at commit-time, i.e., before the commits  reach the central repository. In addition, because it relies on code comparison, BIANCA does not only detect risky commits but also makes recommendations to developers on how to fix them. We believe that this makes BIANCA a practical approach for preventing bugs and proposing corrective measures that integrates well with the developers work flow through the commit mechanism.  
+In this paper, we presented BIANCA (Bug Insertion ANticipation by Clone Analysis at commit time), an approach that detects risky commits (i.e., a commit that is likely to introduce a bug) with  an average of 90.75% precision and 37.15% recall.
+BIANCA uses clone detection techniques and project dependency analysis to detect risky commits within and across projects.  BIANCA operates at commit-time, i.e., before the commits  reach the code central repository. In addition, because it relies on code comparison, BIANCA does not only detect risky commits but also makes recommendations to developers on how to fix them. We believe that this makes BIANCA a practical approach for preventing bugs and proposing corrective measures that integrates well with the developers work flow through the commit mechanism.  
 
 To build on this work, we need to conduct a human study with developers in order to gather their feedback on the approach. 
 The feedback obtained will help us fine-tune the approach. Also, we want to examine the relationship between project cluster measures (such as betweenness) and the performance of BIANCA. Finally, another improvement to BIANCA would be to support Type 4 clones.
 
 # Reproduction Package & Dataset
 
-\red{As described in section \ref{sec:newcommits} our experimentations rely heavily on virtual machines instrumentation and coordination. 
-Providing a straightforward reproduction package in this condition is very challenging.
-However, we are happy to share our consilolidated dataset: https://github.com/MathieuNls/bianca-data.
+\red{As described in Section \ref{sec:newcommits}, we rely heavily on virtual machines instrumentation and coordination to run our experiments. Providing a straightforward reproduction package is therefore very challenging.
+However, we are happy to share our consolidated dataset: https://github.com/MathieuNls/bianca-data.
 The dataset is composed of three compressed PostgresSQL formatted tables: clones, commits and repository.
 The clone table stores the relationship between set of similar commits.
 The commits themselves are in the commit table with details about their author, repository, commit message and all the metrics found in commit guru \cite{Rosen2015}.
-Finally, the repository table describe the repository used in terms of url, name and ingestion status.
+Finally, the repository table describes the repository used in terms of url, name and ingestion status.
 } 
 
-# Acknowledgments
+# Acknowledgements
 
-\red{We are thankful to amazon for their awseducate plateform without which this study would have cost thousands of dollars in server fees.}
+\red{We are thankful to Amazon for their AWS Educate Platform. without it, this study would have cost thousands of dollars in server fees.}
 
 # References
 
