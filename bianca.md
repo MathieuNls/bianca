@@ -29,7 +29,7 @@ Introduction
 
 Research in software maintenance has evolved over the year to include areas like mining bug repositories, bug analytic, and bug prevention and reproduction. The ultimate goal is to develop better techniques and tools to help software developers detect, correct, and prevent bugs in an effective and efficient manner. 
 
-One particular (and growing) line of research focuses on the problem of preventing the introduction of bugs by detecting risky commits (preferably before the commits reach the central repository). Recent approaches (e.g., [@Lo2013; @Nam2013]) rely on training models  based on  code and process metrics (e.g., code complexity, experience of the developers, etc.) that are used to classify  new commits as risky or not. Metrics, however, may vary from one project to another, hindering the reuse of these models. Consequently, these techniques tend to operate within single projects only, despite the fact many large projects share dependencies such as the reuse of common libraries. This makes them potentially vulnerable to similar faults. 
+One particular (and growing) line of research focuses on the problem of preventing the introduction of bugs by detecting risky commits (preferably before the commits reach the central repository). Recent approaches (e.g., [@Lo2013; @Nam2013]) rely on training models  based on  code and process metrics (e.g., code complexity, experience of the developers, etc.) that are used to classify  new commits as risky or not. Metrics, however, may vary from one project to another, hindering the reuse of these models. Consequently, these techniques tend to operate within single projects only, despite the fact that many large projects share dependencies, such as the reuse of common libraries. This makes them potentially vulnerable to similar faults. 
 A solution to a bug provided by the developers of one project may help fix a bug that occur in another (and dependant) project. Moreover, as noted by Lewis _et al._ [@Lewis2013] and Johnson _et al._ [@Johnson2013], techniques based solely on metrics are perceived by developers as black box solutions because they do not provide any insights on the causes of the risky commits or ways for improving them. As a result, developers are less likely to trust the output of these tools.
 
 In this paper, we propose a novel bug prevention approach at commit-time, called BIANCA (Bug Insertion ANticipation by Clone Analysis at commit time). BIANCA does not use metrics to assess whether or not an incoming commit is risky. Instead, it relies on code clone detection techniques by extracting code blocks from incoming commits and comparing them to those of known defect-introducing commits. 
@@ -41,7 +41,7 @@ Note that we do not detect only the bugs resulting from library usage but rather
 
 Another advantage of BIANCA is that it uses commits that are used to fix previous defect-introducing commits to provide guidance to the developers on how to improve risky commits. This way, BIANCA goes one step further than existing techniques by providing developers with a potential fix for their risky commits.
 
-We validated the performance of BIANCA on 42 open source projects, obtained from Github. The examined projects vary in size, domain and popularity. Our findings indicate that BIANCA is able to flag risky commits with an average precision, recall and F-measure of 90.75%, 37.15% and 52.72%, respectively. Moreover, we found that only 8.6% of the risky commits detected by BIANCA match other commits from the same project. This finding stresses the fact that relationships across projects should be taken into consideration for effective prevention of risky commits.
+We validated the performance of BIANCA on 42 open source projects, obtained from Github. The examined projects vary in size, domain and popularity. Our findings indicate that BIANCA is able to flag risky commits with an average precision, recall and F-measure of 90.75%, 37.15% and 52.72%, respectively. Although the performance of BIANCA seems modest it is important to ground these results with the fact that BIANCA outperforms a baseline model by XXXX (mainly due to the data imbalance, i.e., most commits are not defect-inducing). Moreover, we found that only 8.6% of the risky commits detected by BIANCA match other commits from the same project. This finding stresses the fact that relationships across projects should be taken into consideration for effective prevention of risky commits.
 
 The remaining parts of this paper are organized as follows. In Section \ref{sec:relwork}, we present related work. Sections \ref{sec:bianca},  \ref{sec:exp} and \ref{sec:result} are dedicated to the BIANCA approach, the case study setup, and the case study results.
 Then, Sections \ref{sec:threats} and \ref{sec:conclusion} present the threats to validity and a conclusion accompanied with future work.
@@ -169,7 +169,7 @@ project. The only requirement is to use a dependency manager.
 Each time a developer makes a commit, BIANCA intercepts it using a pre-commit hook,  extracts the corresponding code block (in a similar way as in the previous phase), and compares it to the code blocks of historical defect-commits. If there is a match then the new commit is deemed to be risky. A threshold $\alpha$ is used to assess the extent beyond which two commits are considered similar. The setting of $\alpha$ is discussed in the case study section.
 
 Pre-commit hooks are custom scripts set to fire off when certain important actions of the versionning process occur.
-There are two groups of hooks: client-side and server-side. Client-side hooks are triggered by operations such as committing and merging, whereas server-side hooks run on network operations such as receiving pushed commits. These hooks can be used for all sorts of reasons such as checking compliance with coding rules or automatic run of unit test suites. The pre-commit hook runs  before the developer specifies a commit message. It is used to inspect the modifications that are about to be committed. BIANCA is based on a set of bash and python scripts, and the entry point of these scripts lies in a pre-commit hook. These scripts intercept the commit and extract the corresponding code blocks.
+There are two groups of hooks: client-side and server-side. Client-side hooks are triggered by operations such as committing and merging, whereas server-side hooks run on network operations such as receiving pushed commits. These hooks can be used for all sorts of reasons such as checking compliance with coding rules or automatic runs of unit test suites. The pre-commit hook runs  before the developer specifies a commit message. It is used to inspect the modifications that are about to be committed. BIANCA is based on a set of bash and python scripts, and the entry point of these scripts lies in a pre-commit hook. These scripts intercept the commit and extract the corresponding code blocks.
 
 To compare the extracted blocks to the ones in the database, we resort to clone detection techniques, more specifically, text-based clone detection techniques. This is because lexical and syntactic analysis approaches (alternatives to text-based comparisons) would require a complete program to work, i.e., a program that compiles.  In the relatively wide-range of tools and techniques that exist to detect clones by considering code as text [@Johnson1993;  @Johnson1994; @Marcus; @Manber1994; @StephaneDucasse; @Wettel2005], we selected NICAD as the main text-based method for comparing code blocks [@Cordy2011] for several reasons. 
 First, NICAD is built on top of TXL, which we also used in the previous phase.  Second, NICAD can detect Types 1, 2 and 3 software clones [@CoryKapser]. Type 1 clones are copy-pasted blocks of code that only differ from each other in terms of non-code artefacts such as indentation, whitespaces, comments and so on.  Type 2 clones are blocks of code that are syntactically identical except literals, identifiers, and types that can be modified. Also, Type 2 clones share the particularities of Type 1 about indentation, whitespaces, and comments. Type 3 clones are similar to Type 2 clones in terms of modification of literals, identifiers, types, indentation, whitespaces, and comments but also contain added or deleted code statements. BIANCA detects Type 3 clones since they can contain added or deleted code statements, which make them suitable for comparing commit code blocks.
@@ -215,7 +215,7 @@ In this section, we present the setup of our case study in terms of repository s
 
 ## Project Repository Selection {#sec:rep}
 
-To select the projects used to evaluate our approach, we followed three simple criteria. First, the projects need to be in Java and use Maven to manage dependencies. This way, we can automatically extract the dependencies and perform the clustering of projects. The second criterion is to have projects that enjoy a large community support and interest. We selected projects that have at least 2000 followers. A different threshold could be used. Finally, the projects must have a public issue repository to be able to mine their past issues and the fixes. We queried Github with these criteria and retrieved 42 projects (see Table \ref{tab:results} for the list of projects), including those from some of major open-source contributors such as Alibaba, Apache Software Foundation, Eclipse, Facebook, Google and Square. 
+To select the projects used to evaluate our approach, we followed three simple criteria. First, the projects need to be in Java and use Maven to manage dependencies. This way, we can automatically extract the dependencies and perform the clustering of projects. The second criterion is to have projects that enjoy a large community support and interest. We selected projects that have at least 2000 followers. Finally, the projects must have a public issue repository to be able to mine their past issues and the fixes. We queried Github with these criteria and retrieved 42 projects (see Table \ref{tab:results} for the list of projects), including those from some of major open-source contributors such as Alibaba, Apache Software Foundation, Eclipse, Facebook, Google and Square. 
 
 ## Project Dependency Analysis {#sec:dependencies}
 
@@ -223,9 +223,7 @@ Figure \ref{fig:dep-graph} shows the project dependency graph. The dependency gr
 
 \input{tex/dependencies}
 
-As shown in Figure \ref{fig:dep-graph},  these Github projects are very much interconnected.  
-In average, the projects composing our dataset have 77 dependencies.
-Among the 77 dependencies, in average, 62 dependencies are shared with at least one other project from our dataset.
+As shown in Figure \ref{fig:dep-graph},  these Github projects are very much interconnected. On average, the projects composing our dataset have 77 dependencies. Among the 77 dependencies, on average, 62 dependencies are shared with at least one other project from our dataset.
 
 Table \ref{tab:communities} shows the result of the Girvan–Newman clustering algorithm  in terms of centroids and betweenness. The blue cluster is dominated by Storm from The Apache Software Foundation. Storm is a distributed real-time computation system. Druid by Alibaba, the e-commerce company that provides consumer-to-consumer, business-to-consumer and business-to-business sales services via web portals, dominates the yellow cluster. In recent years, Alibaba has become an active member of the open-source community by making some of its projects publicly available. The red cluster has Hadoop by the Apache Software Foundation as its centroid. Hadoop is an open-source software framework for distributed storage and distributed processing of very large data sets on computer clusters built from commodity hardware. The green cluster is dominated by the Persistence project of OpenHab.  OpenHab proposes home automation solutions and the Persistence project is their data access layer. Finally, the purple cluster is dominated by Libdx by Badlogicgames, which is a cross-platform framework for game development.
 
@@ -237,8 +235,7 @@ A review of each cluster shows that this partitioning divides projects in terms 
 
 ## Building a Database of Defect-Commits and Fix-Commits for Performances Evaluation {#sub:golden}
 
-To build the database against which we assess the performance of BIANCA, we use the same process as discussed in Section \ref{sec:offline}.
-We used Commit-guru to retrieve the complete history of each project and label commits as defect-commits if they appear to be linked to a closed issue. The process used by Commit-guru to identify commits that introduce a defect is simple and reliable in terms of accuracy and computation time [@Kamei2013]. We use the commit-guru labels as the baseline to compute the precision and recall of BIANCA. Each time BIANCA classifies a commit as _risky_, we can  check if the _risky_ commit is in the database of defect-introducing commits. The same evaluation process is used by related studies  [@ElEmam2001; @Lee2011a; @Bhattacharya2011; @Kpodjedo2010].
+To build the database that we can used to assess the performance of BIANCA, we use the same process as discussed in Section \ref{sec:offline}. We used Commit-guru to retrieve the complete history of each project and label commits as defect-commits if they appear to be linked to a closed issue. The process used by Commit-guru to identify commits that introduce a defect is simple and reliable in terms of accuracy and computation time [@Kamei2013]. We use the commit-guru labels as the baseline to compute the precision and recall of BIANCA. Each time BIANCA classifies a commit as _risky_, we can  check if the _risky_ commit is in the database of defect-introducing commits. The same evaluation process is used by related studies  [@ElEmam2001; @Lee2011a; @Bhattacharya2011; @Kpodjedo2010].
 
 ## Process of Comparing New Commits {#sec:newcommits}
 
@@ -256,7 +253,7 @@ If at $t_4$, $c_3$ is pushed to $p_2$ and $c_3$ matches $c_1$ after preprocessin
 To measure the similarity between pairs of commits, we need to decide on the value of $\alpha$. One possibility would be to test for all possible values of $\alpha$ and pick the one that provides best accuracy (F$_1$-measure). The ROC (Receiver Operating Characteristic) curve can then be used to display the performance of BIANCA with different values of $\alpha$. Running experiments with all possible $\alpha$ turned out to be computationally demanding given the large number of commits. Testing with all the different values of $\alpha$ amounts to 4e10 comparisons. 
 
 \color{red}
-To address this, we randomly selected a sample of 1% commits from our dataset and checked the results by varying $\alpha$ from 1 to 100%. Figure \ref{fig:alpha-deter} shows the results. The best trade-off between precision and recall is obtained when $\alpha$ = 35\%. This threshold is in line with the findings of Roy et al. [@Roy2008; @Cordy2011] who showed through empirical studies that using NICAD with a threshold of around 30\%, the default setting, provides good results for the detection of Type 3 clones. For these reasons, we set $\alpha$ = 35\% in our experiments.
+To address this, we randomly selected a sample of 1% [Emad: can we add the number of commits, 1% seems low] commits from our dataset and checked the results by varying $\alpha$ from 1 to 100%. Figure \ref{fig:alpha-deter} shows the results. The best trade-off between precision and recall is obtained when $\alpha$ = 35\%. This threshold is in line with the findings of Roy et al. [@Roy2008; @Cordy2011] who showed through empirical studies that using NICAD with a threshold of around 30\%, the default setting, provides good results for the detection of Type 3 clones. For these reasons, we set $\alpha$ = 35\% in our experiments.
 \color{black}
 
 ## Evaluation Measures
@@ -290,27 +287,27 @@ To support such a claim, we would need to analyse the 15,316 detected defect-com
 \input{tex/result}		
 
 Studying the similarity of defects across projects is a complex task and may require analysing the defect reports manually. This is left as  future work. 
-This said, we showed, in this paper, that software systems sharing dependencies also share common issues, irrespective to whether these issues represent similar defects or not.
+That said, we showed, in this paper, that software systems sharing dependencies also share common issues, irrespective of whether these issues represent similar defects or not.
 
-The experiments took nearly three months using 48 Amazon Virtual Private Servers running in parallel. When deployed, the most time consuming part of BIANCA was spent on building the model of known bug-introducing commits. {Once the model was built, it took, in average, 72 seconds to analyze an incoming commit on a typical workstation (quad-core @ 3.2GHz with 8 GB of RAM). 
+The experiments took nearly three months using 48 Amazon Virtual Private Servers running in parallel. When deployed, the most time consuming part of BIANCA was spent on building the model of known bug-introducing commits. Once the model was built, it took, on average, 72 seconds to analyze an incoming commit on a typical workstation (quad-core @ 3.2GHz with 8 GB of RAM). 
 
 In the following subsections, we compare BIANCA with a random classifier, analyze the best and worst performing projects and assess the quality of the proposed fixes.
 
 
-## Random Classifier Comparison
+## Baseline Classifier Comparison
 
 Although our average F$_1$ measure of 52.72% may seem low at first glance, achieving a high F$_1$ measure for unbalanced data is very difficult [@menzies2007problems]. Therefore, a common approach to ground detection results is to compare it to a simple baseline.
 
 To the best of our knowledge, this is the first approach that relies on  code similarity instead of code or process metrics for the detection of risky commits. Comparing it to other approaches will not be accurate. In addition, existing metric-based techniques (e.g., [@Nam2013]) detect risky commits within single projects only. BIANCA, on the other hand, operates across projects. We compared BIANCA  with a random classifier to have a baseline and show that we perform better than a simple baseline.
 
-The random classifier first generates a random number $n$ between 0 and 1 for the 165,912 commits composing our dataset.
+The baseline classifier first generates a random number $n$ between 0 and 1 for the 165,912 commits composing our dataset.
 For each commit, if $n$ is greater than 0.5, then the commit is classified as risky and vice versa. As expected by a random classifier, our implementation detected ~50% (82,384 commits) of the commits to be _risky_. It is worth mentioning that the random classifier achieved 24.9% precision, 49.96% recall and 33.24% F$_1$-measure. Since our data is unbalanced (i.e., there are many more _healthy_ than _risky_ commits) these numbers are to be expected for a random classifier. Indeed, the recall is very close to 50% since a commit can take on one of two classifications, risky or non-risky. While analysing the precision, however, we can see that the data is unbalanced (a random classifier would achieve a precision of 50% on a balanced dataset).
 
 It is important to note that the purpose of this analysis is not to say that we outperform a simple random classifier, rather to shed light on the fact that our dataset is unbalanced and achieving an average F$_1$ = 52.72% is non-trivial, especially when a baseline only achieves an F$_1$-measure of 33.24%.
 
 ## Performance of BIANCA 
 
-\red{In this section, we provide insight on the performance of BIANCA by examining the projects for which best and worst results were obtained.}
+\red{In this section, we provide insight on the performance of BIANCA by examining the projects for which the best and worst results were obtained.}
 
 BIANCA performed best when applied to three projects: Otto by Square (100.00% precision and 76.61% recall, 96.55% F$_1$-measure), JStorm by Alibaba (90.48% precision, 87.50% recall, 88.96% F$_1$-measure), and Auto by Google (90.48% precision, 87.50% recall, 86.76% F$_1$-measure). It performed worst when applied to Android Annotations by Excilys (100.00% precision, 1.59% recall, 3.13% F$_1$-measure) and Che by Eclipse (88.89% precision, 5.33% recall, 10.05% F$_1$-measure), Openhab by Openhab (100.00% precision, 7.14% recall, 13.33% F$_1$-measure). To understand the performance of BIANCA, we conducted a manual analysis of the commits classified as _risky_ by BIANCA for these projects.
 
@@ -373,10 +370,10 @@ We were able to identify the statements from the proposed fixes that can be reus
 
 \input{tex/null.tex}
 
-In Figures \ref{fig:null2} and \ref{fig:null1}, we show two commits that belong to the Okhttp and Druid systems, respectively. In these figures, the statements shown in red are the ones that triggered the match between the two commits. The Okhttp commit was submitted in February 2014, while the one from Druid was submitted in April 2016. The Druid commit was introduced to fix a bug, which was caused by a prior commit, submitted in March 2016. The bug consisted of invoking a function on a null reference, which led to a null pointer exception, causing the system to crash. This bug could have been avoided if if the Druid developers had access to the Okhttp commit.  
+In Figures \ref{fig:null2} and \ref{fig:null1}, we show two commits that belong to the Okhttp and Druid systems, respectively. In these figures, the statements shown in red are the ones that triggered the match between the two commits. The Okhttp commit was submitted in February 2014, while the one from Druid was submitted in April 2016. The Druid commit was introduced to fix a bug, which was caused by a prior commit, submitted in March 2016. The bug consisted of invoking a function on a null reference, which led to a null pointer exception, causing the system to crash. This bug could have been avoided if the Druid developers had access to the Okhttp commit.  
 
 
-In this second example, we present a case where BIANCA could have been used to avoid inserting a bug related to race conditions in multi-threaded code.
+In a second example, we present a case where BIANCA could have been used to avoid inserting a bug related to race conditions in multi-threaded code.
 
 \input{tex/thread.tex}
 
@@ -388,8 +385,8 @@ However, if the developer closes the resources consumed by the thread at the end
 Instead of duplicating the resource management code in the \texttt{try} and \texttt{catch} blocks, a good practice would be to have it in a \texttt{finally} block that always executes  regardless of whether an exception is thrown or not.
 In the commit presented by Figure \ref{fig:thread1}, we can see that a large refactoring has been done in order to prevent crashed threads to keep using resources. This bug could have been avoided if the Okhttp developers had access to the Netty commit.  
 
-Another example would be the one depicted in Figures \ref{fig:orient} and \ref{fig:jsoup},  showing two commits that belong to the JSoup and Orientdb systems, respectively.
-The first commit was submitted in November 2013, while the Orientdb was submitted two years later in October 2015. The  Orientdb commit was used to fix a bug introduced by a commit that was submitted earlier in October 2015. This bug would have been avoided if  the developer had access to the JSoup commit, that is here proposed by BIANCA as the closest match.
+Another example is the one depicted in Figures \ref{fig:orient} and \ref{fig:jsoup},  showing two commits that belong to the JSoup and Orientdb systems, respectively.
+The first commit was submitted in November 2013, while the Orientdb was submitted two years later in October 2015. The  Orientdb commit was used to fix a bug introduced by a commit that was submitted earlier in October 2015. This bug would have been avoided if  the developer had access to the JSoup commit, that is proposed by BIANCA as the closest match.
 
 In these fixes, we can see that the developers are working with the \texttt{StringBuilder} class. 
 According to the Java documentation, the \texttt{StringBuilder} class \textit{provides an API compatible with StringBuffer, but with no guarantee of synchronization. This class is designed for use as a drop-in replacement for StringBuffer in places where the string buffer was being used by a single thread (as is generally the case). Where possible, it is recommended that this class be used in preference to StringBuffer as it will be faster under most implementations.}
@@ -408,7 +405,7 @@ In this section we propose a discussion on limitations and threats to validity.
 We identified three main limitations of our approach, BIANCA, that require further studies.
 
 BIANCA is designed to work on multiple related systems. Applying BIANCA on a single system will most likely be 
-ineffective; it is unlikely to have a large number of similar bugs within the same system. For single systems, we recommend the use of statistical models based on process and code metrics for the detection of risky commits such as the ones developed by Kamei et al. and Rolsen et al. [@Kamei2013; @Rosen2015b]. A metric-based solution, however, may turn to be ineffective when applied across systems because of the difficulty associated with identifying common thresholds that are applicable to a wide range of systems.    
+ineffective; it is unlikely to have a large number of similar bugs within the same system. For single systems, we recommend the use of statistical models based on process and code metrics for the detection of risky commits such as the ones developed by Kamei et al. and Rosen et al. [@Kamei2013; @Rosen2015b]. A metric-based solution, however, may turn to be ineffective when applied across systems because of the difficulty associated with identifying common thresholds that are applicable to a wide range of systems.    
 
 The second limitation is related to scalability of the approach. Because BIANCA operates on multiple systems, we need to build a model that comprises all their commits, which is a time consuming process. It took nearly  three months using 48 Amazon Virtual Private Servers running in parallel to build the model for our experiments.
 
@@ -455,7 +452,7 @@ Finally, the repository table describes the repository used in terms of url, nam
 
 # Acknowledgements
 
-We are thankful to Amazon for their AWS Educate Platform. without it, this study would have cost thousands of dollars in server fees.
+We are thankful to Amazon for their AWS Educate Platform. Without it, this study would have cost thousands of dollars in server fees.
 
 \color{black}
 
