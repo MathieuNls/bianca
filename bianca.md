@@ -24,10 +24,9 @@ keyword:
 - Software Maintenance
 ---
 
-Introduction
-============
+\IEEEraisesectionheading{\section{Introduction}\label{sec:introduction}}
 
-Research in software maintenance has evolved over the year to include areas like mining bug repositories, bug analytic, and bug prevention and reproduction. The ultimate goal is to develop better techniques and tools to help software developers detect, correct, and prevent bugs in an effective and efficient manner. 
+\IEEEPARstart{R}{esearch} in software maintenance has evolved over the year to include areas like mining bug repositories, bug analytic, and bug prevention and reproduction. The ultimate goal is to develop better techniques and tools to help software developers detect, correct, and prevent bugs in an effective and efficient manner. 
 
 One particular (and growing) line of research focuses on the problem of preventing the introduction of bugs by detecting risky commits (preferably before the commits reach the central repository). Recent approaches (e.g., [@Lo2013; @Nam2013]) rely on training models  based on  code and process metrics (e.g., code complexity, experience of the developers, etc.) that are used to classify  new commits as risky or not. Metrics, however, may vary from one project to another, hindering the reuse of these models. Consequently, these techniques tend to operate within single projects only, despite the fact that many large projects share dependencies, such as the reuse of common libraries. This makes them potentially vulnerable to similar faults. 
 A solution to a bug provided by the developers of one project may help fix a bug that occur in another (and dependant) project. Moreover, as noted by Lewis _et al._ [@Lewis2013] and Johnson _et al._ [@Johnson2013], techniques based solely on metrics are perceived by developers as black box solutions because they do not provide any insights on the causes of the risky commits or ways for improving them. As a result, developers are less likely to trust the output of these tools.
@@ -35,13 +34,12 @@ A solution to a bug provided by the developers of one project may help fix a bug
 In this paper, we propose a novel bug prevention approach at commit-time, called BIANCA (Bug Insertion ANticipation by Clone Analysis at commit time). BIANCA does not use metrics to assess whether or not an incoming commit is risky. Instead, it relies on code clone detection techniques by extracting code blocks from incoming commits and comparing them to those of known defect-introducing commits. 
 
 One particular aspect of BIANCA is its ability to  detect risky commits not only by comparing them to commits of a single project but also to those belonging to other projects that share common dependencies.  This is important because complex software systems are not designed in a monolithic way. They have dependencies that make them vulnerable to similar faults. For example, Apache BatchEE [@TheApacheSoftwareFoundation2015] and GraphWalker [@Graphwalker2016] both depend on JUNG (Java Universal Network/Graph Framework) [@JoshuaOMadadhain].  BatchEE provides an implementation of the jsr-352 (Batch Applications for the Java Platform) specification [@ChrisVignola2014] while GraphWalker is an open source model-based testing tool for test automation. These two systems are designed for different purposes. BatchEE is used  to do batch processing in Java, whereas GraphWalker is used to design unit tests using a graph representation of code. Nevertheless, because both Apache BatchEE and GraphWalker rely on JUNG, the developers of these projects made similar mistakes when building upon JUNG. The issue reports Apache BatchEE #69 and  GraphWalker #44 indicate that the developers of these projects made similar mistakes when using the graph visualization component of JUNG. To detect commits across related projects, BIANCA resorts to project dependency analysis.
-\red{
 Note that we do not detect only the bugs resulting from library usage but rather leverage the fact that if two systems use the same libraries then they are likely vulnerable to the same flaws.  
-}
+
 
 Another advantage of BIANCA is that it uses commits that are used to fix previous defect-introducing commits to provide guidance to the developers on how to improve risky commits. This way, BIANCA goes one step further than existing techniques by providing developers with a potential fix for their risky commits.
 
-We validated the performance of BIANCA on 42 open source projects, obtained from Github. The examined projects vary in size, domain and popularity. Our findings indicate that BIANCA is able to flag risky commits with an average precision, recall and F-measure of 90.75%, 37.15% and 52.72%, respectively. Although the performance of BIANCA seems modest it is important to ground these results with the fact that BIANCA outperforms a baseline model by XXXX (mainly due to the data imbalance, i.e., most commits are not defect-inducing). Moreover, we found that only 8.6% of the risky commits detected by BIANCA match other commits from the same project. This finding stresses the fact that relationships across projects should be taken into consideration for effective prevention of risky commits.
+We validated the performance of BIANCA on 42 open source projects, obtained from Github. The examined projects vary in size, domain and popularity. Our findings indicate that BIANCA is able to flag risky commits with an average precision, recall and F-measure of 90.75%, 37.15% and 52.72%, respectively. Although the performance of BIANCA seems modest it is important to ground these results with the fact that BIANCA outperforms a baseline model by 19.48% (mainly due to the data imbalance, i.e., most commits are not defect-inducing). Moreover, we found that only 8.6% of the risky commits detected by BIANCA match other commits from the same project. This finding stresses the fact that relationships across projects should be taken into consideration for effective prevention of risky commits.
 
 The remaining parts of this paper are organized as follows. In Section \ref{sec:relwork}, we present related work. Sections \ref{sec:bianca},  \ref{sec:exp} and \ref{sec:result} are dedicated to the BIANCA approach, the case study setup, and the case study results.
 Then, Sections \ref{sec:threats} and \ref{sec:conclusion} present the threats to validity and a conclusion accompanied with future work.
@@ -55,7 +53,7 @@ The majority of previous file/module-level prediction work used code or process 
 Approaches using code metrics only use information from the code itself and do not use any historical data. Chidamber and Kemerer published the well-known CK metrics suite [@Chidamber1994] for object oriented designs and inspired Moha *et al.* to publish similar metrics for service-oriented programs [@Moha]. Another famous metric suite for assessing the quality of a given software design is Briand's coupling metrics [@Briand1999a].
 
 The CK and Briand’s metrics suites have been used, for example, by Basili *et al.* [@Basili1996], El Emam *et al.* [@ElEmam2001], Subramanyam *et al.* [@Subramanyam2003] and Gyimothy *et al.* [@Gyimothy2005] for object-oriented designs. 
-Service oriented designs have been far less studied than object oriented design as they are relatively new, but, Nayrolles *et al.* [@Nayrolles; @Nayrolles2013d], Demange *et al.* [@demange2013] and Palma *et al.* [@Palma2013] used Moha *et al.* metric suites to detect software defects.
+Service oriented designs have been far less studied than object oriented design as they are relatively new, but, Nayrolles *et al.* [@Nayrolles; @Nayrolles2013a], Demange *et al.* [@demange2013] and Palma *et al.* [@Palma2013] used Moha *et al.* metric suites to detect software defects.
 All these approaches, proved software metrics to be useful at detecting software fault for object oriented and service oriented designs, respectively. More recently, Nagappan *et al.* [@Nagappan2005; @Nagappan2006] and Zimmerman *et al.* [@Zimmermann2007; @Zimmermann2008] further refined metrics-based detection by using statical analysis and call-graph analysis.
 
 Other approaches use historical development data, often referred to as process metrics. Naggapan and Ball [@Nagappan] studied the feasibility of using relative churn metrics to prediction buggy modules in the Windows Server 2003. Other work by Hassan *et al* and Ostrand *et al* used past changes and defects to predict buggy locations (e.g., [@Hassan2005], [@Ostrand2005]). Hassan and Holt proposed an approach that highlights the top ten most susceptible locations to have a bug using heuristics based on file-level metrics [@Hassan2005]. They find that locations that have been recently modified and fixed locations are the most defect-prone. Similarly, Ostrand *et al.* [@Ostrand2005] predict future crash location by combining the data from changed and past defect locations. They validate their approach on industrial systems at AT&T. They showed that data from prior changes and defects can effectively defect-prone locations for open-source and industrial systems. Kim *et al.* [@Kim2007a] proposed the bug cache approach, which is an improved technique over Hassan and Holt's approach [@Hassan2005]. Rahman and Devanbu found that, in general, process-based metrics perform as good as or better than code-based metrics [@rahman2013].
@@ -105,7 +103,7 @@ To build our database of code blocks that are related to defect-commits and fix-
 **Extracting Commits:** BIANCA listens to bug (or issue) closing events happening on the project tracking system. Every time an issue is closed, BIANCA retrieves the commit that was used to fix the issue (the fix-commit) as well as the one that introduced the defect (the defect-commit). Retrieving fix-commits, however, is known to be a challenging task [@Wu2011]. This is because the link between the project tracking system and the code version control system is not always explicit. In an ideal situation, developers would add a reference to the issue they work on inside the description of the commit. But this good practice is not always followed. To make the link between fix-commits and their related issues, we turn to a modified version of the back-end of commit-guru [@Rosen2015]. Commit-guru is a tool, developed by Rosen _et al._  [@Rosen2015] to detect _risky commits_. In order to identify risky commits, Commit-guru builds a statistical model using change metrics (i.e.,  amount of lines added, amount of lines deleted, amount of files modified, etc.) from past commits known to have introduced defects in the past.
 
 Commit-guru's back-end has three major components: ingestion, analysis, and prediction. We reuse the ingestion part of the analysis components for BIANCA. The ingestion component is responsible for ingesting (i.e., downloading) a given repository.
-Once the repository is entirely downloaded on a local server, each commit history is analysed. Commits are classified using the list of keywords proposed by Hindle *et al.* [@Hindle2008]. Commit-guru implements the SZZ algorithm [@Kim2006c] to detect risky changes, where it performs the SCM blame/annotate function on all the modified lines of code for their corresponding files on the fix-commit's parents. This returns the commits that previously modified these lines of code and are flagged as the bug introducing commits (i.e., the defect-commits). Priori work showed that commit-guru is effective in identifying defect-commits and their corresponding fixing commits [@Kamei2013a] and the SZZ algorithm, used by commit-guru, is shown to be effective in detecting risky commits [@Kamei2013; @Rosen2015b]. Note that we could use a simpler and more established tool such as Relink [@Wu2011] to link the commits to their issues and re-implement the classification proposed by Hindle *et al.* [@Hindle2008] on top of it. However, commit-guru has the advantage of being open-source, making it possible to  modify it to fit our needs by fine-tuning its performance.
+Once the repository is entirely downloaded on a local server, each commit history is analysed. Commits are classified using the list of keywords proposed by Hindle *et al.* [@Hindle2008]. Commit-guru implements the SZZ algorithm [@Kim2006c] to detect risky changes, where it performs the SCM blame/annotate function on all the modified lines of code for their corresponding files on the fix-commit's parents. This returns the commits that previously modified these lines of code and are flagged as the bug introducing commits (i.e., the defect-commits). Priori work showed that commit-guru is effective in identifying defect-commits and their corresponding fixing commits [@Kamei2013a] and the SZZ algorithm, used by commit-guru, is shown to be effective in detecting risky commits [@Kamei2013; @Rosen2015]. Note that we could use a simpler and more established tool such as Relink [@Wu2011] to link the commits to their issues and re-implement the classification proposed by Hindle *et al.* [@Hindle2008] on top of it. However, commit-guru has the advantage of being open-source, making it possible to  modify it to fit our needs by fine-tuning its performance.
 
 **Extracting Code Blocks:** To extract code blocks from fix-commits and defect-commits,  we rely on TXL [@Cordy2006a], which is a first-order functional programming over linear term rewriting, developed by Cordy et al. [@Cordy2006a]. For TXL to work, one has to write a grammar describing the syntax of the source language and the transformations needed. TXL has three main phases: *parse*, *transform*, *unparse*. In the parse phase, the grammar controls not only the input but also the output forms. The following code sample---extracted from the official documentation---shows a grammar matching an *if-then-else* statement in C with some special keywords: [IN] (indent), [EX] (exdent) and [NL] (newline) that will be used in the output form.
 
@@ -173,7 +171,7 @@ There are two groups of hooks: client-side and server-side. Client-side hooks ar
 
 To compare the extracted blocks to the ones in the database, we resort to clone detection techniques, more specifically, text-based clone detection techniques. This is because lexical and syntactic analysis approaches (alternatives to text-based comparisons) would require a complete program to work, i.e., a program that compiles.  In the relatively wide-range of tools and techniques that exist to detect clones by considering code as text [@Johnson1993;  @Johnson1994; @Marcus; @Manber1994; @StephaneDucasse; @Wettel2005], we selected NICAD as the main text-based method for comparing code blocks [@Cordy2011] for several reasons. 
 First, NICAD is built on top of TXL, which we also used in the previous phase.  Second, NICAD can detect Types 1, 2 and 3 software clones [@CoryKapser]. Type 1 clones are copy-pasted blocks of code that only differ from each other in terms of non-code artefacts such as indentation, whitespaces, comments and so on.  Type 2 clones are blocks of code that are syntactically identical except literals, identifiers, and types that can be modified. Also, Type 2 clones share the particularities of Type 1 about indentation, whitespaces, and comments. Type 3 clones are similar to Type 2 clones in terms of modification of literals, identifiers, types, indentation, whitespaces, and comments but also contain added or deleted code statements. BIANCA detects Type 3 clones since they can contain added or deleted code statements, which make them suitable for comparing commit code blocks.
-\red{The problem with the current implementation of NICAD is that it only considers complete Java, C\#, and C files. We needed to adapt NICAD to process changesets. With the aid of TXL designers, we developed a TXL grammar for changesets.}
+The problem with the current implementation of NICAD is that it only considers complete Java, C\#, and C files. We needed to adapt NICAD to process changesets. With the aid of TXL designers, we developed a TXL grammar for changesets.
 
 NICAD works in three phases: *Extraction*, *Comparison* and *Reporting*. 
 During the *Extraction* phase all potential clones are identified, pretty-printed, and extracted. 
@@ -198,7 +196,7 @@ Furthermore, in the pretty-printing process, statements can be broken down into 
  for (j=2; j<100; j++)
 \end{equation}
 
-The pretty-printing allows NICAD to detect Segments 1 and 2 as a clone pair because only the initialization of $i$ changed. This specific example would not have been marked as a clone by other tools we tested such as Duploc [@Ducasse1999]. 
+The pretty-printing allows NICAD to detect Segments 1 and 2 as a clone pair because only the initialization of $i$ changed. This specific example would not have been marked as a clone by other tools we tested such as Duploc [@StephaneDucasse]. 
 In addition to the pretty-printing, code can be normalized and filtered to detect different classes of clones and match user preferences.
 
 \input{tex/Pretty-Printing}
@@ -252,9 +250,7 @@ If at $t_4$, $c_3$ is pushed to $p_2$ and $c_3$ matches $c_1$ after preprocessin
 
 To measure the similarity between pairs of commits, we need to decide on the value of $\alpha$. One possibility would be to test for all possible values of $\alpha$ and pick the one that provides best accuracy (F$_1$-measure). The ROC (Receiver Operating Characteristic) curve can then be used to display the performance of BIANCA with different values of $\alpha$. Running experiments with all possible $\alpha$ turned out to be computationally demanding given the large number of commits. Testing with all the different values of $\alpha$ amounts to 4e10 comparisons. 
 
-\color{red}
 To address this, we randomly selected a sample of 1% [Emad: can we add the number of commits, 1% seems low] commits from our dataset and checked the results by varying $\alpha$ from 1 to 100%. Figure \ref{fig:alpha-deter} shows the results. The best trade-off between precision and recall is obtained when $\alpha$ = 35\%. This threshold is in line with the findings of Roy et al. [@Roy2008; @Cordy2011] who showed through empirical studies that using NICAD with a threshold of around 30\%, the default setting, provides good results for the detection of Type 3 clones. For these reasons, we set $\alpha$ = 35\% in our experiments.
-\color{black}
 
 ## Evaluation Measures
 
@@ -307,7 +303,7 @@ It is important to note that the purpose of this analysis is not to say that we 
 
 ## Performance of BIANCA 
 
-\red{In this section, we provide insight on the performance of BIANCA by examining the projects for which the best and worst results were obtained.}
+In this section, we provide insight on the performance of BIANCA by examining the projects for which the best and worst results were obtained.
 
 BIANCA performed best when applied to three projects: Otto by Square (100.00% precision and 76.61% recall, 96.55% F$_1$-measure), JStorm by Alibaba (90.48% precision, 87.50% recall, 88.96% F$_1$-measure), and Auto by Google (90.48% precision, 87.50% recall, 86.76% F$_1$-measure). It performed worst when applied to Android Annotations by Excilys (100.00% precision, 1.59% recall, 3.13% F$_1$-measure) and Che by Eclipse (88.89% precision, 5.33% recall, 10.05% F$_1$-measure), Openhab by Openhab (100.00% precision, 7.14% recall, 13.33% F$_1$-measure). To understand the performance of BIANCA, we conducted a manual analysis of the commits classified as _risky_ by BIANCA for these projects.
 
@@ -363,7 +359,6 @@ On a per commit basis, BIANCA proposed 101,462 fixes for the 13,899 true positiv
 
 In other words, BIANCA is able to detect _risky_ commits with 90.75% precision, 37.15% recall, and proposes fixes that contain, on average, 40-44% of the actual code needed to transform the _risky_ commit into a _non-risky_ one. 
 
-\color{red}
 To further assess the quality of the fixes proposed by BIANCA, we randomly took 250 BIANCA-proposed fixes and manually compared them with the actual fixes provided by the developers. For each fix, we looked at the proposed modifications (i.e., code diff) and the actual modification made by the developer of the system to fix the bug.
 
 We were able to identify the statements from the proposed fixes that can be reused to create fixes similar to the ones that developers had proposed in 85\% of the cases. For the remaining cases, it was difficult to understand the changes that the developers made, mainly because of our lack of familiarity of the systems under study. We recognize that a better evaluation of the quality of BIANCA-proposed fixes would be to conduct a user study. We intend to do this as part of future work. In what follows, we present examples of BIANCA-proposed fixes that were detected as similar to fixes proposed by developers.
@@ -405,12 +400,11 @@ In this section we propose a discussion on limitations and threats to validity.
 We identified three main limitations of our approach, BIANCA, that require further studies.
 
 BIANCA is designed to work on multiple related systems. Applying BIANCA on a single system will most likely be 
-ineffective; it is unlikely to have a large number of similar bugs within the same system. For single systems, we recommend the use of statistical models based on process and code metrics for the detection of risky commits such as the ones developed by Kamei et al. and Rosen et al. [@Kamei2013; @Rosen2015b]. A metric-based solution, however, may turn to be ineffective when applied across systems because of the difficulty associated with identifying common thresholds that are applicable to a wide range of systems.    
+ineffective; it is unlikely to have a large number of similar bugs within the same system. For single systems, we recommend the use of statistical models based on process and code metrics for the detection of risky commits such as the ones developed by Kamei et al. and Rosen et al. [@Kamei2013; @Rosen2015]. A metric-based solution, however, may turn to be ineffective when applied across systems because of the difficulty associated with identifying common thresholds that are applicable to a wide range of systems.    
 
 The second limitation is related to scalability of the approach. Because BIANCA operates on multiple systems, we need to build a model that comprises all their commits, which is a time consuming process. It took nearly  three months using 48 Amazon Virtual Private Servers running in parallel to build the model for our experiments.
 
 The third limitation we identified has to do with the fact that BIANCA is designed to work with Java systems only. It is however common to have a multitude of programming languages used in an environment with many inter-related systems. We intend to extend BIANCA to process commits from other languages as well.
-\color{black}
 
 ## Threats to Validity
 
@@ -441,7 +435,6 @@ The feedback obtained will help us fine-tune the approach. Also, we want to exam
 
 # Reproduction Package & Dataset
 
-\color{red}
 As described in Section \ref{sec:newcommits}, we rely heavily on virtual machines instrumentation and coordination to run our experiments. Providing a straightforward reproduction package is therefore very challenging.
 However, we are happy to share our consolidated dataset: https://github.com/MathieuNls/bianca-data.
 The dataset is composed of three compressed PostgresSQL formatted tables: clones, commits and repository.
@@ -454,9 +447,7 @@ Finally, the repository table describes the repository used in terms of url, nam
 
 We are thankful to Amazon for their AWS Educate Platform. Without it, this study would have cost thousands of dollars in server fees.
 
-\color{black}
-
-# References
+\section*{References} 
 
 <!-- Footnotes text -->
 
@@ -470,4 +461,5 @@ We are thankful to Amazon for their AWS Educate Platform. Without it, this study
 <!-- End Footnotes text -->
 
 \small
-
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}

@@ -9,6 +9,15 @@
 \usepackage{pdflscape}
 \usepackage{float}
 
+\ifCLASSOPTIONcompsoc
+  % IEEE Computer Society needs nocompress option
+  % requires cite.sty v4.0 or later (November 2003)
+  \usepackage[nocompress]{cite}
+\else
+  % normal IEEE
+  \usepackage{cite}
+\fi
+
 \newcommand{\red}[1]{\textcolor{red}{#1}}
 \newcommand{\wahab}[1]{\textcolor{blue}{\\ \\Wahab: #1}}
 \newcommand{\mathieu}[1]{\textcolor{blue}{\\ \\Mathieu: #1}}
@@ -148,8 +157,6 @@ $if(strikeout)$
 \pdfstringdefDisableCommands{\renewcommand{\sout}{}}
 $endif$
 
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -171,38 +178,33 @@ $endif$
 
 % \author{$for(author)$$if(author.name)$ $author.name$$if(author.affiliation)$ ($author.affiliation$)$endif$\and$else$ $author$ $endif$$endfor$}
 
-\date{$date$}
+
+\markboth{}%
+{BIANCA: Preventing Bug Insertion at Commit-Time Using Dependency Analysis and Clone Detection}
+
+
+\IEEEtitleabstractindextext{%
+\begin{abstract}
+$abstract$
+\end{abstract}
+
+% Note that keywords are not normally used for peerreview papers.
+\begin{IEEEkeywords}
+$for(keyword)$
+    $keyword$$sep$;
+$endfor$
+\end{IEEEkeywords}}
+
 
 $for(header-includes)$
 $header-includes$
 $endfor$
 
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
+
 
 \begin{document}
 $if(title)$
 \maketitle
-$endif$
-$if(abstract)$
-\begin{abstract}
-$abstract$
-\end{abstract}
-$endif$
-
-$if(keyword)$
-\begin{IEEEkeywords}
-$for(keyword)$
-    $keyword$$sep$;
-$endfor$
-\end{IEEEkeywords}
 $endif$
 
 $for(include-before)$
